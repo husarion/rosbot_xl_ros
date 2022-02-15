@@ -1,0 +1,18 @@
+services:
+  rosbot_xl:
+    build:
+      context: ./..
+      dockerfile: ./simulation/Dockerfile
+    container_name: rosbot_xl_ros_simulation
+    runtime: nvidia
+    environment:
+      - "DISPLAY"
+      - "QT_X11_NO_MITSHM=1"
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../src:/app/ros2_ws/src
+    command: ros2 launch rosbot_xl_description rviz2_preview.launch.py
+    # command: ros2 launch rosbot_xl_gazebo sim.launch.py
+  

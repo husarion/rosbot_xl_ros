@@ -1,0 +1,17 @@
+services:
+  microros:
+    image: husarion/micro-ros-agent
+    ports:
+      - "8888:8888/udp"
+    command: udp4 --port 8888
+
+  rosbot_xl:
+    build:
+      context: ./..
+      dockerfile: Dockerfile
+    container_name: rosbot_xl_ros
+    volumes:
+      - ../src/rosbot_xl_ekf:/app/ros2_ws/src/rosbot_xl_ekf
+      - ../src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
+      - ../src/rosbot_xl_description:/app/ros2_ws/src/rosbot_xl_description
+    command: ros2 launch rosbot_xl_description rviz2_preview.launch.py

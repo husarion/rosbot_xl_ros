@@ -1,0 +1,64 @@
+<?xml version='1.0'?>
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="rosbot_xl_robot" params="use_sim">
+
+    <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
+    <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
+    <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
+    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl/gazebo_plugins.gazebo.xacro" ns="gazebo" /> -->
+
+    <!-- BODY DECLARATION -->
+    <xacro:body.body />
+
+    <!-- WHEEL DECLARATION -->
+    <xacro:wheel.wheel wheel_type="differential" prefix="front_left" />
+    <xacro:wheel.wheel wheel_type="differential" prefix="front_right" />
+    <xacro:wheel.wheel wheel_type="differential" prefix="rear_left" />
+    <xacro:wheel.wheel wheel_type="differential" prefix="rear_right" />
+
+
+    <ros2_control name="wheels" type="system">
+      <hardware>
+        <xacro:if value="${use_sim}">
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${use_sim}">
+          <plugin>rosbot_xl_hardware/RosbotXLSystem</plugin>
+        </xacro:unless>
+      </hardware>
+
+      <joint name="front_left_wheel_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="front_right_wheel_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="rear_left_wheel_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="rear_right_wheel_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+
+
+    <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+        <robot_param>robot_description</robot_param>
+        <robot_param_node>robot_state_publisher</robot_param_node>
+        <parameters>$(find rosbot_xl_description)/config/controllers_gazebo.yaml</parameters>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

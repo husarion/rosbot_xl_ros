@@ -1,0 +1,9 @@
+<library path="rosbot_xl_hardware">
+  <class name="rosbot_xl_hardware/RosbotXLSystem"
+         type="rosbot_xl_hardware::RosbotXLSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware system controller for Rosbot XL
+    </description>
+  </class>
+</library>

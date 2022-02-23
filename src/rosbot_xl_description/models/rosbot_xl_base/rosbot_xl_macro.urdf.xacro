@@ -4,19 +4,21 @@
 
   <xacro:macro name="rosbot_xl_robot" params="use_sim">
 
+    <xacro:property name="wheel_diameter" value="0.082" />
+
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
     <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl/gazebo_plugins.gazebo.xacro" ns="gazebo" /> -->
 
     <!-- BODY DECLARATION -->
-    <xacro:body.body />
+    <xacro:body.body wheel_diameter="${wheel_diameter}" />
 
     <!-- WHEEL DECLARATION -->
-    <xacro:wheel.wheel wheel_type="differential" prefix="front_left" />
-    <xacro:wheel.wheel wheel_type="differential" prefix="front_right" />
-    <xacro:wheel.wheel wheel_type="differential" prefix="rear_left" />
-    <xacro:wheel.wheel wheel_type="differential" prefix="rear_right" />
+    <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="front_left" />
+    <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="front_right" />
+    <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_left" />
+    <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_right" />
 
 
     <ros2_control name="wheels" type="system">

@@ -42,6 +42,12 @@ def generate_launch_description():
         ),
 
         Node(
+            package="rosbot_xl_kinematics",
+            executable="classic_kinematics",
+            name="rosbot_xl_classic_kinematics"
+        ),
+
+        Node(
             package='rviz2',
             executable='rviz2',
             name='rviz2',

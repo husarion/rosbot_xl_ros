@@ -7,11 +7,19 @@ services:
 
   rosbot_xl:
     build:
-      context: ./..
-      dockerfile: Dockerfile
+      context: ./../
+      dockerfile: ./hardware/Dockerfile
     container_name: rosbot_xl_ros
     volumes:
       - ../src/rosbot_xl_ekf:/app/ros2_ws/src/rosbot_xl_ekf
-      - ../src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
+      # - ./src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
       - ../src/rosbot_xl_description:/app/ros2_ws/src/rosbot_xl_description
-    command: ros2 launch rosbot_xl_description rviz2_preview.launch.py
+      - ../src/rosbot_xl_kinematics:/app/ros2_ws/src/rosbot_xl_kinematics
+    command: ros2 run rosbot_xl_kinematics classic_kinematics
+
+  # ros-rplidar:
+  #   image: husarion/rplidar:latest
+  #   devices:
+  #     - /dev/ttyUSB0
+  #   tty: true        # docker run -t
+  #   command: roslaunch rplidar_ros rplidar.launch

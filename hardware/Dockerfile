@@ -19,8 +19,9 @@ RUN mkdir -p ros2_ws/src
 
 # copy packages
 COPY ./src/rosbot_xl_ekf /app/ros2_ws/src/rosbot_xl_ekf
-COPY ./src/rosbot_xl_hardware /app/ros2_ws/src/rosbot_xl_hardware
+# COPY ./src/rosbot_xl_hardware /app/ros2_ws/src/rosbot_xl_hardware
 COPY ./src/rosbot_xl_description /app/ros2_ws/src/rosbot_xl_description
+COPY ./src/rosbot_xl_kinematics /app/ros2_ws/src/rosbot_xl_kinematics
 
 # build workspace
 RUN cd ros2_ws \

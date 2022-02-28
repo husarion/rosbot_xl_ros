@@ -1,14 +1,18 @@
 services:
+  ros-master:
+    image: ros:melodic-ros-core
+    restart: on-failure
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+    command: roscore
+
   # ROS Noetic + ROS 2 Galactic
   bridge:
     image: ros:galactic-ros1-bridge
     restart: on-failure
-    ipc: host
-    depends_on:
-      - rosbot_xl
     environment:
-      - "ROS_IP=127.0.0.1"
-      - "ROS_MASTER_URI=http://127.0.0.1:11311"
+      - "ROS_IP=bridge"
+      - "ROS_MASTER_URI=http://ros-master:11311"
       - "ROS_DOMAIN_ID=0"
     command: ros2 run ros1_bridge dynamic_bridge
 
@@ -39,10 +43,10 @@ services:
     devices:
       - /dev/ttyUSB0
     environment:
-      - "ROS_IP=127.0.0.1"
-      - "ROS_MASTER_URI=http://127.0.0.1:11311"
+      - "ROS_IP=ros-rplidar"
+      - "ROS_MASTER_URI=http://ros-master:11311"
     tty: true        # docker run -t
-    command: roslaunch rplidar_ros rplidar_s1.launch
+    command: roslaunch rplidar_ros rplidar_s1.launch --wait
 
   husarnet:
     image: husarnet/husarnet

@@ -1,0 +1,26 @@
+services:
+  rosbot_xl:
+    build:
+      context: ./../
+      dockerfile: ./hardware/Dockerfile
+    network_mode: service:husarnet
+    volumes:
+      - ../src/rosbot_xl_ekf:/app/ros2_ws/src/rosbot_xl_ekf
+      # - ./src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
+      - ../src/rosbot_xl_description:/app/ros2_ws/src/rosbot_xl_description
+      - ../src/rosbot_xl_kinematics:/app/ros2_ws/src/rosbot_xl_kinematics
+    command: ros2 run rosbot_xl_kinematics classic_kinematics
+
+  husarnet:
+    image: husarnet/husarnet
+    restart: unless-stopped
+    volumes:
+        - /var/lib/husarnet  # This will persist your Husarnet Client keys, thus IP of the container will be stable/the same between (re)boots
+    sysctls:
+        - net.ipv6.conf.all.disable_ipv6=0  # Husarnet is using IPv6 for the internal connections
+    cap_add:
+        - NET_ADMIN
+    devices:
+        - /dev/net/tun
+    env_file: 
+        - ./.env  # create .env file in the same folder as Dockerfile and specify HOSTNAME and JOINCODE there

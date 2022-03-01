@@ -83,6 +83,8 @@ class ROSbotXLClassic(ROSbotXLKinematics):
         msg.name = ["FR","FL","RR","RL"]
         msg.velocity = [wheel_front_right, wheel_front_left, wheel_rear_right, wheel_rear_left]
 
+        print("Sending motors cmd")
+
         self.wheel_vel_pub.publish(msg)  
 
 

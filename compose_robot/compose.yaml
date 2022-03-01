@@ -2,8 +2,6 @@ services:
   ros-master:
     image: ros:melodic-ros-core
     restart: on-failure
-    network_mode: host
-    ipc: host
     environment:
       - "ROS_IP=127.0.0.1"
       - "ROS_MASTER_URI=http://127.0.0.1:11311"
@@ -13,8 +11,6 @@ services:
   bridge:
     image: ros:galactic-ros1-bridge
     restart: on-failure
-    network_mode: host
-    ipc: host
     environment:
       - "ROS_IP=127.0.0.1"
       - "ROS_MASTER_URI=http://127.0.0.1:11311"
@@ -22,10 +18,8 @@ services:
 
   microros:
     image: husarion/micro-ros-agent
-    network_mode: host
-    ipc: host
-    # ports:
-    #   - "8888:8888/udp"
+    ports:
+      - "8888:8888/udp"
     command: udp4 --port 8888
 
   rosbot_xl:
@@ -33,8 +27,6 @@ services:
       context: ./../
       dockerfile: ./hardware/Dockerfile
     container_name: rosbot_xl_ros
-    network_mode: host
-    ipc: host
     volumes:
       - ../src/rosbot_xl_ekf:/app/ros2_ws/src/rosbot_xl_ekf
       # - ./src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
@@ -46,8 +38,6 @@ services:
     image: husarion/rplidar:latest
     devices:
       - /dev/ttyUSB0
-    network_mode: host
-    ipc: host
     environment:
       - "ROS_IP=127.0.0.1"
       - "ROS_MASTER_URI=http://127.0.0.1:11311"

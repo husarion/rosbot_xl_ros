@@ -1,43 +1,13 @@
 services:
-  # ROS Galactic navigation
-  nav2:
-    image: husarion/nav2:galactic
-    tty: true
+  ros-master:
+    image: ros:melodic-ros-core
     restart: on-failure
-    logging:
-      driver: none
-    network_mode: host
-    ipc: host
-    volumes:
-      - ./husarion_nav2_config:/app/ros2_ws/src/husarion_nav2/config
-    command: ros2 launch husarion_nav2 bringup_both.launch.py
-
-  # ROS Foxy Rviz2 VNC
-  rviz2:
-    image: husarion/ros2-desktop-vnc:latest
-    restart: on-failure
-    logging:
-      driver: none
     network_mode: host
     ipc: host
     environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
-    volumes:
-      - ./rviz_docker_config/pusher.rviz:/root/.rviz2/default.rviz
-      - ./rviz_docker_config/.bash_history:/root/.bash_history
-    shm_size: '512m'
-    runtime: nvidia
-
-  # ros-master:
-  #   image: ros:melodic-ros-core
-  #   restart: on-failure
-  #   network_mode: host
-  #   ipc: host
-  #   environment:
-  #     - "ROS_IP=127.0.0.1"
-  #     - "ROS_MASTER_URI=http://127.0.0.1:11311"
-  #   command: roscore
+      - "ROS_IP=127.0.0.1"
+      - "ROS_MASTER_URI=http://127.0.0.1:11311"
+    command: roscore
 
   # ROS Noetic + ROS 2 Galactic
   bridge:

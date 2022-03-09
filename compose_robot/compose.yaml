@@ -1,4 +1,16 @@
 services:
+  # ROS Foxy navigation
+  nav2:
+    image: husarion/nav2:galactic
+    tty: true
+    restart: on-failure
+    environment:
+      - CYCLONEDDS_URI=file:///cyclonedds.xml
+    volumes:
+      - ./cyclonedds.xml:/cyclonedds.xml
+      - ./husarion_nav2_config:/app/ros2_ws/src/husarion_nav2/config
+    command: ros2 launch husarion_nav2 bringup_both.launch.py
+
   ros-master:
     image: ros:melodic-ros-core
     restart: on-failure

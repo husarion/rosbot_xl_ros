@@ -9,7 +9,7 @@
             <Transport>udp</Transport>
         </General>      
         <Discovery>
-            <ParticipantIndex>auto</ParticipantIndex>
+            <ParticipantIndex>10</ParticipantIndex>
         </Discovery>
         <Internal>
             <Watermarks>

@@ -2,47 +2,23 @@ services:
   # ROS Foxy navigation
   # nav2:
   #   image: husarion/nav2:galactic
-  #   tty: true
   #   restart: on-failure
-  #   network_mode: host
-  #   environment:
-  #     - CYCLONEDDS_URI=file:///cyclonedds.xml
-  #   volumes:
-  #     - ./cyclonedds.xml:/cyclonedds.xml
   #     - ./husarion_nav2_config:/app/ros2_ws/src/husarion_nav2/config
   #   command: ros2 launch husarion_nav2 bringup_both.launch.py
 
   ros-master:
     image: ros:melodic-ros-core
     restart: on-failure
-    network_mode: host
-    environment:
-      - "ROS_IP=127.0.0.1"
-      - "ROS_MASTER_URI=http://127.0.0.1:11311"
     command: roscore
 
   # ROS Noetic + ROS 2 Galactic
   bridge:
     image: ros:galactic-ros1-bridge
     restart: on-failure
-    network_mode: host
-    environment:
-      - "ROS_IP=127.0.0.1"
-      - "ROS_MASTER_URI=http://127.0.0.1:11311"
-      - CYCLONEDDS_URI=file:///cyclonedds.xml
-    volumes:
-      - ./cyclonedds.xml:/cyclonedds.xml
     command: ros2 run ros1_bridge dynamic_bridge
 
   microros:
     image: husarion/micro-ros-agent
-    network_mode: host
-    environment:
-      - CYCLONEDDS_URI=file:///cyclonedds.xml
-    volumes:
-      - ./cyclonedds.xml:/cyclonedds.xml
-    ports:
-      - "8888:8888/udp"
     command: udp4 --port 8888
 
   rosbot_xl:
@@ -50,11 +26,7 @@ services:
       context: ./../
       dockerfile: ./compose_robot/Dockerfile
     container_name: rosbot_xl_ros
-    network_mode: host
-    environment:
-      - CYCLONEDDS_URI=file:///cyclonedds.xml
     volumes:
-      - ./cyclonedds.xml:/cyclonedds.xml
       - ../src/rosbot_xl_ekf:/app/ros2_ws/src/rosbot_xl_ekf
       # - ./src/rosbot_xl_hardware:/app/ros2_ws/src/rosbot_xl_hardware
       - ../src/rosbot_xl_description:/app/ros2_ws/src/rosbot_xl_description
@@ -65,11 +37,7 @@ services:
 
   ros-rplidar:
     image: husarion/rplidar:latest
-    network_mode: host
+    tty: true
     devices:
       - /dev/ttyUSB0
-    environment:
-      - "ROS_IP=127.0.0.1"
-      - "ROS_MASTER_URI=http://127.0.0.1:11311"
-    tty: true        # docker run -t
     command: roslaunch rplidar_ros rplidar_s1.launch --wait

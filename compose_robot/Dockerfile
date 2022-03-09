@@ -9,7 +9,8 @@ RUN apt update && apt upgrade -y \
     python3-pip \
     python3-colcon-common-extensions \
     ros-$ROS_DISTRO-robot-localization \
-    ros-$ROS_DISTRO-teleop-twist-keyboard
+    ros-$ROS_DISTRO-teleop-twist-keyboard \
+    ros-$ROS_DISTRO-xacro
 
 # install everything inside /app folder
 WORKDIR /app
@@ -34,7 +35,7 @@ RUN apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # replace entrypoint
-COPY ./hardware/ros_entrypoint.sh /
+COPY ./compose_robot/ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 

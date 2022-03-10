@@ -14,19 +14,19 @@ services:
   bridge:
     network_mode: host
     environment:
-      - ROS_DOMAIN_ID=21
+      # - ROS_DOMAIN_ID=21
       - "ROS_IP=127.0.0.1"
       - "ROS_MASTER_URI=http://127.0.0.1:11311"
 
   microros:
     network_mode: host
-    environment:
-      - ROS_DOMAIN_ID=21
+    # environment:
+    #   - ROS_DOMAIN_ID=21
 
   rosbot_xl:
     network_mode: host
-    environment:
-      - ROS_DOMAIN_ID=21
+    # environment:
+    #   - ROS_DOMAIN_ID=21
 
   ros-rplidar:
     network_mode: host

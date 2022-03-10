@@ -11,17 +11,12 @@ from sensor_msgs.msg import JointState
 class ROSbotXLClassic(ROSbotXLKinematics):
     def __init__(self):
         super().__init__("ROSbotXL_kinematics")
-
-        self.create_subscription(Twist, "/cmd_vel", self.cmdVelCallback, 1)
-
-        self.wheel_vel_pub = self.create_publisher(JointState, '/motors_cmd', 1)
-        self.acturator_responce_sub = self.create_publisher(JointState, '/motors_response', 1)
-
-
         self.robot_width =  0.200
         self.robot_length = 0.170
         self.wheel_radius = 0.05
         self.power_factor = 0.04166667
+
+        self.get_logger().info("Classic Kinematics node Initializad!")
 
         # pose_publisher = self.create_publisher('pose', Pose, queue_size=1)
         # pose_msg = Pose()
@@ -82,8 +77,8 @@ class ROSbotXLClassic(ROSbotXLKinematics):
 
         msg.name = ["FR","FL","RR","RL"]
         msg.velocity = [wheel_front_right, wheel_front_left, wheel_rear_right, wheel_rear_left]
-
-        print("Sending motors cmd")
+        
+        self.get_logger().info("Sending motors cmd")
 
         self.wheel_vel_pub.publish(msg)  
 

@@ -1,0 +1,7 @@
+services:
+  microros:
+    image: husarion/micro-ros-agent
+    network_mode: host
+    # environment:
+    #   - ROS_DOMAIN_ID=21
+    command: udp4 --port 8888

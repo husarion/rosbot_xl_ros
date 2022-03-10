@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import math
 from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Pose
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import JointState
 
 
 class ROSbotXLKinematics(Node):
@@ -25,6 +29,15 @@ class ROSbotXLKinematics(Node):
         self.scale_factor_y = 0.25
         self.scale_factor_th = 0.125
         
+        self.create_subscription(Twist, "/cmd_vel", self.cmdVelCallback, 1)
+        self.create_subscription(JointState, '/motors_response', self.motorsResponseCallback, 1)
+
+        self.wheel_vel_pub = self.create_publisher(JointState, '/motors_cmd', 1)
+
+    def motorsResponseCallback(self, data):
+        self.get_logger().info("received motors response {}".format(data.velocity[0]))
+
+
     def cmdVelCallback(self, data):
         # forward kinematics
         self.lin_x = data.linear.x * self.scale_factor_x  # m/s

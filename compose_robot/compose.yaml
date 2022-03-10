@@ -3,6 +3,9 @@ services:
   # nav2:
   #   image: husarion/nav2:galactic
   #   restart: on-failure
+  #   logging:
+  #     driver: none
+  #   environment:
   #     - ./husarion_nav2_config:/app/ros2_ws/src/husarion_nav2/config
   #   command: ros2 launch husarion_nav2 bringup_both.launch.py
 
@@ -11,9 +14,8 @@ services:
     restart: on-failure
     command: roscore
 
-  # ROS Noetic + ROS 2 Galactic
   bridge:
-    image: ros:galactic-ros1-bridge
+    image: ros:foxy-ros1-bridge
     restart: on-failure
     command: ros2 run ros1_bridge dynamic_bridge
 
@@ -33,7 +35,6 @@ services:
       - ../src/rosbot_xl_kinematics:/app/ros2_ws/src/rosbot_xl_kinematics
     command: ros2 launch rosbot_xl_description description.launch.py
     # command: ros2 run rosbot_xl_kinematics classic_kinematics
-    
 
   ros-rplidar:
     image: husarion/rplidar:latest

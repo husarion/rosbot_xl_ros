@@ -1,4 +1,4 @@
-FROM osrf/ros:galactic-desktop
+FROM osrf/ros:foxy-desktop
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]

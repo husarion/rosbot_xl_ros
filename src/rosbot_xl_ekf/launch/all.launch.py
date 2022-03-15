@@ -39,6 +39,15 @@ def generate_launch_description():
             executable="classic_kinematics",
             name="rosbot_xl_classic_kinematics"
         ),
+
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            output='screen',
+            parameters=[os.path.join(get_package_share_directory("rosbot_xl_ekf"), 'config', 'ekf.yaml')],
+            # arguments=['--ros-args', '--log-level', 'DEBUG'],
+        ),
     ])
 
 if __name__ == '__main__':

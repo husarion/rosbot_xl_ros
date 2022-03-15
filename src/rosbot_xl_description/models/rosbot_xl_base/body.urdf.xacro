@@ -45,6 +45,12 @@
       </inertial>
     </link>
 
+    <link name="laser">
+      <inertial>
+        <mass value="0.0000001" />
+        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
 
     <joint name="base_link_to_body_joint" type="fixed">
       <origin xyz="0.0 0.0 ${wheel_diameter/2}" rpy="0.0 0.0 0.0" />
@@ -56,6 +62,12 @@
       <origin xyz="0.0 0.0 0.08345" rpy="0.0 0.0 0.0" />
       <parent link="body_link" />
       <child link="cover_link" />
+    </joint>
+
+    <joint name="cover_to_laser_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.08345" rpy="0.0 3.14 0.0" />
+      <parent link="cover_link" />
+      <child link="laser" />
     </joint>
 
     <joint name="body_link_to_imu_link_joint" type="fixed">

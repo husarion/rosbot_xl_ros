@@ -1,0 +1,5 @@
+services:
+  # ROS Foxy Rviz2 VNC
+  rviz:
+    network_mode: host
+    ipc: host

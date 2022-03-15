@@ -1,9 +1,6 @@
 services:
-  # ROS Foxy Rviz2 VNC
   rviz:
-    image: husarion/rviz2
-    network_mode: host
-    ipc: host
+    image: husarion/rviz2:latest    
     runtime: nvidia
     environment:
       - DISPLAY

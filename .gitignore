@@ -1,4 +1,7 @@
-.vscode
+.vscode/*
+!.vscode/settings_template.json
+.devcontainer/devcontainer.json
+.devcontainer/Dockerfile
 
 # ROS2
 build/

@@ -1,7 +1,7 @@
 services:
-  nav2:
-    network_mode: host
-    ipc: host
+  # nav2:
+  #   network_mode: host
+  #   ipc: host
 
   ros-master:
     network_mode: host

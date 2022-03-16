@@ -28,15 +28,50 @@ class ROSbotXLKinematics(Node):
         self.scale_factor_x = 0.25
         self.scale_factor_y = 0.25
         self.scale_factor_th = 0.125
+
+        self.last_time = self.get_sec()
+        self.get_logger().info("Startup time time = {} [s]".format(self.last_time))
+
         
         self.create_subscription(Twist, "/cmd_vel", self.cmdVelCallback, 1)
         self.create_subscription(JointState, '/motors_response', self.motorsResponseCallback, 1)
 
         self.wheel_vel_pub = self.create_publisher(JointState, '/motors_cmd', 1)
+        self.odom_pub = self.create_publisher(Odometry, "/odom/wheel", 1)
+
+    def get_sec(self):
+        return self.get_clock().now().nanoseconds/10e8
 
     def motorsResponseCallback(self, data):
-        self.get_logger().info("received motors response {}".format(data.velocity[0]))
+        now = self.get_sec()
+        dt_ = now - self.last_time
+        self.last_time = now
 
+        robot_x_pos, robot_y_pos, robot_th_pos = self.inverseKinematics(
+                    data.velocity[0], data.velocity[0], data.velocity[0], data.velocity[0], dt_)
+
+        qx, qy, qz, qw = self.eulerToQuaternion(robot_th_pos, 0, 0)
+
+        self.get_logger().info("received motors response, time diff = {}".format(self.last_time))
+
+        odom_msg = Odometry()
+
+        odom_msg.header.frame_id = "odom"
+        odom_msg.header.stamp = self.get_clock().now().to_msg()
+        odom_msg.pose.pose.position.x = robot_x_pos
+        odom_msg.pose.pose.position.y = robot_y_pos
+        odom_msg.pose.pose.orientation.x = qx
+        odom_msg.pose.pose.orientation.y = qy
+        odom_msg.pose.pose.orientation.z = qz
+        odom_msg.pose.pose.orientation.w = qw
+        odom_msg.twist.twist.linear.x = 0.0
+        odom_msg.twist.twist.linear.y = 0.0
+        odom_msg.twist.twist.linear.z = 0.0
+        odom_msg.twist.twist.angular.x = 0.0
+        odom_msg.twist.twist.angular.y = 0.0
+        odom_msg.twist.twist.angular.z = 0.0
+        self.odom_pub.publish(odom_msg)
+        
 
     def cmdVelCallback(self, data):
         # forward kinematics
@@ -53,7 +88,7 @@ class ROSbotXLKinematics(Node):
         print("not implemented")
         return 1
 
-    def eulerToQuaternion(yaw, pitch, roll):
+    def eulerToQuaternion(self, yaw, pitch, roll):
         qx = math.sin(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) - \
             math.cos(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
         qy = math.cos(roll/2) * math.sin(pitch/2) * math.cos(yaw/2) + \

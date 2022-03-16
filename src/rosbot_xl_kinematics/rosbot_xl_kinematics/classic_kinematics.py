@@ -18,49 +18,6 @@ class ROSbotXLClassic(ROSbotXLKinematics):
 
         self.get_logger().info("Classic Kinematics node Initializad!")
 
-        # pose_publisher = self.create_publisher('pose', Pose, queue_size=1)
-        # pose_msg = Pose()
-        # pose_msg.position.x = 0
-        # pose_msg.position.y = 0
-        # pose_msg.position.z = 0
-        # pose_msg.orientation.x = 0
-        # pose_msg.orientation.y = 0
-        # pose_msg.orientation.z = 0
-        # pose_msg.orientation.w = 1
-
-        # odom_publisher = self.create_publisher('odom/wheel', Odometry, queue_size=1)
-        # odom_msg = Odometry()
-
-        # self.motor_velocity
-
-        # loop_rate = 50
-
-        # if publish_pose == True:
-        #     pose_msg.position.x = robot_x_pos
-        #     pose_msg.position.y = robot_y_pos
-        #     pose_msg.orientation.x = qx
-        #     pose_msg.orientation.y = qy
-        #     pose_msg.orientation.z = qz
-        #     pose_msg.orientation.w = qw
-        #     pose_publisher.publish(pose_msg)
-
-        # if publish_odometry == True:
-        #     odom_msg.header.frame_id = odom_frame
-        #     odom_msg.header.stamp = now
-        #     odom_msg.pose.pose.position.x = robot_x_pos
-        #     odom_msg.pose.pose.position.y = robot_y_pos
-        #     odom_msg.pose.pose.orientation.x = qx
-        #     odom_msg.pose.pose.orientation.y = qy
-        #     odom_msg.pose.pose.orientation.z = qz
-        #     odom_msg.pose.pose.orientation.w = qw
-        #     odom_msg.twist.twist.linear.x = 0
-        #     odom_msg.twist.twist.linear.y = 0
-        #     odom_msg.twist.twist.linear.z = 0
-        #     odom_msg.twist.twist.angular.x = 0
-        #     odom_msg.twist.twist.angular.y = 0
-        #     odom_msg.twist.twist.angular.z = 0
-        #     odom_publisher.publish(odom_msg)
-
 
     def forwardKinematics(self):
         # Classic:

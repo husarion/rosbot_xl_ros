@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef ROSBOT_XL_HARDWARE__VISIBILITY_CONTROL_H_
 #define ROSBOT_XL_HARDWARE__VISIBILITY_CONTROL_H_
 
@@ -49,4 +48,3 @@
 #endif
 
 #endif  // ROSBOT_XL_HARDWARE__VISIBILITY_CONTROL_H_
-

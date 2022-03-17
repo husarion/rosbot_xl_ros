@@ -6,7 +6,6 @@
 #include "rclcpp/logging.hpp"
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
-#include "std_msgs/msg/multi_array_layout.hpp"
 
 namespace rosbot_xl_hardware
 {
@@ -77,9 +76,12 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
       "hardware_node",
       rclcpp::NodeOptions().allow_undeclared_parameters(true).automatically_declare_parameters_from_overrides(true));
 
-  pos_state_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  vel_state_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  vel_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  for (auto& j : info_.joints)
+  {
+    pos_state_[j.name] = std::numeric_limits<double>::quiet_NaN();
+    vel_state_[j.name] = std::numeric_limits<double>::quiet_NaN();
+    vel_commands_[j.name] = std::numeric_limits<double>::quiet_NaN();
+  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -90,9 +92,9 @@ std::vector<StateInterface> RosbotXLSystem::export_state_interfaces()
   for (auto i = 0u; i < info_.joints.size(); i++)
   {
     state_interfaces.emplace_back(
-        StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &pos_state_[i]));
-    state_interfaces.emplace_back(
-        hardware_interface::StateInterface(info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[i]));
+        StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &pos_state_[info_.joints[i].name]));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[info_.joints[i].name]));
   }
 
   return state_interfaces;
@@ -104,7 +106,7 @@ std::vector<CommandInterface> RosbotXLSystem::export_command_interfaces()
   for (auto i = 0u; i < info_.joints.size(); i++)
   {
     command_interfaces.emplace_back(hardware_interface::CommandInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_commands_[i]));
+        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_commands_[info_.joints[i].name]));
   }
 
   return command_interfaces;
@@ -114,12 +116,12 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
 {
   RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Starting");
 
-  motor_command_publisher_ = node_->create_publisher<Float64MultiArray>("~/motor/command", rclcpp::SystemDefaultsQoS());
+  motor_command_publisher_ = node_->create_publisher<JointState>("~/motors_cmd", rclcpp::SystemDefaultsQoS());
   realtime_motor_command_publisher_ =
-      std::make_shared<realtime_tools::RealtimePublisher<std_msgs::msg::Float64MultiArray>>(motor_command_publisher_);
+      std::make_shared<realtime_tools::RealtimePublisher<JointState>>(motor_command_publisher_);
 
-  motor_state_subscriber_ = node_->create_subscription<Float64MultiArray>(
-      "~/motors/state", rclcpp::SystemDefaultsQoS(), [this](const std::shared_ptr<Float64MultiArray> msg) -> void {
+  motor_state_subscriber_ = node_->create_subscription<JointState>(
+      "~/motors_response", rclcpp::SystemDefaultsQoS(), [this](const std::shared_ptr<JointState> msg) -> void {
         if (!subscriber_is_active_)
         {
           RCLCPP_WARN(node_->get_logger(), "Can't accept new commands. subscriber is inactive");
@@ -167,13 +169,19 @@ CallbackReturn RosbotXLSystem::on_error(const rclcpp_lifecycle::State&)
 
 return_type RosbotXLSystem::read()
 {
-  std::shared_ptr<Float64MultiArray> motor_state;
+  std::shared_ptr<JointState> motor_state;
   received_motor_state_msg_ptr_.get(motor_state);
 
-  for (auto i = 0u; i < motor_state->layout.dim[0].size / 2; i++)
+  for (auto i = 0u; i < motor_state->name.size(); i++)
   {
-    pos_state_[i] = motor_state->data[i];
-    vel_state_[i] = motor_state->data[i + motor_state->layout.dim[0].size / 2];
+    if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
+        vel_state_.find(motor_state->name[i]) == vel_state_.end())
+    {
+      return return_type::ERROR;
+    }
+
+    pos_state_[motor_state->name[i]] = motor_state->position[i];
+    vel_state_[motor_state->name[i]] = motor_state->velocity[i];
   }
 
   return return_type::OK;
@@ -184,15 +192,11 @@ return_type RosbotXLSystem::write()
   if (realtime_motor_command_publisher_->trylock())
   {
     auto& motor_command = realtime_motor_command_publisher_->msg_;
-    // motor_command.layout.dim = new std_msgs::msg::MultiArrayDimension;
-    // motor_command.layout.dim[0].label = "control_signal";
-    // motor_command.layout.dim[0].size = vel_commands_.size();
-    // motor_command.layout.dim[0].size = vel_commands_.size();
-    // motor_command.layout.data_offset = 0u;
 
-    for (auto i = 0u; i < vel_commands_.size(); i++)
+    for (auto const& v : vel_commands_)
     {
-      motor_command.data[i] = vel_commands_[i];
+      motor_command.name.push_back(v.first);
+      motor_command.velocity.push_back(v.second);
     }
 
     realtime_motor_command_publisher_->unlockAndPublish();

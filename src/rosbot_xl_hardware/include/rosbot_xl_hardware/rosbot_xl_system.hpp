@@ -15,7 +15,7 @@
 #include "realtime_tools/realtime_buffer.h"
 #include "realtime_tools/realtime_publisher.h"
 
-#include "std_msgs/msg/float64_multi_array.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 namespace rosbot_xl_hardware
 {
@@ -24,7 +24,7 @@ using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface
 using StateInterface = hardware_interface::StateInterface;
 using CommandInterface = hardware_interface::CommandInterface;
 
-using Float64MultiArray = std_msgs::msg::Float64MultiArray;
+using JointState = sensor_msgs::msg::JointState;
 
 class RosbotXLSystem : public hardware_interface::SystemInterface
 {
@@ -65,17 +65,17 @@ public:
   return_type write() override;
 
 protected:
-  realtime_tools::RealtimeBox<std::shared_ptr<Float64MultiArray>> received_motor_state_msg_ptr_{ nullptr };
+  realtime_tools::RealtimeBox<std::shared_ptr<JointState>> received_motor_state_msg_ptr_{ nullptr };
 
-  std::shared_ptr<rclcpp::Publisher<Float64MultiArray>> motor_command_publisher_ = nullptr;
+  std::shared_ptr<rclcpp::Publisher<JointState>> motor_command_publisher_ = nullptr;
 
-  std::shared_ptr<realtime_tools::RealtimePublisher<Float64MultiArray>> realtime_motor_command_publisher_ = nullptr;
+  std::shared_ptr<realtime_tools::RealtimePublisher<JointState>> realtime_motor_command_publisher_ = nullptr;
 
-  rclcpp::Subscription<Float64MultiArray>::SharedPtr motor_state_subscriber_ = nullptr;
+  rclcpp::Subscription<JointState>::SharedPtr motor_state_subscriber_ = nullptr;
 
-  std::vector<double> vel_commands_;
-  std::vector<double> pos_state_;
-  std::vector<double> vel_state_;
+  std::map<std::string, double> vel_commands_;
+  std::map<std::string, double> pos_state_;
+  std::map<std::string, double> vel_state_;
 
   bool subscriber_is_active_ = false;
 

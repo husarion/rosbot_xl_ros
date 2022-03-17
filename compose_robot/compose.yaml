@@ -1,6 +1,7 @@
 services:
   nav2:
-    image: husarion/nav2:galactic-latest
+    # image: husarion/nav2:galactic-latest
+    build: ./nav2_mod/
     restart: on-failure
     logging:
         driver: none

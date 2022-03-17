@@ -12,6 +12,8 @@
         "--env=NVIDIA_VISIBLE_DEVICES=all",
         "--env=NVIDIA_DRIVER_CAPABILITIES=all",
     ],
+    // assuming that directory structure on host is ros2_ws/src/rosbot_xl_ros
+    // when mounting whole workspace it won't be necessary to rebuild it every time
     "workspaceMount": "src=${localWorkspaceFolder}/../..,dst=/home/husarion/ros2_ws/,type=bind",
     "workspaceFolder": "/home/husarion/ros2_ws/src/rosbot_xl_ros",
     "extensions": [

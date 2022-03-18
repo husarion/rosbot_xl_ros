@@ -1,0 +1,69 @@
+# Quick Start (at fist stop ROS Master if working on host)
+# $ docker compose -f compose.husarnet.rosbot.yaml up
+
+version: "2.3"
+
+services:
+  nav2:
+    image: husarion/nav2:galactic-latest
+    restart: on-failure
+    network_mode: service:husarnet
+    ipc: host
+    volumes:
+      - ./cyclonedds.xml:/cyclonedds.xml
+    environment:
+      - CYCLONEDDS_URI=file:///cyclonedds.xml
+    command: ros2 launch husarion_nav2 bringup_both.launch.py
+
+  rosbot_xl:
+    image: compose_robot_rosbot_xl
+    network_mode: service:husarnet
+    ipc: host
+    volumes:
+      - ./cyclonedds.xml:/cyclonedds.xml
+    environment:
+      - CYCLONEDDS_URI=file:///cyclonedds.xml
+    command: ros2 launch rosbot_xl_bringup all.launch.py
+    
+  # ROS Noetic + ROS 2 Galactic
+  bridge:
+    image: ros:galactic-ros1-bridge
+    restart: on-failure
+    network_mode: service:husarnet
+    volumes:
+      - ./cyclonedds.xml:/cyclonedds.xml
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+      - CYCLONEDDS_URI=file:///cyclonedds.xml
+    command: ros2 run ros1_bridge dynamic_bridge
+
+  # ROS Master (using custom port in case Master is already running on host OS)
+  ros-master:
+    image: ros:melodic-ros-core
+    restart: on-failure
+    command: stdbuf -o L roscore
+
+  # ROS Melodic Rplidar
+  rplidar:
+    image: husarion/rplidar:latest
+    restart: on-failure
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+    devices:
+      - /dev/ttyUSB0
+    command: roslaunch rplidar_ros rplidar_s1.launch --wait
+
+  husarnet:
+    image: husarnet/husarnet
+    restart: on-failure
+    volumes:
+      - /var/lib/husarnet  # This will persist your Husarnet Client keys, thus IP of the container will be stable/the same between (re)boots
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0  # Husarnet is using IPv6 for the internal connections
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      - HOSTNAME=rosbot
+      - JOINCODE= fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/ztsyNChyt3wnxWjeaMSwKM 

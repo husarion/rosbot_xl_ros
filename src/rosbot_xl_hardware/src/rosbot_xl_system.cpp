@@ -15,62 +15,46 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
   {
     return CallbackReturn::ERROR;
   }
-  // catch (const std::exception & e) {
-  //   fprintf(stderr, "Exception thrown during init stage with message: %s \n", e.what());
-  //   RCLCPP_FATAL(
-  //     rclcpp::get_logger("RosbotXLSystem"),
-  //     "Exception thrown during init stage with message: %s \n", e.what());
-  //   return CallbackReturn::ERROR;
-  // }
 
-  // for (const hardware_interface::ComponentInfo & joint : info_.joints)
-  // {
-  //   // DiffBotSystem has exactly two states and one command interface on each joint
-  //   if (joint.command_interfaces.size() != 1)
-  //   {
-  //     RCLCPP_FATAL(
-  //       rclcpp::g  is_halted = false;et_logger("RosbotXLSystem"),
-  //       "Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
-  //       joint.command_interfaces.size());
-  //     return CallbackReturn::ERROR;
-  //   }
+  for (const hardware_interface::ComponentInfo& joint : info_.joints)
+  {
+    if (joint.command_interfaces.size() != 1)
+    {
+      RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"), "Joint '%s' has %zu command interfaces found. 1 expected.",
+                   joint.name.c_str(), joint.command_interfaces.size());
+      return CallbackReturn::ERROR;
+    }
 
-  //   if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
-  //   {
-  //     RCLCPP_FATAL(
-  //       rclcpp::get_logger("RosbotXLSystem"),
-  //       "Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
-  //       joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-  //     return CallbackReturn::ERROR;
-  //   }
+    if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
+    {
+      RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"), "Joint '%s' have %s command interfaces found. '%s' expected.",
+                   joint.name.c_str(), joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+      return CallbackReturn::ERROR;
+    }
 
-  //   if (joint.state_interfaces.size() != 2)
-  //   {
-  //     RCLCPP_FATAL(
-  //       rclcpp::get_logger("RosbotXLSystem"),
-  //       "Joint '%s' has %zu state interface. 2 expected.", joint.name.c_str(),
-  //       joint.state_interfaces.size());
-  //     return CallbackReturn::ERROR;
-  //   }
+    if (joint.state_interfaces.size() != 2)
+    {
+      RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"), "Joint '%s' has %zu state interface. 2 expected.",
+                   joint.name.c_str(), joint.state_interfaces.size());
+      return CallbackReturn::ERROR;
+    }
 
-  //   if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
-  //   {
-  //     RCLCPP_FATAL(
-  //       rclcpp::get_logger("RosbotXLSystem"),
-  //       "Joint '%s' have '%s' as first state interface. '%s' expected.", joint.name.c_str(),
-  //       joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-  //     return CallbackReturn::ERROR;
-  //   }
+    if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
+    {
+      RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"),
+                   "Joint '%s' have '%s' as first state interface. '%s' expected.", joint.name.c_str(),
+                   joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
+      return CallbackReturn::ERROR;
+    }
 
-  //   if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
-  //   {
-  //     RCLCPP_FATAL(
-  //       rclcpp::get_logger("RosbotXLSystem"),
-  //       "Joint '%s' have '%s' as second state interface. '%s' expected.", joint.name.c_str(),
-  //       joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-  //     return CallbackReturn::ERROR;
-  //   }
-  // }
+    if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
+    {
+      RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"),
+                   "Joint '%s' have '%s' as second state interface. '%s' expected.", joint.name.c_str(),
+                   joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+      return CallbackReturn::ERROR;
+    }
+  }
 
   node_ = std::make_shared<rclcpp::Node>(
       "hardware_node",
@@ -114,7 +98,7 @@ std::vector<CommandInterface> RosbotXLSystem::export_command_interfaces()
 
 CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
 {
-  RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Starting");
+  RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Configuring...");
 
   motor_command_publisher_ = node_->create_publisher<JointState>("~/motors_cmd", rclcpp::SystemDefaultsQoS());
   realtime_motor_command_publisher_ =
@@ -129,6 +113,8 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
         }
         received_motor_state_msg_ptr_.set(std::move(msg));
       });
+
+  RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Successfully configured");
 
   return CallbackReturn::SUCCESS;
 }

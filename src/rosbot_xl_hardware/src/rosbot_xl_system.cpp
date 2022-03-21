@@ -158,6 +158,11 @@ return_type RosbotXLSystem::read()
   std::shared_ptr<JointState> motor_state;
   received_motor_state_msg_ptr_.get(motor_state);
 
+  if (!motor_state)
+  {
+    return return_type::ERROR;
+  }
+
   for (auto i = 0u; i < motor_state->name.size(); i++)
   {
     if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||

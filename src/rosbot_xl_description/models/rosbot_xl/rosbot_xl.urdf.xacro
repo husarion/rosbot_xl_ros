@@ -2,6 +2,7 @@
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="use_sim" default="false" />
+  <!-- Why are we adding husarion namespace here? -->
   <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/rosbot_xl_macro.urdf.xacro" ns="husarion" />
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" />
 

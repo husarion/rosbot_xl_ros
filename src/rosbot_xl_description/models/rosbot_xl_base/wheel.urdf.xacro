@@ -8,6 +8,9 @@
     <xacro:property name="wheel_separation_y" value="0.236" />
     <xacro:property name="wheel_thickness" value="0.032" />
 
+    <!-- for ros2_control -->
+    <xacro:property name="wheel_separation" value="${wheel_separation_x}" />
+
     <xacro:if value="${prefix == 'front_left'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />

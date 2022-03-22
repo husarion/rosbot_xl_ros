@@ -1,9 +1,0 @@
- 
-services:
-  rviz:
-    image: husarion/ros2-desktop-vnc:latest
-    volumes:
-      - ./config.rviz:/root/.rviz2/default.rviz
-    ports: 
-      - 6080:80
-    shm_size: '512m'

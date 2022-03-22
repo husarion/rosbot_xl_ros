@@ -1,6 +1,0 @@
-services:  
-  microros:
-    image: husarion/micro-ros-agent
-    ports:
-      - "8888:8888/udp"
-    command: udp4 --port 8888

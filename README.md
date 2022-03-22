@@ -4,13 +4,31 @@ ROS2 packages for ROSbot XL.
 
 # Docker configurations
 
-## [hardware](./hardware)
+## Instructions: How to run software on [real_robot](./compose_robot)
 
-Hardware configuration requires two docker containers running. First one is custom Husarion microros agent docker. Second is responsible for packages such as URDF model and EKF configuration.
+Connect to robot remotely:
 
 ``` bash
-cd hardware
+ssh ubuntu@<robot_ip>
+```
+
+Start docker containers:
+
+``` bash
+cd rosbot_xl_ros/compose_robot/
 docker compose up
+```
+
+**Important: for now it is required to reset powerboard manualy**
+
+On PC:
+
+Launch web browser and connect to: `http://<robot_ip>:6080/`
+
+Open terminal isnside vnc and run rviz
+
+``` bash
+rviz2 rvzi2
 ```
 
 ## [simulation](./simulation)

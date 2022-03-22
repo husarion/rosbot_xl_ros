@@ -2,7 +2,7 @@ services:
   nav2:
     # image: husarion/nav2:galactic-latest
     build: ./nav2_mod/
-    restart: on-failure
+    restart: unless-stopped
     logging:
         driver: none
     environment:
@@ -15,23 +15,31 @@ services:
 
   ros-master:
     image: ros:melodic-ros-core
-    restart: on-failure
+    restart: unless-stopped
+    environment:
+      - "ROS_IP=ros-master"
     command: roscore
 
   bridge:
-    image: ros:foxy-ros1-bridge
-    restart: on-failure
+    image: ros:galactic-ros1-bridge
+    restart: unless-stopped
+    environment:
+      - "ROS_IP=bridge"
+      - "ROS_MASTER_URI=http://ros-master:11311"
     command: ros2 run ros1_bridge dynamic_bridge
 
   microros:
     image: husarion/micro-ros-agent
+    restart: unless-stopped
+    ports:
+      - "8888:8888/udp"
     command: udp4 --port 8888
 
   rosbot_xl:
     build:
       context: ./../
       dockerfile: ./compose_robot/Dockerfile
-    container_name: rosbot_xl_ros
+    restart: unless-stopped
     volumes:
       - ../src/rosbot_xl_bringup:/app/ros2_ws/src/rosbot_xl_bringup
       - ../src/rosbot_xl_description:/app/ros2_ws/src/rosbot_xl_description
@@ -42,7 +50,20 @@ services:
 
   ros-rplidar:
     image: husarion/rplidar:latest
+    restart: unless-stopped
     tty: true
     devices:
       - /dev/ttyUSB0
+    environment:
+      - "ROS_IP=ros-rplidar"
+      - "ROS_MASTER_URI=http://ros-master:11311"
     command: roslaunch rplidar_ros rplidar_s1.launch --wait
+
+  rviz:
+    image: husarion/ros2-desktop-vnc:latest
+    restart: unless-stopped
+    volumes:
+      - ./rviz_docker_config/rbxl.rviz:/root/.rviz2/default.rviz
+    ports: 
+      - 6080:80
+    shm_size: '512m'

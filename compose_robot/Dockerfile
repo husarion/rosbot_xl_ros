@@ -1,4 +1,4 @@
-FROM ros:galactic-ros-base
+FROM ros:foxy-ros-base
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -11,12 +11,6 @@ RUN apt update && apt upgrade -y \
     ros-$ROS_DISTRO-robot-localization \
     ros-$ROS_DISTRO-teleop-twist-keyboard \
     ros-$ROS_DISTRO-xacro
-
-RUN apt install -y ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    &&  apt remove -y ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-    &&  apt autoremove -y
-
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 # install everything inside /app folder
 WORKDIR /app

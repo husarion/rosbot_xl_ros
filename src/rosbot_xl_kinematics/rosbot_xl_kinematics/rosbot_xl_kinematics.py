@@ -30,7 +30,7 @@ class ROSbotXLKinematics(Node):
         self.scale_factor_th = 0.125
 
         self.last_time = self.get_sec()
-        self.get_logger().info("Startup time time = {} [s]".format(self.last_time))
+        # self.get_logger().info("Startup time time = {} [s]".format(self.last_time))
 
         
         self.create_subscription(Twist, "/cmd_vel", self.cmdVelCallback, 1)
@@ -48,15 +48,15 @@ class ROSbotXLKinematics(Node):
         self.last_time = now
 
         robot_x_pos, robot_y_pos, robot_th_pos = self.inverseKinematics(
-                    data.velocity[0], data.velocity[0], data.velocity[0], data.velocity[0], dt_)
+                    data.velocity[0], data.velocity[1], data.velocity[2], data.velocity[3], dt_)
 
         qx, qy, qz, qw = self.eulerToQuaternion(robot_th_pos, 0, 0)
 
-        self.get_logger().info("received motors response, time diff = {}".format(self.last_time))
+        # self.get_logger().info("received motors response, time diff = {}".format(self.last_time))
 
         odom_msg = Odometry()
 
-        odom_msg.header.frame_id = "odom"
+        odom_msg.header.frame_id = 'odom'
         odom_msg.header.stamp = self.get_clock().now().to_msg()
         odom_msg.pose.pose.position.x = robot_x_pos
         odom_msg.pose.pose.position.y = robot_y_pos

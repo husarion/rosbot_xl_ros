@@ -38,19 +38,19 @@ def generate_launch_description():
             name="rosbot_xl_classic_kinematics"
         ),
 
-        # Node(
-        #     package='robot_localization',
-        #     executable='ekf_node',
-        #     name='ekf_filter_node',
-        #     output='screen',
-        #     parameters=[os.path.join(get_package_share_directory("rosbot_xl_ekf"), 'config', 'ekf.yaml')],
-        #     # arguments=['--ros-args', '--log-level', 'DEBUG'],
-        # ),
-
-        Node(package = "tf2_ros", 
-            executable = "static_transform_publisher",
-            arguments = ["0", "0", "0", "0", "0", "0", "odom", "base_link"]        
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            output='screen',
+            parameters=[os.path.join(get_package_share_directory("rosbot_xl_ekf"), 'config', 'ekf.yaml')],
+            # arguments=['--ros-args', '--log-level', 'DEBUG'],
         ),
+
+        # Node(package = "tf2_ros", 
+        #     executable = "static_transform_publisher",
+        #     arguments = ["0", "0", "0", "0", "0", "0", "odom", "base_link"]        
+        # ),
     ])
 
 if __name__ == '__main__':

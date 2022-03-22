@@ -1,4 +1,4 @@
-FROM ros:foxy-ros-base
+FROM ros:galactic-ros-base
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]

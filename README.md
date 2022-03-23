@@ -4,7 +4,7 @@ ROS2 packages for ROSbot XL.
 
 # Docker configurations
 
-## Instructions: How to run software on [real_robot](./compose_robot)
+## Instructions: How to run software on [real_robot](./docker)
 
 Connect to robot remotely:
 
@@ -15,7 +15,7 @@ ssh ubuntu@<robot_ip>
 Start docker containers:
 
 ``` bash
-cd rosbot_xl_ros/compose_robot/
+cd rosbot_xl_ros/docker/
 docker compose up
 ```
 

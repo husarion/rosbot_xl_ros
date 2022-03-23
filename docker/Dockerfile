@@ -12,12 +12,6 @@ RUN apt update && apt upgrade -y \
     ros-$ROS_DISTRO-teleop-twist-keyboard \
     ros-$ROS_DISTRO-xacro
 
-RUN apt install -y ros-$ROS_DISTRO-rmw-fastrtps-cpp \
-    &&  apt remove -y ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-    &&  apt autoremove -y
-
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-
 # install everything inside /app folder
 WORKDIR /app
 
@@ -25,6 +19,7 @@ WORKDIR /app
 RUN mkdir -p ros2_ws/src
 
 # copy packages
+COPY ./src/rosbot_xl_bringup /app/ros2_ws/src/rosbot_xl_bringup
 COPY ./src/rosbot_xl_ekf /app/ros2_ws/src/rosbot_xl_ekf
 # COPY ./src/rosbot_xl_hardware /app/ros2_ws/src/rosbot_xl_hardware
 COPY ./src/rosbot_xl_description /app/ros2_ws/src/rosbot_xl_description
@@ -41,7 +36,7 @@ RUN apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # replace entrypoint
-COPY ./compose_robot/ros_entrypoint.sh /
+COPY ./docker/ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 

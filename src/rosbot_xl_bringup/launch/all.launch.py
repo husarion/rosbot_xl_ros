@@ -11,9 +11,7 @@ def generate_launch_description():
     rosbot_xl_description = get_package_share_directory('rosbot_xl_description')
     xacro_file = os.path.join(rosbot_xl_description, 'models', 'rosbot_xl', 'rosbot_xl.urdf.xacro')
 
-
-    print(xacro_file)
-
+    # print(xacro_file)
 
     return LaunchDescription([
         Node(
@@ -39,6 +37,20 @@ def generate_launch_description():
             executable="classic_kinematics",
             name="rosbot_xl_classic_kinematics"
         ),
+
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            output='screen',
+            parameters=[os.path.join(get_package_share_directory("rosbot_xl_ekf"), 'config', 'ekf.yaml')],
+            # arguments=['--ros-args', '--log-level', 'DEBUG'],
+        ),
+
+        # Node(package = "tf2_ros", 
+        #     executable = "static_transform_publisher",
+        #     arguments = ["0", "0", "0", "0", "0", "0", "odom", "base_link"]        
+        # ),
     ])
 
 if __name__ == '__main__':

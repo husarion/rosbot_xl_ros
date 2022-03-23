@@ -37,7 +37,7 @@ services:
   rosbot_xl:
     build:
       context: ./../
-      dockerfile: ./compose_robot/Dockerfile
+      dockerfile: ./docker/Dockerfile
     restart: unless-stopped
     volumes:
       - ../src/rosbot_xl_bringup:/app/ros2_ws/src/rosbot_xl_bringup

@@ -36,7 +36,7 @@ RUN apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # replace entrypoint
-COPY ./compose_robot/ros_entrypoint.sh /
+COPY ./docker/ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
 

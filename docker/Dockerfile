@@ -8,9 +8,7 @@ RUN apt update && apt upgrade -y \
     && apt install -y \
     python3-pip \
     python3-colcon-common-extensions \
-    ros-$ROS_DISTRO-robot-localization \
-    ros-$ROS_DISTRO-teleop-twist-keyboard \
-    ros-$ROS_DISTRO-xacro
+    ros-$ROS_DISTRO-teleop-twist-keyboard
 
 # install everything inside /app folder
 WORKDIR /app
@@ -21,7 +19,7 @@ RUN mkdir -p ros2_ws/src
 # copy packages
 COPY ./src/rosbot_xl_bringup /app/ros2_ws/src/rosbot_xl_bringup
 COPY ./src/rosbot_xl_ekf /app/ros2_ws/src/rosbot_xl_ekf
-# COPY ./src/rosbot_xl_hardware /app/ros2_ws/src/rosbot_xl_hardware
+COPY ./src/rosbot_xl_hardware /app/ros2_ws/src/rosbot_xl_hardware
 COPY ./src/rosbot_xl_description /app/ros2_ws/src/rosbot_xl_description
 COPY ./src/rosbot_xl_kinematics /app/ros2_ws/src/rosbot_xl_kinematics
 
@@ -29,8 +27,9 @@ COPY ./src/rosbot_xl_kinematics /app/ros2_ws/src/rosbot_xl_kinematics
 RUN cd ros2_ws \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && rosdep update --rosdistro $ROS_DISTRO \
+    && rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y \
     && colcon build --symlink-install
-    
+
 # clear ubuntu packages
 RUN apt clean && \
     rm -rf /var/lib/apt/lists/*

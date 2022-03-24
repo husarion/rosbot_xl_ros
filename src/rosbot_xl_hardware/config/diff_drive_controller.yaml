@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 50 # Hz
+    update_rate: 25 # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -12,11 +12,9 @@ rosbot_xl_base_controller:
     left_wheel_names: ["front_left_wheel_joint", "rear_left_wheel_joint"]
     right_wheel_names: ["front_right_wheel_joint", "rear_right_wheel_joint"]
 
-    # Should be in urdf
-    # wheel_separation: 0.10
-    # wheel_radius: 0.015
+    wheel_separation: 0.252
+    wheel_radius: 0.05
 
-    # TODO: confirm it (if it should be like that for skid kinematics)
     wheel_separation_multiplier: 1.5
     left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0
@@ -27,7 +25,12 @@ rosbot_xl_base_controller:
     pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
 
-    open_loop: true
+    # Whether to use feedback or commands for odometry calculations
+    # (feedback is not working correctly yet)
+    open_loop: false
+
+    # Update odometry from velocities instead of positions
+    position_feedback: false
     enable_odom_tf: false
 
     cmd_vel_timeout: 0.5
@@ -42,11 +45,11 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 1.0 # m/s
-        min_velocity: -1.0 # m/s
-        max_acceleration: 1.0 # m/s^2
+        max_velocity: 0.5 # m/s
+        # min_velocity -  When unspecified, -max_velocity is used
+        max_acceleration: 0.25 # m/s^2
+        # min_acceleration - When unspecified, -max_acceleration is used.
         max_jerk: 0.0 # m/s^3
-        min_jerk: 0.0 # m/s^3
 
     angular:
       z:
@@ -54,8 +57,7 @@ rosbot_xl_base_controller:
         has_acceleration_limits: true
         has_jerk_limits: false
         max_velocity: 1.0 # rad/s
-        min_velocity: -1.0 # rad/s
-        max_acceleration: 1.0 # rad/s^2
-        min_acceleration: -1.0 # rad/s^2
+        # min_velocity -  When unspecified, -max_velocity is used
+        max_acceleration: 4.0 # rad/s^2
+        # min_acceleration - When unspecified, -max_acceleration is used.
         max_jerk: 0.0 # rad/s^3
-        min_jerk: 0.0 # rad/s^3

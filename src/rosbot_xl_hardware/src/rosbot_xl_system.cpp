@@ -62,6 +62,8 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
 
   for (auto& j : info_.joints)
   {
+    RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Joint '%s' found", j.name.c_str());
+
     pos_state_[j.name] = std::numeric_limits<double>::quiet_NaN();
     vel_state_[j.name] = std::numeric_limits<double>::quiet_NaN();
     vel_commands_[j.name] = std::numeric_limits<double>::quiet_NaN();
@@ -122,6 +124,14 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
 CallbackReturn RosbotXLSystem::on_activate(const rclcpp_lifecycle::State&)
 {
   // method where hardware “power” is enabled.
+
+  for (auto& j : info_.joints)
+  {
+    pos_state_[j.name] = 0.0;
+    vel_state_[j.name] = 0.0;
+    vel_commands_[j.name] = 0.0;
+  }
+
   subscriber_is_active_ = true;
 
   RCLCPP_DEBUG(node_->get_logger(), "Subscriber and publisher are now active.");
@@ -158,40 +168,98 @@ return_type RosbotXLSystem::read()
   std::shared_ptr<JointState> motor_state;
   received_motor_state_msg_ptr_.get(motor_state);
 
+  RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Reading motors state");
+
   if (!motor_state)
   {
-    return return_type::ERROR;
+    // returning ERROR causes controller to freeze
+    return return_type::OK;
   }
 
-  for (auto i = 0u; i < motor_state->name.size(); i++)
+  // Temporal solution for current firmware - BEGIN
+  std::vector<std::string> names = { "rear_right_wheel_joint", "rear_left_wheel_joint", "front_right_wheel_joint",
+                                     "front_left_wheel_joint" };
+
+  for (auto i = 0u; i < motor_state->velocity.size(); i++)
   {
-    if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
-        vel_state_.find(motor_state->name[i]) == vel_state_.end())
-    {
-      return return_type::ERROR;
-    }
-
-    pos_state_[motor_state->name[i]] = motor_state->position[i];
-    vel_state_[motor_state->name[i]] = motor_state->velocity[i];
+    vel_state_[names[i]] = motor_state->velocity[i];
   }
+  // Temporal solution for current firmware - END
+
+  // Target solution (after changes in firmware) - BEING
+  // for (auto i = 0u; i < motor_state->name.size(); i++)
+  // {
+  //   if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
+  //       vel_state_.find(motor_state->name[i]) == vel_state_.end())
+  //   {
+  //     return return_type::ERROR;
+  //   }
+
+  //   pos_state_[motor_state->name[i]] = motor_state->position[i];
+  //   vel_state_[motor_state->name[i]] = motor_state->velocity[i];
+  // }
+  // Target solution (after changes in firmware) - END
 
   return return_type::OK;
 }
 
 return_type RosbotXLSystem::write()
 {
+  // Temporal solution for current firmware - BEGIN
+  // names are ignored
+  // 1 - rear right - M1
+  // 2 - rear left - M2
+  // 3 - front right - M3
+  // 4 - front left - M4
+
+  std::map<std::string, int> remapping;
+  remapping["rear_right_wheel_joint"] = 0;
+  remapping["rear_left_wheel_joint"] = 1;
+  remapping["front_right_wheel_joint"] = 2;
+  remapping["front_left_wheel_joint"] = 3;
+
   if (realtime_motor_command_publisher_->trylock())
   {
     auto& motor_command = realtime_motor_command_publisher_->msg_;
+    motor_command.name.clear();
+    motor_command.velocity.clear();
+
+    RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Wrtiting motors cmd message");
+
+    for (int i = 0; i < 4; ++i)
+    {
+      motor_command.name.push_back("");
+      motor_command.velocity.push_back(0.0);
+    }
 
     for (auto const& v : vel_commands_)
     {
-      motor_command.name.push_back(v.first);
-      motor_command.velocity.push_back(v.second);
+      motor_command.velocity[remapping[v.first]] = v.second;
     }
 
     realtime_motor_command_publisher_->unlockAndPublish();
   }
+  // Temporal solution for current firmware - END
+
+  // Target solution (after changes in firmware) - BEGIN
+  // if (realtime_motor_command_publisher_->trylock())
+  // {
+  //   auto& motor_command = realtime_motor_command_publisher_->msg_;
+  //   motor_command.name.clear();
+  //   motor_command.velocity.clear();
+
+  //   RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Wrtiting motors cmd message");
+
+  //   for (auto const& v : vel_commands_)
+  //   {
+  //     motor_command.name.push_back(v.first);
+  //     motor_command.velocity.push_back(v.second);
+
+  //   }
+
+  //   realtime_motor_command_publisher_->unlockAndPublish();
+  // }
+  // Target solution (after changes in firmware) - END
 
   return return_type::OK;
 }

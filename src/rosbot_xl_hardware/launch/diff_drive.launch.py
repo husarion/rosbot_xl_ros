@@ -50,11 +50,15 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
-        # arguments=["--ros-args", "--log-level", "debug"],
         output={
             "stdout": "screen",
             "stderr": "screen",
         },
+        remappings=[
+            ("~/motors_cmd", "/motors_cmd"),
+            ("~/motors_response", "/motors_response"),
+            ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
+        ],
     )
 
     robot_state_pub_node = Node(
@@ -62,9 +66,6 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[robot_description],
-        remappings=[
-            ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
-        ],
     )
 
     joint_state_broadcaster_spawner = Node(

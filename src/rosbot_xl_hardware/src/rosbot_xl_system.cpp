@@ -106,19 +106,30 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
   realtime_motor_command_publisher_ =
       std::make_shared<realtime_tools::RealtimePublisher<JointState>>(motor_command_publisher_);
 
-  motor_state_subscriber_ = node_->create_subscription<JointState>(
-      "~/motors_response", rclcpp::SystemDefaultsQoS(), [this](const std::shared_ptr<JointState> msg) -> void {
-        if (!subscriber_is_active_)
-        {
-          RCLCPP_WARN(node_->get_logger(), "Can't accept new commands. subscriber is inactive");
-          return;
-        }
-        received_motor_state_msg_ptr_.set(std::move(msg));
-      });
+  motor_state_subscriber_ =
+      node_->create_subscription<JointState>("~/motors_response", rclcpp::SystemDefaultsQoS(),
+                                             std::bind(&RosbotXLSystem::motor_state_cb, this, std::placeholders::_1));
 
   RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Successfully configured");
 
+  executor_.add_node(node_);
+  executor_thread_ =
+      std::make_unique<std::thread>(std::bind(&rclcpp::executors::MultiThreadedExecutor::spin, &executor_));
+
   return CallbackReturn::SUCCESS;
+}
+
+void RosbotXLSystem::motor_state_cb(const std::shared_ptr<JointState> msg)
+{
+  RCLCPP_DEBUG(node_->get_logger(), "Received motors response");
+
+  if (!subscriber_is_active_)
+  {
+    RCLCPP_WARN(node_->get_logger(), "Can't accept new commands. subscriber is inactive");
+    return;
+  }
+
+  received_motor_state_msg_ptr_.set(std::move(msg));
 }
 
 CallbackReturn RosbotXLSystem::on_activate(const rclcpp_lifecycle::State&)
@@ -172,52 +183,33 @@ return_type RosbotXLSystem::read()
 
   if (!motor_state)
   {
+    RCLCPP_ERROR(rclcpp::get_logger("RosbotXLSystem"), "Feedback message from motors wasn't yet received");
     // returning ERROR causes controller to freeze
     return return_type::OK;
   }
 
-  // Temporal solution for current firmware - BEGIN
-  std::vector<std::string> names = { "rear_right_wheel_joint", "rear_left_wheel_joint", "front_right_wheel_joint",
-                                     "front_left_wheel_joint" };
-
-  for (auto i = 0u; i < motor_state->velocity.size(); i++)
+  for (auto i = 0u; i < motor_state->name.size(); i++)
   {
-    vel_state_[names[i]] = motor_state->velocity[i];
+    if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
+        vel_state_.find(motor_state->name[i]) == vel_state_.end())
+    {
+      RCLCPP_ERROR(rclcpp::get_logger("RosbotXLSystem"), "Position or velocity feedback not found for joint %s",
+                   motor_state->name[i].c_str());
+      return return_type::ERROR;
+    }
+
+    pos_state_[motor_state->name[i]] = motor_state->position[i];
+    vel_state_[motor_state->name[i]] = motor_state->velocity[i];
+
+    RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Position feedback: %f, velocity feedback: %f",
+                 pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);
   }
-  // Temporal solution for current firmware - END
-
-  // Target solution (after changes in firmware) - BEING
-  // for (auto i = 0u; i < motor_state->name.size(); i++)
-  // {
-  //   if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
-  //       vel_state_.find(motor_state->name[i]) == vel_state_.end())
-  //   {
-  //     return return_type::ERROR;
-  //   }
-
-  //   pos_state_[motor_state->name[i]] = motor_state->position[i];
-  //   vel_state_[motor_state->name[i]] = motor_state->velocity[i];
-  // }
-  // Target solution (after changes in firmware) - END
 
   return return_type::OK;
 }
 
 return_type RosbotXLSystem::write()
 {
-  // Temporal solution for current firmware - BEGIN
-  // names are ignored
-  // 1 - rear right - M1
-  // 2 - rear left - M2
-  // 3 - front right - M3
-  // 4 - front left - M4
-
-  std::map<std::string, int> remapping;
-  remapping["rear_right_wheel_joint"] = 0;
-  remapping["rear_left_wheel_joint"] = 1;
-  remapping["front_right_wheel_joint"] = 2;
-  remapping["front_left_wheel_joint"] = 3;
-
   if (realtime_motor_command_publisher_->trylock())
   {
     auto& motor_command = realtime_motor_command_publisher_->msg_;
@@ -226,40 +218,14 @@ return_type RosbotXLSystem::write()
 
     RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Wrtiting motors cmd message");
 
-    for (int i = 0; i < 4; ++i)
-    {
-      motor_command.name.push_back("");
-      motor_command.velocity.push_back(0.0);
-    }
-
     for (auto const& v : vel_commands_)
     {
-      motor_command.velocity[remapping[v.first]] = v.second;
+      motor_command.name.push_back(v.first);
+      motor_command.velocity.push_back(v.second);
     }
 
     realtime_motor_command_publisher_->unlockAndPublish();
   }
-  // Temporal solution for current firmware - END
-
-  // Target solution (after changes in firmware) - BEGIN
-  // if (realtime_motor_command_publisher_->trylock())
-  // {
-  //   auto& motor_command = realtime_motor_command_publisher_->msg_;
-  //   motor_command.name.clear();
-  //   motor_command.velocity.clear();
-
-  //   RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Wrtiting motors cmd message");
-
-  //   for (auto const& v : vel_commands_)
-  //   {
-  //     motor_command.name.push_back(v.first);
-  //     motor_command.velocity.push_back(v.second);
-
-  //   }
-
-  //   realtime_motor_command_publisher_->unlockAndPublish();
-  // }
-  // Target solution (after changes in firmware) - END
 
   return return_type::OK;
 }

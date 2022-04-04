@@ -107,7 +107,7 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
       std::make_shared<realtime_tools::RealtimePublisher<JointState>>(motor_command_publisher_);
 
   motor_state_subscriber_ =
-      node_->create_subscription<JointState>("~/motors_response", rclcpp::SystemDefaultsQoS(),
+      node_->create_subscription<JointState>("~/motors_response", rclcpp::SensorDataQoS(),
                                              std::bind(&RosbotXLSystem::motor_state_cb, this, std::placeholders::_1));
 
   RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Successfully configured");

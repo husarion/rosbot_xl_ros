@@ -13,6 +13,5 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ../src:/app/ros2_ws/src
-    command: ros2 launch rosbot_xl_description rviz2_preview.launch.py
-    # command: ros2 launch rosbot_xl_gazebo sim.launch.py
+    command: ros2 launch rosbot_xl_gazebo sim.launch.py
   

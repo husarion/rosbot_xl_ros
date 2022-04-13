@@ -1,0 +1,21 @@
+
+# Quick Start
+# $ xhost local:root
+# $ docker compose -f compose.pc.yaml up
+
+version: "2.3"
+
+services:
+
+  # ROS Galactic
+  rviz:
+    image: husarion/rviz2
+    restart: unless-stopped
+    network_mode: host
+    ipc: host
+    volumes: 
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./rosbot_pro.rviz:/root/.rviz2/default.rviz
+    environment:
+      - ROS_DOMAIN_ID=138
+      - DISPLAY

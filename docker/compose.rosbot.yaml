@@ -67,7 +67,7 @@ services:
       - ../src/rosbot_xl_kinematics:/app/ros2_ws/src/rosbot_xl_kinematics
     environment:
       - ROS_DOMAIN_ID=138
-    command: ros2 launch rosbot_xl_bringup all.launch.py
+    command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
   # ROS Melodic Rplidar
   rplidar:

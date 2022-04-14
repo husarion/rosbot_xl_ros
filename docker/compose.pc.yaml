@@ -17,5 +17,5 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./rviz_docker_config/rbxl.rviz:/root/.rviz2/default.rviz
     environment:
-      - ROS_DOMAIN_ID=138
+      # - ROS_DOMAIN_ID=138
       - DISPLAY

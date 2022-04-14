@@ -1,4 +1,3 @@
-
 # Quick Start (at fist stop ROS Master if working on host)
 # $ docker compose -f compose.rosbot.yaml up
 
@@ -17,28 +16,6 @@ services:
     #   - ROS_DOMAIN_ID=138
     command: ros2 launch husarion_nav2 bringup_both.launch.py
 
-  # ROS Master (using custom port in case Master is already running on host OS)
-  ros-master:
-    image: ros:melodic-ros-core
-    restart: unless-stopped
-    network_mode: host
-    ipc: host
-    environment:
-      - ROS_IP=127.0.0.1
-    command: stdbuf -o L roscore
-
-  # ROS Noetic + ROS 2 Galactic
-  bridge:
-    image: ros:galactic-ros1-bridge
-    restart: unless-stopped
-    network_mode: host
-    ipc: host
-    environment:
-      - ROS_IP=127.0.0.1
-      - ROS_MASTER_URI=http://127.0.0.1:11311
-      # - ROS_DOMAIN_ID=138
-    command: ros2 run ros1_bridge dynamic_bridge
-
   microros:
     image: microros/micro-ros-agent:galactic
     restart: unless-stopped
@@ -49,33 +26,10 @@ services:
     # environment:
     #   - ROS_DOMAIN_ID=138
       # - ROS_LOCALHOST_ONLY=0
-    ports:
-      - "8888:8888/udp"
+    # ports:
+    #   - "8888:8888/udp"
     # command: udp4 -i 192.168.77.2 --port 8888
     command: udp4 --port 8888
-
-  # microros:
-  #   image: microros/micro-ros-agent:galactic
-  #   restart: unless-stopped
-  #   network_mode: host
-  #   ipc: host
-  #   environment:
-  #      - ROS_DOMAIN_ID=138
-  #   # ports:
-  #   # - "8888:8888/udp"
-  #   command: udp4 --port 8888 # -v6
-
-  # # ROS 2 Galacitc
-  # microros:
-  #   image: husarion/micro-ros-agent
-  #   restart: unless-stopped
-  #   network_mode: host
-  #   ipc: host
-  #   environment:
-  #     - ROS_DOMAIN_ID=138
-  #   # ports:
-  #   #   - "8888:8888/udp"
-  #   command: udp4 --port 8888
 
   # ROS 2 Galacitc
   rosbot_xl:
@@ -95,6 +49,28 @@ services:
     #   - ROS_DOMAIN_ID=138
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
+  # ROS Noetic + ROS 2 Galactic
+  bridge:
+    image: ros:galactic-ros1-bridge
+    restart: unless-stopped
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_IP=127.0.0.1
+      - ROS_MASTER_URI=http://127.0.0.1:11311
+      # - ROS_DOMAIN_ID=138
+    command: ros2 run ros1_bridge dynamic_bridge
+
+  # ROS Master (using custom port in case Master is already running on host OS)
+  ros-master:
+    image: ros:melodic-ros-core
+    restart: unless-stopped
+    network_mode: host
+    ipc: host
+    environment:
+      - ROS_IP=127.0.0.1
+    command: stdbuf -o L roscore
+
   # ROS Melodic Rplidar
   rplidar:
     image: husarion/rplidar:latest
@@ -102,7 +78,7 @@ services:
     network_mode: host
     ipc: host
     devices:
-      - /dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB0
     environment:
       - ROS_IP=127.0.0.1
       - ROS_MASTER_URI=http://127.0.0.1:11311

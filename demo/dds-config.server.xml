@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dds>
     <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
-<!-- TODO: test with discovery server -->
+
         <transport_descriptors>
             <transport_descriptor>
                 <transport_id>udpv6_transport</transport_id>
@@ -9,30 +9,25 @@
             </transport_descriptor>
         </transport_descriptors>
 
-        <participant profile_name="CustomHusarnetParticipant" is_default_profile="true" >
+        <participant profile_name="server_profile" is_default_profile="true">
             <rtps>
                 <userTransports>
                     <transport_id>udpv6_transport</transport_id>
                 </userTransports>
                 <useBuiltinTransports>false</useBuiltinTransports>
+                <prefix>44.49.53.43.53.45.52.56.45.52.5F.31</prefix>
                 <builtin>
-                    <initialPeersList>
+                    <discovery_config>
+                        <discoveryProtocol>SERVER</discoveryProtocol>
+                    </discovery_config>
+                    <metatrafficUnicastLocatorList>
                         <locator>
                             <udpv6>
-                                <address>rosbot-xl</address>
+                                <address>[fc94:c030:b086:1a0a:104d:d89:dd79:2b27]</address>
+                                <port>11811</port>
                             </udpv6>
                         </locator>
-                        <locator>
-                            <udpv6>
-                                <address>rviz2</address>
-                            </udpv6>
-                        </locator>
-                        <locator>
-                            <udpv4>
-                                <address>localhost</address>
-                            </udpv4>
-                        </locator>
-                    </initialPeersList>
+                    </metatrafficUnicastLocatorList>
                 </builtin>
             </rtps>
         </participant>

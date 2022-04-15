@@ -6,7 +6,7 @@ services:
   nav2:
     network_mode: service:husarnet
     volumes:
-      - ./dds-config.xml:/dds-config.xml
+      - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
@@ -16,15 +16,15 @@ services:
     # ports:
     #   - "8888:8888/udp"
     volumes:
-      - ./dds-config.xml:/dds-config.xml
+      - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   # ROS 2 Galacitc
   rosbot_xl:
-    # network_mode: service:husarnet
+    network_mode: service:husarnet
     volumes:
-      - ./dds-config.xml:/dds-config.xml
+      - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
@@ -32,7 +32,7 @@ services:
   bridge:
     network_mode: service:husarnet
     volumes:
-      - ./dds-config.xml:/dds-config.xml
+      - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 

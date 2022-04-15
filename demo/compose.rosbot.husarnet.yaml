@@ -1,8 +1,6 @@
 # Quick Start (at fist stop ROS Master if working on host)
 # $ docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
 
-version: "2.3"
-
 services:
   # ROS Galactic
   nav2:
@@ -24,7 +22,7 @@ services:
 
   # ROS 2 Galacitc
   rosbot_xl:
-    network_mode: service:husarnet
+    # network_mode: service:husarnet
     volumes:
       - ./dds-config.xml:/dds-config.xml
     environment:
@@ -37,13 +35,6 @@ services:
       - ./dds-config.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
-    environment:
-      - ROS_MASTER_URI=http://ros-master:11311
-
-  # ROS Melodic Rplidar
-  rplidar:
-    environment:
-      - ROS_MASTER_URI=http://ros-master:11311
 
   husarnet:
     image: husarnet/husarnet

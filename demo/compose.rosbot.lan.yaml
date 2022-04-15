@@ -1,8 +1,6 @@
 # Quick Start (at fist stop ROS Master if working on host)
 # $ docker compose -f compose.rosbot.yaml up
 
-version: "2.3"
-
 services:
   # ROS Galactic
   nav2:

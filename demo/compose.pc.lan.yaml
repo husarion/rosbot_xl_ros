@@ -3,8 +3,6 @@
 # $ xhost local:root
 # $ docker compose -f compose.pc.yaml up
 
-version: "2.3"
-
 services:
 
   # ROS Galactic

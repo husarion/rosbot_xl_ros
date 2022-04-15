@@ -3,7 +3,7 @@
 !.vscode/c_cpp_properties_template.json
 .devcontainer/devcontainer.json
 .devcontainer/Dockerfile
-docker/.env
+demo/.env
 
 # ROS2
 build/

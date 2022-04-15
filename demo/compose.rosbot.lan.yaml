@@ -23,25 +23,6 @@ services:
     #   - ROS_DOMAIN_ID=138
 
   # ROS Noetic + ROS 2 Galactic
-  bridge:
-    network_mode: host
-    ipc: host
-    environment:
-      - ROS_IP=127.0.0.1
-      - ROS_MASTER_URI=http://127.0.0.1:11311
-      # - ROS_DOMAIN_ID=138
-
-  # ROS Master (using custom port in case Master is already running on host OS)
-  ros-master:
-    network_mode: host
-    ipc: host
-    environment:
-      - ROS_IP=127.0.0.1
-
-  # ROS Melodic Rplidar
   rplidar:
     network_mode: host
     ipc: host
-    environment:
-      - ROS_IP=127.0.0.1
-      - ROS_MASTER_URI=http://127.0.0.1:11311

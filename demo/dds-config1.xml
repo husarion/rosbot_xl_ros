@@ -20,11 +20,6 @@
                 <initialPeersList>
                     <locator>
                         <udpv6>
-                            <address>rosbot-xl</address>
-                        </udpv6>
-                    </locator>
-                    <locator>
-                        <udpv6>
                             <address>rviz2</address>
                         </udpv6>
                     </locator>

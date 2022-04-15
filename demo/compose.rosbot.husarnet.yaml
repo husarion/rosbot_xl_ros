@@ -28,8 +28,8 @@ services:
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
-  # ROS Noetic + ROS 2 Galactic
-  bridge:
+  # ROS 2 Galactic
+  rplidar:
     network_mode: service:husarnet
     volumes:
       - ./dds-config1.xml:/dds-config.xml

@@ -32,26 +32,10 @@ services:
       - ../src/rosbot_xl_kinematics:/ros2_ws/src/rosbot_xl_kinematics
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
-  # ROS Noetic + ROS 2 Galactic
-  bridge:
-    image: ros:foxy-ros1-bridge
-    restart: unless-stopped
-    environment:
-      - ROS_MASTER_URI=http://ros-master:11311
-    command: ros2 run ros1_bridge dynamic_bridge
-
-  # ROS Master (using custom port in case Master is already running on host OS)
-  ros-master:
-    image: ros:melodic-ros-core
-    restart: unless-stopped
-    command: stdbuf -o L roscore
-
-  # ROS Melodic Rplidar
+  # ROS Galactic Rplidar
   rplidar:
-    image: husarion/rplidar:latest
+    image: husarion/rplidar:galactic
     restart: unless-stopped
     devices:
       - /dev/ttyUSB0
-    environment:
-      - ROS_MASTER_URI=http://ros-master:11311
-    command: roslaunch rplidar_ros rplidar_s1.launch --wait
+    command: ros2 launch rplidar_ros2 rplidar_s1_launch.py

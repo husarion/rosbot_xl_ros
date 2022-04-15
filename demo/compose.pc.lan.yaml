@@ -1,7 +1,7 @@
 
 # Quick Start
 # $ xhost local:root
-# $ docker compose -f compose.pc.yaml up
+# $ docker compose -f compose.pc.yaml -f compose.pc.lan.yaml up
 
 services:
 

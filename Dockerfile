@@ -1,4 +1,4 @@
-FROM ros:galactic-ros-core
+FROM husarion/ros:galactic-ros-core
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]

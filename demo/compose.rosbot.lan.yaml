@@ -1,5 +1,5 @@
 # Quick Start (at fist stop ROS Master if working on host)
-# $ docker compose -f compose.rosbot.yaml up
+# $ docker compose -f compose.rosbot.yaml -f compose.rosbot.lan.yaml up
 
 services:
   # ROS Galactic

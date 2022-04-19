@@ -14,8 +14,6 @@ services:
   microros:
     image: microros/micro-ros-agent:galactic
     restart: unless-stopped
-    # ports:
-    #   - "8888:8888/udp"
     command: udp4 --port 8888
 
   # ROS 2 Galacitc
@@ -24,12 +22,6 @@ services:
       context: ./../
       dockerfile: ./Dockerfile
     restart: unless-stopped
-    volumes:
-      - ../src/rosbot_xl_bringup:/ros2_ws/src/rosbot_xl_bringup
-      - ../src/rosbot_xl_description:/ros2_ws/src/rosbot_xl_description
-      - ../src/rosbot_xl_ekf:/ros2_ws/src/rosbot_xl_ekf
-      # - ../src/rosbot_xl_hardware:/ros2_ws/src/rosbot_xl_hardware
-      - ../src/rosbot_xl_kinematics:/ros2_ws/src/rosbot_xl_kinematics
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
   # ROS Galactic Rplidar
@@ -38,4 +30,4 @@ services:
     restart: unless-stopped
     devices:
       - /dev/ttyUSB0
-    command: ros2 launch rplidar_ros2 rplidar_s1_launch.py
+    command: ros2 launch rplidar_ros2 rplidar_s1_launch.py inverted:=true

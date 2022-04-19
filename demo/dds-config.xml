@@ -27,11 +27,6 @@
                                 <address>rviz2</address>
                             </udpv6>
                         </locator>
-                        <locator>
-                            <udpv4>
-                                <address>localhost</address>
-                            </udpv4>
-                        </locator>
                     </initialPeersList>
                 </builtin>
             </rtps>

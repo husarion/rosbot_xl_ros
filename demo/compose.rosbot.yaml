@@ -2,7 +2,6 @@
 # $ docker compose -f compose.rosbot.yaml up
 
 services:
-  # ROS Galactic
   nav2:
     image: husarion/nav2:galactic
     restart: unless-stopped
@@ -10,21 +9,18 @@ services:
       - ./husarion_nav2_config:/ros2_ws/src/husarion_nav2/config
     command: ros2 launch husarion_nav2 bringup_both.launch.py
 
-  # ROS Galactic
   microros:
     image: microros/micro-ros-agent:galactic
     restart: unless-stopped
     command: udp4 --port 8888
 
-  # ROS 2 Galacitc
-  rosbot_xl:
+  rosbot-xl:
     build:
       context: ./../
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.hardware
     restart: unless-stopped
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
-  # ROS Galactic Rplidar
   rplidar:
     image: husarion/rplidar:galactic
     restart: unless-stopped

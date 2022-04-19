@@ -1,11 +1,11 @@
-FROM husarion/ros:galactic-ros-core
+FROM ros:galactic-ros-core AS builder
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
 
 WORKDIR /ros2_ws
 
-COPY . .
+COPY src/ src/
 
 # install everything needed
 RUN apt-get update && apt-get install -y \
@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
         python3-rosdep \
         ros-$ROS_DISTRO-teleop-twist-keyboard && \
     apt-get upgrade -y && \
+    # remove gazebo simulation folder
+    rm -rf src/rosbot_xl_gazebo/ && \
     # build & install ROSbot XL packages
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     rosdep init && \
@@ -27,10 +29,19 @@ RUN apt-get update && apt-get install -y \
         python3-colcon-common-extensions \
         python3-rosdep && \       
     apt-get autoremove -y && \
+    rm -rf log/ src/ && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+FROM husarion/ros:galactic-ros-core
+
+# select bash as default shell
+SHELL ["/bin/bash", "-c"]
+
+COPY --from=builder /ros2_ws /ros2_ws
+COPY config/ /config/
+COPY ros_entrypoint.sh /ros_entrypoint.sh
+
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
-ENTRYPOINT ["/ros2_ws/ros_entrypoint.sh"]
 

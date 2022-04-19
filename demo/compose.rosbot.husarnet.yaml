@@ -2,17 +2,17 @@
 # $ docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
 
 services:
-  # ROS Galactic
   nav2:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
-  # ROS Galactic
   microros:
     network_mode: service:husarnet
+    ipc: service:husarnet
     # ports:
     #   - "8888:8888/udp"
     volumes:
@@ -20,17 +20,17 @@ services:
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
-  # ROS 2 Galacitc
-  rosbot_xl:
+  rosbot-xl:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config1.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
-  # ROS 2 Galactic
   rplidar:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config1.xml:/dds-config.xml
     environment:

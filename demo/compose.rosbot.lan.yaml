@@ -2,27 +2,18 @@
 # $ docker compose -f compose.rosbot.yaml -f compose.rosbot.lan.yaml up
 
 services:
-  # ROS Galactic
   nav2:
     network_mode: host
     ipc: host
-    # environment:
-    #   - ROS_DOMAIN_ID=138
 
   microros:
     network_mode: host
     ipc: host
-    # environment:
-    #   - ROS_DOMAIN_ID=138
 
-  # ROS 2 Galacitc
-  rosbot_xl:
+  rosbot-xl:
     network_mode: host
     ipc: host
-    # environment:
-    #   - ROS_DOMAIN_ID=138
 
-  # ROS Noetic + ROS 2 Galactic
   rplidar:
     network_mode: host
     ipc: host

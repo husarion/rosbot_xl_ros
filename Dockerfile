@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y \
         python3-pip \
         python3-colcon-common-extensions \
         python3-rosdep \
-        ros-$ROS_DISTRO-teleop-twist-keyboard \
-        ros-$ROS_DISTRO-rmw-fastrtps-cpp && \
+        ros-$ROS_DISTRO-teleop-twist-keyboard && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source /opt/ros/$ROS_DISTRO/setup.bash && \

@@ -1,8 +1,9 @@
 services:
   rosbot_xl:
-    build:
-      context: ./..
-      dockerfile: ./simulation/Dockerfile
+    # build:
+    #   context: ./..
+    #   dockerfile: ./simulation/Dockerfile
+    image: husarion/rosbot-xl:galactic-simulation
     container_name: rosbot_xl_ros_simulation
     runtime: nvidia
     environment:

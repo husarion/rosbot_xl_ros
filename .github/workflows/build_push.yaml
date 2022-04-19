@@ -11,9 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-platform:
-          - "hardware"
-          - "simulation"
+        include:
+          - dockerfile: Dockerfile.hardware
+            docker-tag: galactic
+          - dockerfile: Dockerfile.simulation
+            docker-tag: galactic-simulation
 
     steps:
     - name: Checkout
@@ -38,9 +40,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: Dockerfile.${{ matrix.target-platform }}
+        file: ${{ matrix.dockerfile }}
         platforms: linux/arm64, linux/amd64
         push: true
-        tags: husarion/rosbot-xl:galactic-${{ matrix.target-platform }}
-        cache-from: type=registry,ref=husarion/rosbot-xl:galactic-${{ matrix.target-platform }}-buildcache
-        cache-to: type=registry,ref=husarion/rosbot-xl:galactic-${{ matrix.target-platform }}-buildcache,mode=max
+        tags: husarion/rosbot-xl:${{ matrix.docker-tag }}
+        cache-from: type=registry,ref=husarion/rosbot-xl:${{ matrix.docker-tag }}-buildcache
+        cache-to: type=registry,ref=husarion/rosbot-xl:${{ matrix.docker-tag }}-buildcache,mode=max

@@ -6,7 +6,7 @@ services:
     image: husarion/nav2:galactic
     restart: unless-stopped
     volumes:
-      - nav2config:/ros2_ws/src/husarion_nav2/config
+      - nav2config:/ros2_ws/src/husarion_nav2/config:ro
     command: ros2 launch husarion_nav2 bringup_both.launch.py
 
   microros:

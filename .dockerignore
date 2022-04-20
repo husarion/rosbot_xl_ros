@@ -2,8 +2,8 @@
 .github/
 .vscode/
 demo/
+src/rosbot_xl_gazebo/
 .dockerignore
 .gitignore
-Dockerfile.*
+Dockerfile
 README.md
-

@@ -6,7 +6,8 @@ services:
     image: husarion/nav2:galactic
     restart: unless-stopped
     volumes:
-      - nav2config:/ros2_ws/src/husarion_nav2/config:ro
+      # - nav2config:/ros2_ws/src/husarion_nav2/config:ro
+      - ./../config/nav2:/ros2_ws/src/husarion_nav2/config
     command: ros2 launch husarion_nav2 bringup_both.launch.py
 
   microros:
@@ -15,14 +16,15 @@ services:
     command: udp4 --port 8888
 
   rosbot-xl:
-    # build:
-    #   context: ./../
-    #   dockerfile: ./Dockerfile.hardware
-    image: husarion/rosbot-xl:galactic
-    volumes:
-      - nav2config:/config/nav2:ro
+    build:
+      context: ./../
+      dockerfile: ./Dockerfile.hardware
+    # image: husarion/rosbot-xl:galactic
+    # volumes:
+    #   - nav2config:/config/nav2:ro
     restart: unless-stopped
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
+    # command: sleep 3600
 
   rplidar:
     image: husarion/rplidar:galactic

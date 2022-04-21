@@ -27,6 +27,6 @@
             <Wait wait_duration="5"/>
           </SequenceStar>
         </ReactiveFallback>
-      </RecoveryNode>"/
+      </RecoveryNode>
     </BehaviorTree>
   </root>

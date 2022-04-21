@@ -1,73 +1,27 @@
-# # Quick Star
-# # $ docker compose -f compose.rosbot.yaml up
-
-# services:
-#   rosbot-xl:
-#     # build:
-#     #   context: ./../
-#     #   dockerfile: ./Dockerfile.hardware
-#     image: husarion/rosbot-xl:galactic
-#     volumes:
-#       - nav2config:/ros2_ws/config/nav2:ro
-#     restart: unless-stopped
-#     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
-
-#   microros:
-#     image: microros/micro-ros-agent:galactic
-#     restart: unless-stopped
-#     command: udp4 --port 8888
-
-#   nav2:
-#     image: husarion/nav2:galactic
-#     restart: unless-stopped
-#     volumes:
-#       # - nav2config:/ros2_ws/config/nav2:ro
-#       - ../config/nav2:/ros2_ws/src/husarion_nav2/config
-#     command: >
-#       ros2 launch husarion_nav2 bringup_both.launch.py
-
-#   # nav2_conf:=/ros2_ws/config/nav2/nav2_params.yaml
-#   # slam_toolbox_conf:=/ros2_ws/config/nav2/slam_toolbox.yaml
-
-#   rplidar:
-#     image: husarion/rplidar:galactic
-#     restart: unless-stopped
-#     devices:
-#       - /dev/ttyUSB0
-#     command: ros2 launch rplidar_ros2 rplidar_s1_launch.py inverted:=true
-
-# volumes:
-#   nav2config:
-
-
-# Quick Start (at fist stop ROS Master if working on host)
+# Quick Star
 # $ docker compose -f compose.rosbot.yaml up
 
 services:
-  # ROS Galactic
-  nav2:
-    image: husarion/nav2:galactic
+  rosbot-xl:
+    image: husarion/rosbot-xl:galactic
+    # build:
+    #   context: ./../
+    #   dockerfile: ./Dockerfile.hardware
     restart: unless-stopped
-    volumes:
-      - ./husarion_nav2_config:/ros2_ws/src/husarion_nav2/config
-    command: ros2 launch husarion_nav2 bringup_both.launch.py
+    command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
 
-  # ROS Galactic
   microros:
     image: microros/micro-ros-agent:galactic
     restart: unless-stopped
     command: udp4 --port 8888
 
-  # ROS 2 Galacitc
-  rosbot-xl:
-    # image: husarion/rosbot-xl:galactic
-    build:
-      context: ./../
-      dockerfile: ./Dockerfile.hardware
+  nav2:
+    image: husarion/nav2:galactic
     restart: unless-stopped
-    command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
+    volumes:
+      - ../config/nav2:/ros2_ws/src/husarion_nav2/config
+    command: ros2 launch husarion_nav2 bringup_both.launch.py
 
-  # ROS Galactic Rplidar
   rplidar:
     image: husarion/rplidar:galactic
     restart: unless-stopped

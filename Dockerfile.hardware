@@ -18,7 +18,6 @@ RUN rm -rf src/rosbot_xl_gazebo && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
-    source "/fastdds_overlay/install/setup.bash" && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \

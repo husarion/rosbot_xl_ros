@@ -44,5 +44,5 @@ jobs:
         platforms: linux/arm64, linux/amd64
         push: true
         tags: husarion/rosbot-xl:${{ matrix.docker-tag }}
-        cache-from: type=registry,ref=husarion/rosbot-xl:${{ matrix.docker-tag }}-buildcache
-        cache-to: type=registry,ref=husarion/rosbot-xl:${{ matrix.docker-tag }}-buildcache,mode=max
+        cache-from: type=registry,ref=husarion/rosbot-xl:${{ matrix.docker-tag }}
+        cache-to: type=inline

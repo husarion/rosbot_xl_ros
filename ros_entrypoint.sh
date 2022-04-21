@@ -6,7 +6,9 @@ source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "/ros2_ws/install/setup.bash"
 
 # setup Fast DDS RMW
-source "/fastdds_overlay/install/setup.bash"
+if [ "$RMW_IMPLEMENTATION" == "rmw_fastrtps_cpp" ]
+    source "/fastdds_overlay/install/setup.bash"
+fi
 
 GAZEBO_SETUP_PATH=/usr/share/gazebo/setup.sh
 if [[ -f "$GAZEBO_SETUP_PATH" ]]; then

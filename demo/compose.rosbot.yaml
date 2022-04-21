@@ -11,6 +11,7 @@ services:
       - nav2config:/ros2_ws/config/nav2:ro
     restart: unless-stopped
     command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
+    # command: sleep 3600
 
   microros:
     image: microros/micro-ros-agent:galactic

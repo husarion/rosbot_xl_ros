@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
-    rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
     colcon build --symlink-install && \

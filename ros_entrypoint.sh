@@ -6,7 +6,7 @@ source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "/ros2_ws/install/setup.bash"
 
 # setup Fast DDS RMW
-if [ "$RMW_IMPLEMENTATION" == "rmw_fastrtps_cpp" ]
+if [ "$RMW_IMPLEMENTATION" == "rmw_fastrtps_cpp" ]; then
     source "/fastdds_overlay/install/setup.bash"
 fi
 

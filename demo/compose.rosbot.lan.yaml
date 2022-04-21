@@ -2,7 +2,7 @@
 # $ docker compose -f compose.rosbot.yaml -f compose.rosbot.lan.yaml up
 
 services:
-  nav2:
+  rosbot-xl:
     network_mode: host
     ipc: host
 
@@ -10,7 +10,7 @@ services:
     network_mode: host
     ipc: host
 
-  rosbot-xl:
+  nav2:
     network_mode: host
     ipc: host
 

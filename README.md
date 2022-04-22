@@ -8,6 +8,14 @@ ROS2 packages for ROSbot XL.
 
 URDF model used for both simulation and as a source of transforms on physical robot. It was written to be compatible with ROS Industrial and preconfigured for ROS2 control.
 
+Available models:
+
+| Model | Description |
+| - | - |
+| `rosbot_xl` | Final configuration of rosbot_xl with ability to attach external hardware. |
+| `rosbot_xl_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
+
+
 ### `rosbot_xl_ekf`
 
 Draft Kalman filter configuration for a ROSbot XL. Currently inputs odometry published by microros and creates transform between `/odom` and `/base_link`. IMU not implemented. Covariances were not tweaked.
@@ -20,15 +28,6 @@ Ported [panther_gazebo](https://github.com/husarion/panther_simulation/tree/ros2
 
 ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros. Current state: controller compiles and loads. Crashes in runtime.
 
-## Models
-
-### rosbot_xl
-
-Final configuration of rosbot_xl with ability to attach external hardware.
-
-### rosbot_xl_base
-
-Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors.
 
 ## Docker Image
 

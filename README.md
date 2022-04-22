@@ -45,8 +45,9 @@ Set `BOOT0` pin to HIGH and click `RESET` button, to enter the programming mode.
 Execute in a termianl on your laptop:
 
 ```bash
-docker run --rm -it husarion/rosbot-xl:galactic \
+docker run --rm -it \
 --device /dev/ttyUSB0:/dev/ttyUSB0 \
+husarion/rosbot-xl:galactic \
 stm32flash -w /rosbot_xl_fw_v0.0.1.bin -v -g 0x0 /dev/ttyUSB0
 ```
 

@@ -36,6 +36,22 @@ Official ROSbot XL docker images built from this repo are available here: https:
 - `husarion/rosbot-xl:galactic` - the image for a real (physical) robot
 - `husarion/rosbot-xl:galactic-simulation` - the image with built-in Gazebo simulation model
 
+## Flashing the firmware on STM32
+
+Connect your laptop to Micro USB port on the ROSbot XL digital board (with STM32F4), check USB port in your OS with a serial connection to the board (in most cases `/dev/ttyUSB0`).
+
+Set `BOOT0` pin to HIGH and click `RESET` button, to enter the programming mode.
+
+Execute in a termianl on your laptop:
+
+```bash
+docker run --rm -it husarion/rosbot-xl:galactic \
+--device /dev/ttyUSB0:/dev/ttyUSB0 \
+stm32flash -w /rosbot_xl_fw_v0.0.1.bin -v -g 0x0 /dev/ttyUSB0
+```
+
+Set `BOOT0` pin to LOW and click `RESET` to start newly flashed firmware.
+
 ## Demo
 
 ### Control ROSbot XL in LAN from RViz running on your laptop (Nav2 based)

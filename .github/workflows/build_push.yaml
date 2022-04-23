@@ -3,7 +3,7 @@ name: Build a Docker Image
 on:
   push:
     branches:
-      - 'ros-control-hardware'
+      - 'master'
   
 jobs:
   build:

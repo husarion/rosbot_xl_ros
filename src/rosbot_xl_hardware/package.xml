@@ -16,6 +16,7 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>realtime_tools</depend>
+  <depend>diff_drive_controller</depend>
 
   <build_depend>pluginlib</build_depend>
   <test_depend>ament_cmake_gtest</test_depend>

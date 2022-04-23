@@ -5,6 +5,7 @@
   <xacro:macro name="rosbot_xl_robot" params="use_sim">
 
     <xacro:property name="wheel_diameter" value="0.082" />
+    <xacro:property name="wheel_radius" value="${wheel_diameter/2.0}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />

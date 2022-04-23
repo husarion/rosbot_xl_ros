@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dds>
+    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+<!-- TODO: test with discovery server -->
+        <transport_descriptors>
+            <transport_descriptor>
+                <transport_id>udpv6_transport</transport_id>
+                <type>UDPv6</type>
+            </transport_descriptor>
+        </transport_descriptors>
+
+        <participant profile_name="CustomHusarnetParticipant" is_default_profile="true" >
+            <rtps>
+                <userTransports>
+                    <transport_id>udpv6_transport</transport_id>
+                </userTransports>
+                <useBuiltinTransports>false</useBuiltinTransports>
+                <builtin>
+                    <initialPeersList>
+                        <locator>
+                            <udpv6>
+                                <address>rosbot-xl</address>
+                            </udpv6>
+                        </locator>
+                        <locator>
+                            <udpv6>
+                                <address>rviz2</address>
+                            </udpv6>
+                        </locator>
+                    </initialPeersList>
+                </builtin>
+            </rtps>
+        </participant>
+    </profiles>
+</dds>

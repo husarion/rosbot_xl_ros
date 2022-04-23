@@ -1,0 +1,14 @@
+
+# Quick Start
+# $ xhost local:root
+# $ docker compose -f compose.pc.yaml up
+
+services:
+  rviz:
+    image: husarion/rviz2:latest
+    restart: unless-stopped
+    volumes: 
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./../config/rviz/rbxl.rviz:/root/.rviz2/default.rviz
+    environment:
+      - DISPLAY

@@ -1,0 +1,30 @@
+# Quick Star
+# $ docker compose -f compose.rosbot.yaml up
+
+services:
+  rosbot-xl:
+    image: husarion/rosbot-xl:galactic
+    # build:
+    #   context: ./../
+    #   dockerfile: ./Dockerfile.hardware
+    restart: unless-stopped
+    command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
+
+  microros:
+    image: microros/micro-ros-agent:galactic
+    restart: unless-stopped
+    command: udp4 --port 8888
+
+  nav2:
+    image: husarion/nav2:galactic
+    restart: unless-stopped
+    volumes:
+      - ../config/nav2:/ros2_ws/src/husarion_nav2/config
+    command: ros2 launch husarion_nav2 bringup_both.launch.py
+
+  rplidar:
+    image: husarion/rplidar:galactic
+    restart: unless-stopped
+    devices:
+      - /dev/ttyUSB0
+    command: ros2 launch rplidar_ros2 rplidar_s1_launch.py inverted:=true

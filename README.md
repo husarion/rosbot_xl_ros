@@ -2,65 +2,136 @@
 
 ROS2 packages for ROSbot XL.
 
-# Docker configurations
+## ROS packages
 
-## Instructions: How to run software on [real_robot](./docker)
-
-Connect to robot remotely:
-
-``` bash
-ssh ubuntu@<robot_ip>
-```
-
-Start docker containers:
-
-``` bash
-cd rosbot_xl_ros/docker/
-docker compose up
-```
-
-**Important: for now it is required to reset powerboard manualy**
-
-On PC:
-
-Launch web browser and connect to: `http://<robot_ip>:6080/`
-
-Open terminal isnside vnc and run rviz
-
-``` bash
-rviz2 rvzi2
-```
-
-## [simulation](./simulation)
-
-Robot description with gazebo configuration.
-``` bash
-cd simulation
-xhost +local:docker
-docker compose up
-```
-
-# ROS packages
-
-## rosbot_xl_description
+### `rosbot_xl_description`
 
 URDF model used for both simulation and as a source of transforms on physical robot. It was written to be compatible with ROS Industrial and preconfigured for ROS2 control.
 
-### Models
-#### rosbot_xl
-Final configuration of rosbot_xl with ability to attach external hardware.
+Available models:
 
-#### rosbot_xl_base
-Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors.
+| Model | Description |
+| - | - |
+| `rosbot_xl` | Final configuration of rosbot_xl with ability to attach external hardware. |
+| `rosbot_xl_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
 
-## rosbot_xl_ekf
+
+### `rosbot_xl_ekf`
 
 Draft Kalman filter configuration for a ROSbot XL. Currently inputs odometry published by microros and creates transform between `/odom` and `/base_link`. IMU not implemented. Covariances were not tweaked.
 
-## rosbot_xl_gazebo
+### `rosbot_xl_gazebo`
 
 Ported [panther_gazebo](https://github.com/husarion/panther_simulation/tree/ros2/panther_gazebo) simulation modified to work with ROS2 control.
 
-## rosbot_xl_hardware
+### `rosbot_xl_hardware`
 
 ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros. Current state: controller compiles and loads. Crashes in runtime.
+
+
+## Docker Image
+
+Official ROSbot XL docker images built from this repo are available here: https://hub.docker.com/r/husarion/rosbot-xl/tags
+
+- `husarion/rosbot-xl:galactic` - the image for a real (physical) robot
+- `husarion/rosbot-xl:galactic-simulation` - the image with built-in Gazebo simulation model
+
+## Flashing the firmware on STM32
+
+Connect your laptop to Micro USB port on the ROSbot XL digital board (with STM32F4), check USB port in your OS with a serial connection to the board (in most cases `/dev/ttyUSB0`).
+
+Set `BOOT0` pin to HIGH and click `RESET` button, to enter the programming mode.
+
+Execute in a termianl on your laptop:
+
+```bash
+docker run --rm -it \
+--device /dev/ttyUSB0:/dev/ttyUSB0 \
+husarion/rosbot-xl:galactic \
+/stm32flash -w /firmware.bin -b 115200 -v /dev/ttyUSB0
+```
+
+Set `BOOT0` pin to LOW and click `RESET` to start newly flashed firmware.
+
+## Demo
+
+> **Prerequisites**
+>
+> Make sure you have [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) and [Docker Compose v2](https://docs.docker.com/compose/cli-command/#install-on-linux) installed on your laptop. Tested on Ubuntu 20.04.
+>
+> If you don't have, here's a quick summary for Ubuntu 20.04:
+> 
+> 1. Installing Docker (just click the `copy` button, and paste it to the Linux terminal):
+>     ```bash
+>     sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg lsb-release
+>     ```
+>     ```bash
+>     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+>     ```
+>     ```bash
+>     echo \
+>     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+>     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+>     ```
+>     ```bash
+>     sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
+>     ```
+>
+> 2. Installing Docker Compose v2
+>     ```bash
+>     mkdir -p /usr/local/lib/docker/cli-plugins
+>     ```
+>     ```bash
+>     curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+>     ```
+>     ```bash
+>     chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+>     ```
+>
+> The proper version of Docker and Docker Compose are already installed in the official ROSbot XL system image.
+
+### Control ROSbot XL in LAN from RViz running on your laptop (Nav2 based)
+
+Connect your ROSbot XL and laptop to the same Wi-Fi network, navigate to `demo/` folder and execute:
+
+- On laptop:
+
+    ```bash
+    xhost local:root
+    ```
+
+    ```bash
+    docker compose -f compose.pc.yaml -f compose.pc.lan.yaml up
+    ```
+
+- On ROSbot XL:
+
+    ```bash
+    docker compose -f compose.rosbot.yaml -f compose.rosbot.lan.yaml up
+    ```
+
+### Control ROSbot XL over the Internet from RViz running on your laptop (Nav2 based)
+
+Login at https://app.husarnet.com, create a new network, navigate to `demo/` folder, copy a **Join Code** a place it in `demo/.env` file:
+
+```bash
+HUSARNET_JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/xxxxxxxxxxxxxxxxxxxxxx
+```
+
+ROSbot XL and your laptop can be in the same or in different Wi-Fi networks. Execute in their terminals:
+
+- On laptop:
+
+    ```bash
+    xhost local:root
+    ```
+
+    ```bash
+    docker compose -f compose.pc.yaml -f compose.pc.husarnet.yaml up
+    ```
+
+- On ROSbot XL:
+
+    ```bash
+    docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
+    ```

@@ -118,6 +118,27 @@ Login at https://app.husarnet.com, create a new network, navigate to `demo/` fol
 HUSARNET_JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/xxxxxxxxxxxxxxxxxxxxxx
 ```
 
+In the ROSbot XL terminal execute:
+
+```bash
+docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up -d husarnet
+```
+
+after a while you should see Husarnet IPv6 address of your ROSbot XL:
+
+![ROSbot XL address](docs/husarnet-addr.png)
+
+Paste it to `dds-config.client.xml` and `dds-config.server.xml` files here:
+
+```xml
+<locator>
+    <udpv6>
+        <address>fc94:2b69:4b3d:68d0:2da7:99ea:1340:989f</address>
+        <port>11811</port>
+    </udpv6>
+</locator>
+```
+
 ROSbot XL and your laptop can be in the same or in different Wi-Fi networks. Execute in their terminals:
 
 - On laptop:

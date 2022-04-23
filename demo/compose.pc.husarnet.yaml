@@ -9,7 +9,7 @@ services:
   rviz:
     network_mode: service:husarnet
     volumes:
-      - ./dds-config.xml:/dds-config.xml
+      - ./dds-config.client.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 

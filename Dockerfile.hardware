@@ -15,7 +15,6 @@ RUN rm -rf src/rosbot_xl_gazebo && \
         python3-pip \
         python3-colcon-common-extensions \
         python3-rosdep \
-        stm32flash \
         curl \
         ros-$ROS_DISTRO-teleop-twist-keyboard && \
     apt-get upgrade -y && \
@@ -26,7 +25,9 @@ RUN rm -rf src/rosbot_xl_gazebo && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
     colcon build --symlink-install && \
     # download a firmware binary release
-    curl https://github.com/husarion/rosbot_xl_firmware/releases/download/v0.0.1/firmware.bin -o /rosbot_xl_fw_v0.0.1.bin && \
+    curl -L https://github.com/husarion/rosbot_xl_firmware/releases/download/v0.0.1/firmware.bin -o /firmware.bin && \
+    curl https://raw.githubusercontent.com/rogerclarkmelbourne/Arduino_STM32/master/tools/linux/stm32flash/stm32flash -o /stm32flash && \
+    chmod +x /stm32flash && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \

@@ -48,38 +48,73 @@ Execute in a termianl on your laptop:
 docker run --rm -it \
 --device /dev/ttyUSB0:/dev/ttyUSB0 \
 husarion/rosbot-xl:galactic \
-stm32flash -w /rosbot_xl_fw_v0.0.1.bin -v -g 0x0 /dev/ttyUSB0
+/stm32flash -w /firmware.bin -b 115200 -v /dev/ttyUSB0
 ```
 
 Set `BOOT0` pin to LOW and click `RESET` to start newly flashed firmware.
 
 ## Demo
 
+> **Prerequisites**
+>
+> Make sure you have [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) and [Docker Compose v2](https://docs.docker.com/compose/cli-command/#install-on-linux) installed on your laptop. Tested on Ubuntu 20.04.
+>
+> If you don't have, here's a quick summary for Ubuntu 20.04:
+> 
+> 1. Installing Docker (just click the `copy` button, and paste it to the Linux terminal):
+>     ```bash
+>     sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg lsb-release
+>     ```
+>     ```bash
+>     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+>     ```
+>     ```bash
+>     echo \
+>     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+>     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+>     ```
+>     ```bash
+>     sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
+>     ```
+>
+> 2. Installing Docker Compose v2
+>     ```bash
+>     mkdir -p /usr/local/lib/docker/cli-plugins
+>     ```
+>     ```bash
+>     curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+>     ```
+>     ```bash
+>     chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+>     ```
+>
+> The proper version of Docker and Docker Compose are already installed in the official ROSbot XL system image.
+
 ### Control ROSbot XL in LAN from RViz running on your laptop (Nav2 based)
 
-Connect your ROSbot XL and laptop to the same Wi-Fi network and execute:
+Connect your ROSbot XL and laptop to the same Wi-Fi network, navigate to `demo/` folder and execute:
 
 - On laptop:
 
     ```bash
-    cd demo/
     xhost local:root
+    ```
+
+    ```bash
     docker compose -f compose.pc.yaml -f compose.pc.lan.yaml up
     ```
 
 - On ROSbot XL:
 
     ```bash
-    cd demo/
     docker compose -f compose.rosbot.yaml -f compose.rosbot.lan.yaml up
     ```
 
 ### Control ROSbot XL over the Internet from RViz running on your laptop (Nav2 based)
 
-Login at https://app.husarnet.com, create a new network, copy a **Join Code** a place it in `demo/.env` file:
+Login at https://app.husarnet.com, create a new network, navigate to `demo/` folder, copy a **Join Code** a place it in `demo/.env` file:
 
 ```bash
-# Place your own Join Code below
 HUSARNET_JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/xxxxxxxxxxxxxxxxxxxxxx
 ```
 
@@ -88,14 +123,15 @@ ROSbot XL and your laptop can be in the same or in different Wi-Fi networks. Exe
 - On laptop:
 
     ```bash
-    cd demo/
     xhost local:root
+    ```
+
+    ```bash
     docker compose -f compose.pc.yaml -f compose.pc.husarnet.yaml up
     ```
 
 - On ROSbot XL:
 
     ```bash
-    cd demo/
     docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
     ```

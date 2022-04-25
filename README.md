@@ -112,23 +112,29 @@ Connect your ROSbot XL and laptop to the same Wi-Fi network, navigate to `demo/`
 
 ### Control ROSbot XL over the Internet from RViz running on your laptop (Nav2 based)
 
-Login at https://app.husarnet.com, create a new network, navigate to `demo/` folder, copy a **Join Code** a place it in `demo/.env` file:
+Login at https://app.husarnet.com, create a new network, copy a **Join Code** a place it in `demo/.env` file:
 
 ```bash
 HUSARNET_JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/xxxxxxxxxxxxxxxxxxxxxx
 ```
 
-In the ROSbot XL terminal execute:
+Do that both on your laptop and ROSbot XL (they don't need to be in the same LAN)
+
+#### Steps to do on ROSbot XL
+
+In the ROSbot XL terminal navigate to `demo/` folder and execute:
 
 ```bash
-docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up -d husarnet
+docker run --rm -it husarnet/husarnet:latest husarnet genid > id
 ```
 
-after a while you should see Husarnet IPv6 address of your ROSbot XL:
+to generate unique Husarnet ID for ROSbot XL. Print ROSbot XL Husarnet IPv6 address with this command:
 
-![ROSbot XL address](docs/husarnet-addr.png)
+```
+sed -r 's/([a-f0-9:]*)\s.*/\1/g' id
+```
 
-Paste it to `dds-config.client.xml` and `dds-config.server.xml` files here:
+and paste it to `dds-config.client.xml` and `dds-config.server.xml` files here:
 
 ```xml
 <locator>
@@ -139,20 +145,31 @@ Paste it to `dds-config.client.xml` and `dds-config.server.xml` files here:
 </locator>
 ```
 
-ROSbot XL and your laptop can be in the same or in different Wi-Fi networks. Execute in their terminals:
+Now you can launch the docker compose stack:
 
-- On laptop:
+```bash
+docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
+```
 
-    ```bash
-    xhost local:root
-    ```
+#### Steps to do on your laptop
 
-    ```bash
-    docker compose -f compose.pc.yaml -f compose.pc.husarnet.yaml up
-    ```
+paste ROSbot XL IPv6 address from the prvious steps to `dds-config.client.xml` and `dds-config.server.xml` files here:
 
-- On ROSbot XL:
+```xml
+<locator>
+    <udpv6>
+        <address>fc94:2b69:4b3d:68d0:2da7:99ea:1340:989f</address>
+        <port>11811</port>
+    </udpv6>
+</locator>
+```
 
-    ```bash
-    docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
-    ```
+And execute in the Linux terminal
+
+```bash
+xhost local:root
+```
+
+```bash
+docker compose -f compose.pc.yaml -f compose.pc.husarnet.yaml up
+```

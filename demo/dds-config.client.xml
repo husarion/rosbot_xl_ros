@@ -14,7 +14,6 @@
                 <userTransports>
                     <transport_id>udpv6_transport</transport_id>
                 </userTransports>
-                <useBuiltinTransports>false</useBuiltinTransports>
                 <builtin>
                     <discovery_config>
                         <discoveryProtocol>CLIENT</discoveryProtocol>
@@ -23,7 +22,7 @@
                                 <metatrafficUnicastLocatorList>
                                     <locator>
                                         <udpv6>
-                                            <address>fc94:2b69:4b3d:68d0:2da7:99ea:1340:989f</address>
+                                            <address>fc94:4370:c189:b3a1:650e:edfb:2daa:9846</address>
                                             <port>11811</port>
                                         </udpv6>
                                     </locator>

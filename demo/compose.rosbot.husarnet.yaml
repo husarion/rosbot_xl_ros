@@ -4,6 +4,7 @@
 services:
   rosbot-xl:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config.server.xml:/dds-config.xml
     environment:
@@ -11,6 +12,7 @@ services:
 
   microros:
     network_mode: service:husarnet
+    ipc: service:husarnet
     # ports:
     #   - "8888:8888/udp"
     volumes:
@@ -20,6 +22,7 @@ services:
 
   nav2:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config.client.xml:/dds-config.xml
     environment:
@@ -27,6 +30,7 @@ services:
 
   rplidar:
     network_mode: service:husarnet
+    ipc: service:husarnet
     volumes:
       - ./dds-config.client.xml:/dds-config.xml
     environment:
@@ -35,10 +39,12 @@ services:
   husarnet:
     image: husarnet/husarnet
     restart: unless-stopped
+    ipc: shareable
     ports:
       - "8888:8888/udp"
     volumes:
-      - /var/lib/husarnet 
+      - /var/lib/husarnet
+      - ./id:/var/lib/husarnet/id
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0 
     cap_add:

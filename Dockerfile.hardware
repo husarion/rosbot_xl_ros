@@ -29,7 +29,6 @@ RUN rm -rf src/rosbot_xl_gazebo && \
         ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
         curl \
         ros-$ROS_DISTRO-teleop-twist-keyboard && \
-    apt-get remove ros-${ROS_DISTRO}-rmw_cyclonedds_cpp && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \

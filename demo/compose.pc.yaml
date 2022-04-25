@@ -5,7 +5,7 @@
 
 services:
   rviz:
-    image: husarion/rviz2:latest
+    image: husarion/rviz2:galactic
     restart: unless-stopped
     volumes: 
       - /tmp/.X11-unix:/tmp/.X11-unix:rw

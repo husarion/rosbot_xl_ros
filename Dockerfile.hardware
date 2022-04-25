@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     cd stm32flash/ && \
     make all
 
-FROM husarion/ros:galactic-ros-core
+FROM ros:galactic-ros-core
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -18,7 +18,7 @@ WORKDIR /ros2_ws
 COPY --from=stm32flash_builder /stm32flash/stm32flash /stm32flash
 COPY . .
 
-# ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 # install everything needed
 RUN rm -rf src/rosbot_xl_gazebo && \
@@ -45,12 +45,11 @@ RUN rm -rf src/rosbot_xl_gazebo && \
         python3-pip \
         python3-colcon-common-extensions \
         python3-rosdep \
-        ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
         curl && \       
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+
 
 ENTRYPOINT ["/ros2_ws/ros_entrypoint.sh"]

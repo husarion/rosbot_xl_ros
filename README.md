@@ -40,7 +40,7 @@ Official ROSbot XL docker images built from this repo are available here: https:
 
 Connect your laptop to Micro USB port on the ROSbot XL digital board (with STM32F4), check USB port in your OS with a serial connection to the board (in most cases `/dev/ttyUSB0`).
 
-Set `BOOT0` pin to HIGH and click `RESET` button, to enter the programming mode.
+Set dip switch no. 3 on ROSbot XL digital board to **"on" state** (`BOOT0` pin to HIGH) and click the `RESET` button, to enter the programming mode.
 
 Execute in a termianl on your laptop:
 
@@ -51,7 +51,7 @@ husarion/rosbot-xl:galactic \
 /stm32flash -w /firmware.bin -b 115200 -v /dev/ttyUSB0
 ```
 
-Set `BOOT0` pin to LOW and click `RESET` to start newly flashed firmware.
+Set dip switch no. 3 to **"off" state**  (`BOOT0` pin to LOW) and click the `RESET` button to start a newly flashed firmware.
 
 ## Demo
 
@@ -111,6 +111,8 @@ Connect your ROSbot XL and laptop to the same Wi-Fi network, navigate to `demo/`
     ```
 
 ### Control ROSbot XL over the Internet from RViz running on your laptop (Nav2 based)
+
+**This setup is not finished yet!!!**
 
 Login at https://app.husarnet.com, create a new network, copy a **Join Code** a place it in `demo/.env` file:
 

@@ -9,9 +9,12 @@ services:
   rviz:
     network_mode: service:husarnet
     volumes:
-      - ./dds-config.client.xml:/dds-config.xml
+      # - ./dds-config.client.xml:/dds-config.xml
+      - ./dds-config.xml:/dds-config.xml
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      # - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
+      - CYCLONEDDS_URI=file:///dds-config.xml
 
   husarnet:
     image: husarnet/husarnet

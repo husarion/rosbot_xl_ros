@@ -4,42 +4,47 @@
 services:
   rosbot-xl:
     network_mode: service:husarnet
-    ipc: service:husarnet
+    # ipc: service:husarnet
     volumes:
-      - ./dds-config.server.xml:/dds-config.xml
+      # - ./dds-config.server.xml:/dds-config.xml
+      - ./dds-config.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   microros:
     network_mode: service:husarnet
-    ipc: service:husarnet
+    # ipc: service:husarnet
     # ports:
     #   - "8888:8888/udp"
     volumes:
-      - ./dds-config.client.xml:/dds-config.xml
+      # - ./dds-config.client.xml:/dds-config.xml
+      - ./dds-config.xml:/dds-config.xml
+      - ./micro-ros_entrypoint.sh:/micro-ros_entrypoint.sh
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   nav2:
     network_mode: service:husarnet
-    ipc: service:husarnet
+    # ipc: service:husarnet
     volumes:
-      - ./dds-config.client.xml:/dds-config.xml
+      # - ./dds-config.client.xml:/dds-config.xml
+      - ./dds-config.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   rplidar:
     network_mode: service:husarnet
-    ipc: service:husarnet
+    # ipc: service:husarnet
     volumes:
-      - ./dds-config.client.xml:/dds-config.xml
+      # - ./dds-config.client.xml:/dds-config.xml
+      - ./dds-config.xml:/dds-config.xml
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   husarnet:
     image: husarnet/husarnet
     restart: unless-stopped
-    ipc: shareable
+    # ipc: shareable
     ports:
       - "8888:8888/udp"
     volumes:

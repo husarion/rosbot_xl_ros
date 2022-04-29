@@ -15,9 +15,7 @@ services:
       - ROS_DOMAIN_ID=1
 
   listener:
-    build:
-      context: ../
-      dockerfile: Dockerfile
+    build: .
     networks:
       - listener_net
     environment:

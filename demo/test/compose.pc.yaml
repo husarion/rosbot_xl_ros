@@ -9,9 +9,20 @@ services:
     restart: unless-stopped
     volumes: 
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ./../config/rviz/rbxl.rviz:/root/.rviz2/default.rviz
+      - ./../../config/rviz/rbxl.rviz:/root/.rviz2/default.rviz
     environment:
       - DISPLAY
+      - ROS_DOMAIN_ID=1
+
+  listener:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    networks:
+      - listener_net
+    environment:
+      - ROS_DOMAIN_ID=1
+    command: ros2 run demo_nodes_cpp listener
 
   dds-router-pc:
     image: husarnet/dds-router

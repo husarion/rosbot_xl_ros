@@ -1,0 +1,31 @@
+version: v2.0
+
+builtin:
+  - name: "rt/scan"
+    type: "sensor_msgs::msg::dds_::LaserScan_"
+
+allowlist:
+  
+  # - name: "*"
+  - name: "rt/scan"
+    type: "sensor_msgs::msg::dds_::LaserScan_"
+
+participants:
+  
+  - name: LocalParticipant
+    kind: local
+    domain: 0
+
+  - name: ClientWAN
+    kind: local-discovery-server
+    discovery-server-guid:
+      id: 2
+      ros-discovery-server: true
+    connection-addresses:
+      - discovery-server-guid:
+          id: 1
+          ros-discovery-server: true
+        addresses:
+          - domain: rosbot-xl
+            port: 11811
+            transport: udp

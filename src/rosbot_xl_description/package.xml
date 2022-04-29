@@ -15,6 +15,7 @@
   <build_depend>xacro</build_depend>
 
   <exec_depend>controller_manager</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
   <exec_depend>joint_state_broadcaster</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>

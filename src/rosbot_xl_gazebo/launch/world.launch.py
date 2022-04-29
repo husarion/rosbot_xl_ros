@@ -38,7 +38,7 @@ def generate_launch_description():
 
     DeclareLaunchArgument(
       name='verbose',
-      default_value='true',
+      default_value='false',
       description='Set "true" to increase debug message level.'
     ),
 

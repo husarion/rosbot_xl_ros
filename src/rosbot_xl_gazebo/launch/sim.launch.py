@@ -28,9 +28,9 @@ def generate_launch_description():
       }.items(),
     ),
 
-    IncludeLaunchDescription(
-      PythonLaunchDescriptionSource([rosbot_xl_gazebo, '/launch/rviz2.launch.py'])
-    ),
+    # IncludeLaunchDescription(
+    #   PythonLaunchDescriptionSource([rosbot_xl_gazebo, '/launch/rviz2.launch.py'])
+    # ),
   ])
 
 

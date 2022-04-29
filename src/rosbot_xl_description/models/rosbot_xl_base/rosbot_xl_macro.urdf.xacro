@@ -5,12 +5,11 @@
   <xacro:macro name="rosbot_xl_robot" params="use_sim">
 
     <xacro:property name="wheel_diameter" value="0.082" />
-    <xacro:property name="wheel_radius" value="${wheel_diameter/2.0}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
-    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl/gazebo_plugins.gazebo.xacro" ns="gazebo" /> -->
+    <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.gazebo.xacro" ns="gazebo" />
 
     <!-- BODY DECLARATION -->
     <xacro:body.body wheel_diameter="${wheel_diameter}" />
@@ -21,6 +20,8 @@
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_left" />
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_right" />
 
+    <!-- GAZEBO PLUGINS DECLARATION -->
+    <xacro:gazebo.rosbot_gazebo_plugins />
 
     <ros2_control name="wheels" type="system">
       <hardware>
@@ -57,9 +58,7 @@
 
     <gazebo>
       <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <robot_param>robot_description</robot_param>
-        <robot_param_node>robot_state_publisher</robot_param_node>
-        <parameters>$(find rosbot_xl_description)/config/controllers_gazebo.yaml</parameters>
+        <parameters>$(find rosbot_xl_description)/config/controllers.yaml</parameters>
       </plugin>
     </gazebo>
 

@@ -1,10 +1,12 @@
 services:
   rosbot_xl:
-    # build:
-    #   context: ./..
-    #   dockerfile: ./simulation/Dockerfile
-    image: husarion/rosbot-xl:galactic-simulation
-
+    build:
+      context: ./..
+      dockerfile: ./Dockerfile.simulation
+    # image: husarion/rosbot-xl:galactic-simulation
+    container_name: rosbot_xl
+    tty: true
+    stdin_open: true
     runtime: nvidia
     environment:
       - "DISPLAY"
@@ -13,6 +15,7 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    # command: ros2 launch rosbot_xl_description rviz2_preview.launch.py
-    command: ros2 launch rosbot_xl_gazebo sim.launch.py
+      - ./../src:/ros2_ws/src
+    command: watch ls
+    # command: ros2 launch rosbot_xl_gazebo sim.launch.py
   

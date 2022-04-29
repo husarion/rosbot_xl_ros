@@ -9,6 +9,12 @@ services:
       - /dev/ttyUSB0
     command: ros2 launch rplidar_ros2 rplidar_s1_launch.py inverted:=true
 
+  talker:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    command: ros2 run demo_nodes_cpp talker
+
   dds-router-rosbot:
     image: husarnet/dds-router
     restart: unless-stopped

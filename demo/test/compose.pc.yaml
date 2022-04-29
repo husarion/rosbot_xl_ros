@@ -16,8 +16,6 @@ services:
 
   listener:
     build: .
-    networks:
-      - listener_net
     environment:
       - ROS_DOMAIN_ID=1
     command: ros2 run demo_nodes_cpp listener

@@ -13,6 +13,7 @@
                 <userTransports>
                     <transport_id>udpv6_transport</transport_id>
                 </userTransports>
+                <useBuiltinTransports>false</useBuiltinTransports>
                 <builtin>
                     <initialPeersList>
                         <locator>

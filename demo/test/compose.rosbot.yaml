@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     network_mode: service:husarnet-rosbot
     environment:
-      - DS_HOSTNAME=rviz2
+      - DS_HOSTNAME=rosbot-xl
     volumes:
       - ./router-config.rosbot.yaml:/config.yaml
     command: bash -c "wait_ds.sh && ddsrouter -c /config.yaml -r 10"

@@ -1,34 +1,26 @@
 #!/usr/bin/env python3
-
 import os
-from launch_ros.actions import Node
 from launch import LaunchDescription
+from launch_ros.actions import Node
 from launch.substitutions import Command
 from launch.substitutions import LaunchConfiguration
-from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
+from launch.actions import IncludeLaunchDescription
 from launch.event_handlers import OnProcessExit
-from launch.conditions import IfCondition
-from launch.actions import DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
+  pkg_ros_ign_gazebo = get_package_share_directory('ros_ign_gazebo')
+  
+  use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+  
+  use_sim = use_sim_time
+  
   rosbot_xl_description = get_package_share_directory('rosbot_xl_description')
   xacro_file = os.path.join(rosbot_xl_description, 'models', 'rosbot_xl', 'rosbot_xl.urdf.xacro')
   
-  use_sim_time = LaunchConfiguration('use_sim_time', default=True)
-  launch_rviz = LaunchConfiguration('launch_rviz', default=True)
-  rviz_config = LaunchConfiguration('rviz_config',
-    default=os.path.join(rosbot_xl_description, 'rviz/rosbot_xl.rviz'))
-
-
-  pos_x = LaunchConfiguration('pos_x', default='0.0')
-  pos_y = LaunchConfiguration('pos_y', default='0.0')
-  pos_z = LaunchConfiguration('pos_z', default='0.0')
-
-  use_sim = use_sim_time
-
   robot_description = {
     'robot_description' : Command([
       'xacro --verbosity 0 ', xacro_file,
@@ -48,13 +40,13 @@ def generate_launch_description():
   control_node = Node(
     package='controller_manager',
     executable='ros2_control_node',
-    parameters=[robot_description],
+    parameters=[robot_description,],
     output={
         'stdout': 'screen',
         'stderr': 'screen',
     },
     remappings=[
-        ('~/rosbot_xl_base_controller/cmd_vel_unstamped', '/cmd_vel'),
+      ('/rosbot_xl_base_controller/cmd_vel_unstamped', '/cmd_vel')
     ]
   )
 
@@ -78,37 +70,36 @@ def generate_launch_description():
         '/controller_manager',
     ]
   )
-  
 
-  gazebo_spawner_node = Node(
-    package='gazebo_ros',
-    executable='spawn_entity.py',
-    # output='screen',
-    parameters=[{'use_sim_time': use_sim_time}],
-    arguments=['-spawn_service_timeout', '600',
-                '-entity', 'rosbot_xl',
-                '-x', pos_x, '-y', pos_y, '-z', pos_z,
-                '-topic', 'robot_description']
+  ign_gazebo = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+      os.path.join(pkg_ros_ign_gazebo, 'launch', 'ign_gazebo.launch.py')),
+      launch_arguments={'ign_args': '-r -v 4 empty.sdf'}.items(),
   )
   
-  rviz_configuration = DeclareLaunchArgument(
-    name='rvizconfig',
-    default_value=rviz_config,
-    description='Absolute path to rviz config file'
+  # Ign - ROS Bridge
+  bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    arguments=['/imu/data_raw@sensor_msgs/msg/Imu@ignition.msgs.IMU'],
+    output='screen'
   )
   
-  rviz_node = Node(
-    package='rviz2',
-    executable='rviz2',
-    name='rviz2',
+  spawn = Node(
+    package='ros_ign_gazebo',
+    executable='create',
+    arguments=[
+      '-name', 'rosbot_xl',
+      '-allow_renaming', 'true',
+      '-topic', 'robot_description'
+    ],
     output='screen',
-    arguments=['-d', LaunchConfiguration('rvizconfig')],
   )
   
   delay_controllers_after_gazebo_spawner = (
     RegisterEventHandler(
       event_handler=OnProcessExit(
-        target_action=gazebo_spawner_node,
+        target_action=spawn,
         on_exit=[
           control_node,
           joint_state_broadcaster_spawner
@@ -125,27 +116,15 @@ def generate_launch_description():
       )
     )
   )
-  
-  # dealy_rviz_after_joint_state_broadcaster = (
-  #   RegisterEventHandler(
-  #     event_handler=OnProcessExit(
-  #       target_action=joint_state_broadcaster_spawner,
-  #       on_exit=[rviz_configuration, rviz_node]
-  #     ),
-  #     # condition=IfCondition(LaunchConfiguration('launch_rviz'))
-  #   )
-  # )
 
-
-  nodes = [
+  return LaunchDescription([
     robot_state_pub_node,
-    gazebo_spawner_node,
+    bridge,
+    ign_gazebo,
+    spawn,
     delay_controllers_after_gazebo_spawner,
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-    # dealy_rviz_after_joint_state_broadcaster
-  ]
-  
-  return LaunchDescription(nodes)
+  ])
 
 if __name__ == '__main__':
-  generate_launch_description()
+    generate_launch_description()

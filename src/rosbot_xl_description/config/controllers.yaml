@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 50 # Hz
+    update_rate: 100 # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -24,7 +24,7 @@ rosbot_xl_base_controller:
     right_wheel_radius_multiplier: 1.0
 
     # Feedback from motors is published at around 20 Hz
-    publish_rate: 25.0
+    publish_rate: 50.0
     odom_frame_id: odom
     base_frame_id: base_link
     pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]

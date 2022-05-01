@@ -3,33 +3,36 @@ FROM osrf/ros:galactic-desktop
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
 
+ENV IGNITION_VERSION fortress
+
 WORKDIR /ros2_ws
 
+COPY . .
 
 # install everything needed
 RUN apt-get update && apt-get install -y \
         python3-pip \
         python3-colcon-common-extensions \
-        python3-rosdep && \
-    apt-get upgrade -y
+        python3-rosdep \
+        python3-vcstool && \
+    apt-get upgrade -y && \
     # build & install ROSbot XL packages
-
-COPY . .
-
-RUN source "/opt/ros/$ROS_DISTRO/setup.bash" && \
+    source "/opt/ros/$ROS_DISTRO/setup.bash" && \
+    vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos && \
+    vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
+    colcon build --symlink-install && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
-    # apt-get remove -y \
-    #     python3-pip \
-    #     python3-colcon-common-extensions \
-    #     python3-rosdep && \       
+    apt-get remove -y \
+        python3-pip \
+        python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-vcstool && \   
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN source "/opt/ros/$ROS_DISTRO/setup.bash" && \
-    colcon build --symlink-install
 
 ENTRYPOINT ["/ros2_ws/ros_entrypoint.sh"]
 

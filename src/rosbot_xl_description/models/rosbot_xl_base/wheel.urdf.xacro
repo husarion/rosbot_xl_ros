@@ -67,17 +67,7 @@
 
       <dynamics damping="0.001"
                 friction="0.001"/>
-    </joint>
-
-
-    <gazebo reference="${prefix}_wheel_link">
-      <mu1 value="0.5" />
-      <mu2 value="0.5" />
-      <kp value="10000000.0" />
-      <kd value="1.0" />
-      <fdir1 value="1 0 0"/>
-    </gazebo>
-    
+    </joint>   
     
   </xacro:macro>
 

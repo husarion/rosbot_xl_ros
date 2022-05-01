@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    colcon build --symlink-install && \
+    colcon build --merge-install && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \

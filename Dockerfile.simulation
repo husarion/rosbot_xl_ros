@@ -4,6 +4,7 @@ FROM osrf/ros:galactic-desktop
 SHELL ["/bin/bash", "-c"]
 
 ENV IGNITION_VERSION fortress
+ENV ROSBOT_XL_ROS_BUILD simulation
 
 WORKDIR /ros2_ws
 
@@ -22,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    colcon build --merge-install && \
+    colcon build --merge-install --packages-up-to rosbot_xl && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:macro name="rosbot_ign_plugins" >
     <!-- publish IMU -->
-    <!-- <gazebo reference="imu_link">
+    <gazebo reference="imu_link">
       <sensor name="imu_link" type="imu">
         <plugin
           filename="ignition-gazebo-imu-system"
@@ -59,12 +59,12 @@
           </z>
         </linear_acceleration>
       </sensor>
-    </gazebo> -->
+    </gazebo>
 
-    <!-- <gazebo>
+    <gazebo>
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters>$(find rosbot_xl_description)/config/controllers.yaml</parameters>
       </plugin>
-    </gazebo> -->
+    </gazebo>
   </xacro:macro>
 </robot>

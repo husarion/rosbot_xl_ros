@@ -3,3 +3,8 @@ repositories:
     type: git
     url: https://github.com/ignitionrobotics/ign_ros2_control.git
     version: galactic
+
+  husarion/gazebo_worlds:
+    type: git
+    url: https://github.com/husarion/gazebo_worlds.git
+    version: main

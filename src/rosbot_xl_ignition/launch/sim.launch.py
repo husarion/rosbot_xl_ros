@@ -40,7 +40,7 @@ def generate_launch_description():
   control_node = Node(
     package='controller_manager',
     executable='ros2_control_node',
-    parameters=[robot_description,],
+    parameters=[robot_description],
     output={
         'stdout': 'screen',
         'stderr': 'screen',
@@ -81,7 +81,9 @@ def generate_launch_description():
   bridge = Node(
     package='ros_ign_bridge',
     executable='parameter_bridge',
-    arguments=['/imu/data_raw@sensor_msgs/msg/Imu@ignition.msgs.IMU'],
+    arguments=[
+      '/imu/data_raw@sensor_msgs/msg/Imu@ignition.msgs.IMU'
+    ],
     output='screen'
   )
   

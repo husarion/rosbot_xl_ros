@@ -49,10 +49,10 @@
       </collision>
 
       <inertial>
-          <mass value="0.100" />
-          <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                             iyy="1.0" iyz="0.0"
-                                       izz="0.0" />
+          <mass value="0.051" />
+          <inertia  ixx="3.954e-05" ixy="0.000"     ixz="0.000"
+                                    iyy="7.116e-05" iyz="0.000"
+                                                    izz="4.032e-05" />
       </inertial>
     </link>
 

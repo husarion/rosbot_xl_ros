@@ -23,7 +23,7 @@
     <!-- IGNITION PLUGINS DECLARATION -->
     <xacro:ignition.rosbot_ign_plugins />
 
-    <ros2_control name="wheels" type="system">
+    <!-- <ros2_control name="wheels" type="system">
       <hardware>
         <xacro:if value="${use_sim}">
           <plugin>ign_ros2_control/IgnitionSystem</plugin>
@@ -53,6 +53,6 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
       </joint>
-    </ros2_control>
+    </ros2_control> -->
   </xacro:macro>
 </robot>

@@ -24,7 +24,9 @@ def generate_launch_description():
   robot_description = {
     'robot_description' : Command([
       'xacro --verbosity 0 ', xacro_file,
-      ' use_sim:=', use_sim
+      ' use_sim:=', use_sim,
+      # non gpu lidar is not supported yet
+      ' use_gpu:=true'
     ])
   }
   
@@ -137,6 +139,20 @@ def generate_launch_description():
     ],
     output='screen'
   )
+  
+  joint_state_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='joint_state_bridge',
+    arguments=[
+        '/world/empty/model/rosbot_xl/joint_state' + '@sensor_msgs/msg/JointState' + '[ignition.msgs.Model'
+    ],
+    remappings=[
+      ('world/empty/model/rosbot_xl/joint_state', 'joint_states')
+    ],
+    output='screen'
+  )
+  
 
   
   spawn = Node(
@@ -179,6 +195,7 @@ def generate_launch_description():
     tf_bridge,
     laser_bridge,
     cmd_vel_bridge,
+    joint_state_bridge,
     ign_gazebo,
     spawn,
     # delay_controllers_after_gazebo_spawner,

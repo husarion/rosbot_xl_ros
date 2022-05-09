@@ -31,6 +31,7 @@
     </link>
 
     <link name="rplidar_s1_laser_link"></link>
+    
 
     <joint name="body_link_to_rplidar_s1_link_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
@@ -50,8 +51,8 @@
     </gazebo>
 
     <gazebo reference="rplidar_s1_laser_link">
-      <sensor name='rplidar_s1_laser_link' type='${ray_type}'>"
-        <pose relative_to='rplidar_s1_laser_link'>0.0 0.0 0.04 0.0 0.0 0.0</pose>
+      <sensor name='rplidar_s1' type='${ray_type}'>"
+        <ignition_frame_id>rplidar_s1_laser_link</ignition_frame_id>
         <topic>${topic}</topic>
         <update_rate>10</update_rate>
         <visualize>true</visualize>
@@ -71,7 +72,7 @@
             </vertical>
           </scan>
           <range>
-            <min>${0.051/2+0.03}</min>
+            <min>0.3</min>
             <max>40.0</max>
             <resolution>0.03</resolution>
           </range>
@@ -83,12 +84,6 @@
         </ray>
         <always_on>1</always_on>
         <visualize>true</visualize>
-
-        <plugin
-          filename="libignition-gazebo-sensors-system.so"
-          name="ignition::gazebo::systems::Sensors">
-          <render_engine>ogre2</render_engine>
-        </plugin>
       </sensor>
     </gazebo> 
   </xacro:macro>

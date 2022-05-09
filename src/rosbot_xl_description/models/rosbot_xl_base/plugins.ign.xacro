@@ -14,6 +14,8 @@
         <topic>imu/data_raw</topic>
         <visualize>false</visualize>
         <enable_metrics>false</enable_metrics>
+        <frame_id>imu_link</frame_id>
+        <ignition_frame_id>imu_link</ignition_frame_id>
 
         <pose relative_to='imu_link'>0 0 0 0 0 0</pose>
 
@@ -80,12 +82,13 @@
         <right_joint>rear_right_wheel_joint</right_joint>
         <wheel_separation>0.192</wheel_separation>
         <wheel_separation>0.192</wheel_separation>
-        <wheel_radius>${wheel_diameter}</wheel_radius>
-        <wheel_radius>${wheel_diameter}</wheel_radius>
+        <wheel_radius>${wheel_diameter/2}</wheel_radius>
+        <wheel_radius>${wheel_diameter/2}</wheel_radius>
         <odom_publish_frequency>25</odom_publish_frequency>
         <topic>cmd_vel</topic>
         <odom_topic>odom/wheels</odom_topic>
         <tf_topic>tf</tf_topic>
+        <frame_id>odom</frame_id>
         <child_frame_id>base_link</child_frame_id>
       </plugin>
     </gazebo>
@@ -95,7 +98,9 @@
         filename="libignition-gazebo-pose-publisher-system.so"
         name="ignition::gazebo::systems::PosePublisher">
         <publish_link_pose>true</publish_link_pose>
-        <publish_nested_model_pose>true</publish_nested_model_pose>
+        <publish_collision_pose>false</publish_collision_pose>
+        <publish_visual_pose>false</publish_visual_pose>
+        <publish_nested_model_pose>false</publish_nested_model_pose>
         <use_pose_vector_msg>true</use_pose_vector_msg>
         <update_frequency>50</update_frequency>
       </plugin>
@@ -105,7 +110,7 @@
       <plugin
         filename="libignition-gazebo-sensors-system.so"
         name="ignition::gazebo::systems::Sensors">
-        <render_engine>ogre</render_engine>
+        <render_engine>ogre2</render_engine>
       </plugin>
     </gazebo>
 
@@ -117,6 +122,13 @@
         <joint name="front_right_wheel_joint"></joint>
         <joint name="rear_left_wheel_joint"></joint>
         <joint name="rear_right_wheel_joint"></joint>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin
+        filename="ignition-gazebo-scene-broadcaster-system"
+        name="ignition::gazebo::systems::SceneBroadcaster">
       </plugin>
     </gazebo>
   </xacro:macro>

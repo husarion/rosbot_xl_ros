@@ -37,39 +37,39 @@ def generate_launch_description():
     ]
   )
   
-  control_node = Node(
-    package='controller_manager',
-    executable='ros2_control_node',
-    parameters=[robot_description],
-    output={
-        'stdout': 'screen',
-        'stderr': 'screen',
-    },
-    remappings=[
-      ('/rosbot_xl_base_controller/cmd_vel_unstamped', '/cmd_vel')
-    ]
-  )
+  # control_node = Node(
+  #   package='controller_manager',
+  #   executable='ros2_control_node',
+  #   parameters=[robot_description],
+  #   output={
+  #       'stdout': 'screen',
+  #       'stderr': 'screen',
+  #   },
+  #   remappings=[
+  #     ('/rosbot_xl_base_controller/cmd_vel_unstamped', '/cmd_vel')
+  #   ]
+  # )
 
 
-  joint_state_broadcaster_spawner = Node(
-    package='controller_manager',
-    executable='spawner',
-    arguments=[
-      'joint_state_broadcaster',
-      '--controller-manager',
-      '/controller_manager'
-    ]
-  )
+  # joint_state_broadcaster_spawner = Node(
+  #   package='controller_manager',
+  #   executable='spawner',
+  #   arguments=[
+  #     'joint_state_broadcaster',
+  #     '--controller-manager',
+  #     '/controller_manager'
+  #   ]
+  # )
 
-  robot_controller_spawner = Node(
-    package='controller_manager',
-    executable='spawner',
-    arguments=[
-        'rosbot_xl_base_controller',
-        '--controller-manager',
-        '/controller_manager',
-    ]
-  )
+  # robot_controller_spawner = Node(
+  #   package='controller_manager',
+  #   executable='spawner',
+  #   arguments=[
+  #       'rosbot_xl_base_controller',
+  #       '--controller-manager',
+  #       '/controller_manager',
+  #   ]
+  # )
 
   ign_gazebo = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(
@@ -78,14 +78,66 @@ def generate_launch_description():
   )
   
   # Ign - ROS Bridge
-  bridge = Node(
+  clock_bridge = Node(
     package='ros_ign_bridge',
     executable='parameter_bridge',
+    name='clock_bridge',
     arguments=[
-      '/imu/data_raw@sensor_msgs/msg/Imu@ignition.msgs.IMU'
+      '/clock' + '@rosgraph_msgs/msg/Clock' + '[ignition.msgs.Clock'
     ],
     output='screen'
   )
+  
+  imu_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='imu_bridge',
+    arguments=[
+      '/imu/data_raw' + '@sensor_msgs/msg/Imu' + '[ignition.msgs.IMU'
+    ],
+    output='screen'
+  )
+  
+  odom_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='odom_bridge',
+    arguments=[
+      '/odom/wheels' + '@nav_msgs/msg/Odometry' + '[ignition.msgs.Odometry'
+    ],
+    output='screen'
+  )
+  
+  tf_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='tf_bridge',
+    arguments=[
+      '/tf' + '@tf2_msgs/msg/TFMessage' + '[ignition.msgs.Pose_V'
+    ],
+    output='screen'
+  )
+  
+  laser_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='laser_bridge',
+    arguments=[
+      '/laser/scan' + '@sensor_msgs/msg/LaserScan' + '[ignition.msgs.LaserScan'
+    ],
+    output='screen'
+  )
+  
+  cmd_vel_bridge = Node(
+    package='ros_ign_bridge',
+    executable='parameter_bridge',
+    name='cmd_vel_bridge',
+    arguments=[
+        '/cmd_vel' + '@geometry_msgs/msg/Twist' + ']ignition.msgs.Twist'
+    ],
+    output='screen'
+  )
+
   
   spawn = Node(
     package='ros_ign_gazebo',
@@ -98,34 +150,39 @@ def generate_launch_description():
     output='screen',
   )
   
-  delay_controllers_after_gazebo_spawner = (
-    RegisterEventHandler(
-      event_handler=OnProcessExit(
-        target_action=spawn,
-        on_exit=[
-          control_node,
-          joint_state_broadcaster_spawner
-        ]
-      )
-    )
-  )
+  # delay_controllers_after_gazebo_spawner = (
+  #   RegisterEventHandler(
+  #     event_handler=OnProcessExit(
+  #       target_action=spawn,
+  #       on_exit=[
+  #         control_node,
+  #         joint_state_broadcaster_spawner
+  #       ]
+  #     )
+  #   )
+  # )
   
-  delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
-    RegisterEventHandler(
-      event_handler=OnProcessExit(
-        target_action=joint_state_broadcaster_spawner,
-        on_exit=[robot_controller_spawner]
-      )
-    )
-  )
+  # delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
+  #   RegisterEventHandler(
+  #     event_handler=OnProcessExit(
+  #       target_action=joint_state_broadcaster_spawner,
+  #       on_exit=[robot_controller_spawner]
+  #     )
+  #   )
+  # )
 
   return LaunchDescription([
     robot_state_pub_node,
-    bridge,
+    clock_bridge,
+    imu_bridge,
+    odom_bridge,
+    tf_bridge,
+    laser_bridge,
+    cmd_vel_bridge,
     ign_gazebo,
     spawn,
-    delay_controllers_after_gazebo_spawner,
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+    # delay_controllers_after_gazebo_spawner,
+    # delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
   ])
 
 if __name__ == '__main__':

@@ -27,10 +27,6 @@ def generate_launch_description():
         'pos_y' : '0.0',
       }.items(),
     ),
-
-    IncludeLaunchDescription(
-      PythonLaunchDescriptionSource([rosbot_xl_gazebo, '/launch/rviz2.launch.py'])
-    ),
   ])
 
 

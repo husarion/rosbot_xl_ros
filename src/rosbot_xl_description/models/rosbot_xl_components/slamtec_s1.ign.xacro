@@ -52,10 +52,16 @@
 
     <gazebo reference="rplidar_s1_laser_link">
       <sensor name='rplidar_s1' type='${ray_type}'>"
+      <!-- <pose relative_to='rplidar_s1_laser_link'>0 0 0 0 0 0</pose> -->
+
+        <!-- <frame name="rplidar_s1_laser_link" attached_to='odom'>
+          <pose>0 0 0 0 0 0</pose>
+        </frame> -->
+
         <ignition_frame_id>rplidar_s1_laser_link</ignition_frame_id>
         <topic>${topic}</topic>
         <update_rate>10</update_rate>
-        <visualize>true</visualize>
+        <visualize>false</visualize>
         <ray>
           <scan>
             <horizontal>

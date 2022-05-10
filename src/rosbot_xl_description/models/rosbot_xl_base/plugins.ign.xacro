@@ -93,6 +93,8 @@
       </plugin>
     </gazebo>
 
+
+
     <gazebo>
       <plugin
         filename="libignition-gazebo-pose-publisher-system.so"

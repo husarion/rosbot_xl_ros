@@ -21,7 +21,12 @@ services:
     restart: unless-stopped
     volumes:
       - ../config/nav2:/ros2_ws/src/husarion_nav2/config
-    command: ros2 launch husarion_nav2 navigation2_bringup.launch.py
+    command: >
+      ros2 launch husarion_nav2 navigation2_bringup.launch.py
+        use_slam:=True 
+        use_auto_localization:=False
+        use_sim_time:=True
+
 
   rviz:
     image: husarion/rviz2:galactic

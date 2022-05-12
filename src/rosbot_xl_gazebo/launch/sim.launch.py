@@ -10,13 +10,13 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
   rosbot_xl_description = get_package_share_directory('rosbot_xl_description')
   rosbot_xl_gazebo = get_package_share_directory('rosbot_xl_gazebo')
-  # world = LaunchConfiguration('world', default=os.path.join(rosbot_xl_gazebo, 'worlds', ' turtlebot_playground.world'))
+  world = LaunchConfiguration('world', default=os.path.join(rosbot_xl_gazebo, 'worlds', 'turtlebot_playground.world'))
 
   return LaunchDescription([
     IncludeLaunchDescription(
       PythonLaunchDescriptionSource([rosbot_xl_gazebo, '/launch/world.launch.py']),
       launch_arguments = {
-        'world' : '',
+        'world' : world,
       }.items(),
     ),
 

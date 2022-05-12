@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="rplidar_s1" params="xyz rpy use_gpu:=false topic:=laser/scan">
+  <xacro:macro name="rplidar_s1" params="xyz rpy use_gpu:=false topic:=scan">
     <xacro:if value="${use_gpu}">
       <xacro:property name="ray_type" value="gpu_ray" />
     </xacro:if>
@@ -26,7 +26,7 @@
 
       <inertial>
         <mass value="0.105" />
-        <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001" />
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001" />
       </inertial>
     </link>
 

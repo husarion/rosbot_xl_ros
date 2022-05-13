@@ -33,6 +33,6 @@ services:
     restart: unless-stopped
     volumes: 
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ./../config/rviz/rbxl.rviz:/root/.rviz2/default.rviz
+      - ./../config/rviz/slam.rviz:/root/.rviz2/default.rviz
     environment:
       - DISPLAY

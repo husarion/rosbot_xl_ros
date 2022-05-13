@@ -21,7 +21,7 @@ RUN apt-get update --fix-missing && apt-get install -y \
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    colcon build --merge-install && \
+    colcon build --symlink-install && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \

@@ -14,7 +14,6 @@ RUN apt-get update --fix-missing && apt-get install -y \
         ros-${ROS_DISTRO}-rmw-fastrtps-cpp && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
-    rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
     colcon build --symlink-install && \

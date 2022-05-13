@@ -49,6 +49,4 @@ RUN rm -rf src/rosbot_xl_gazebo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
-
 ENTRYPOINT ["/ros2_ws/ros_entrypoint.sh"]

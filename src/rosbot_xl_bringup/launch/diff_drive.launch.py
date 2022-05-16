@@ -101,20 +101,36 @@ def generate_launch_description():
         )
     )
 
-    rosbot_xl_description = get_package_share_directory('rosbot_xl_description')
-    xacro_file = os.path.join(rosbot_xl_description, 'models', 'rosbot_xl', 'rosbot_xl.urdf.xacro')
+    rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
+    xacro_file = os.path.join(
+        rosbot_xl_description, "models", "rosbot_xl", "rosbot_xl.urdf.xacro"
+    )
 
-    description_node =  Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            parameters=[{
-                'use_sim_time': False,
-                'robot_description' : Command([
-                    'xacro --verbosity 0 ', xacro_file,
-                    ' use_sim:=false'])
-                }]
-        )
+    description_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        parameters=[
+            {
+                "use_sim_time": False,
+                "robot_description": Command(
+                    ["xacro --verbosity 0 ", xacro_file, " use_sim:=false"]
+                ),
+            }
+        ],
+    )
+
+    robot_localization_node = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[
+            os.path.join(
+                get_package_share_directory("rosbot_xl_ekf"), "config", "ekf.yaml"
+            )
+        ],
+    )
 
     nodes = [
         control_node,
@@ -122,6 +138,7 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         description_node,
+        robot_localization_node,
     ]
 
     return LaunchDescription(nodes)

@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     volumes:
       - ../config/nav2:/ros2_ws/src/husarion_nav2/config
-    command: ros2 launch husarion_nav2 bringup_both.launch.py
+    command: ros2 launch husarion_nav2 navigation2_bringup.launch.py use_slam:=True
 
   rplidar:
     image: husarion/rplidar:galactic

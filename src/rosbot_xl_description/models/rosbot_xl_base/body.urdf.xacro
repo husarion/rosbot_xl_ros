@@ -38,7 +38,7 @@
       </inertial>
     </link> 
 
-    <link name="imu_link">
+    <link name="imu">
       <inertial>
         <mass value="0.0000001" />
         <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
@@ -70,10 +70,10 @@
       <child link="laser" />
     </joint>
 
-    <joint name="body_link_to_imu_link_joint" type="fixed">
-      <origin xyz="-0.1369 -0.0419 0.0370" rpy="0.0 0.0 0.0" />
+    <joint name="body_link_to_imu_joint" type="fixed">
+      <origin xyz="-0.1369 -0.0419 0.0370" rpy="3.14159 0.0 0.0" />
       <parent link="body_link" />
-      <child link="imu_link" />
+      <child link="imu" />
     </joint>
   
   </xacro:macro>

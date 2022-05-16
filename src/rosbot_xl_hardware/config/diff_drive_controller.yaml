@@ -35,7 +35,7 @@ rosbot_xl_base_controller:
 
     # Update odometry from position (at the time of writing velocity update is still bugged)
     position_feedback: true
-    enable_odom_tf: true
+    enable_odom_tf: false
 
     cmd_vel_timeout: 0.5
     #publish_limited_velocity: true

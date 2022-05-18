@@ -129,7 +129,17 @@ controller_server:
       stateful: True
     # DWB parameters
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
+      # Shim controller first rotates robot in place to orientation of global path
+      # and the switches to DWB - otherwise DWB won't turn in place, but with arc, which
+      # is less optimal
+      plugin: "nav2_rotation_shim_controller::RotationShimController"
+      primary_controller: "dwb_core::DWBLocalPlanner"
+      angular_dist_threshold: 0.785
+      forward_sampling_distance: 0.5
+      rotate_to_heading_angular_vel: 1.0
+      max_angular_accel: 3.2
+      simulate_ahead_time: 1.0
+
       debug_trajectory_details: True
       min_vel_x: 0.0
       min_vel_y: 0.0

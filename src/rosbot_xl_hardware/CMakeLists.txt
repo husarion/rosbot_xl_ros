@@ -20,6 +20,9 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(realtime_tools REQUIRED)
 
+find_package(ament_cmake_python REQUIRED)
+find_package(rclpy REQUIRED)
+
 add_library(
   ${PROJECT_NAME}
   SHARED
@@ -84,6 +87,13 @@ ament_export_dependencies(
   rclcpp_lifecycle
   rclcpp
   std_msgs
+)
+
+ament_python_install_package(${PROJECT_NAME})
+# Install Python executables
+install(PROGRAMS
+rosbot_xl_hardware/repub_imu_msg.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

@@ -120,6 +120,12 @@ def generate_launch_description():
         ],
     )
 
+    repub_imu_node = Node(
+        package="rosbot_xl_hardware",
+        executable="repub_imu_msg.py",
+        name="repub_imu_msg",
+    )
+
     robot_localization_node = Node(
         package="robot_localization",
         executable="ekf_node",
@@ -138,6 +144,7 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         description_node,
+        repub_imu_node,
         robot_localization_node,
     ]
 

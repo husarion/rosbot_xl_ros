@@ -55,6 +55,7 @@ def generate_launch_description():
             "stderr": "screen",
         },
         remappings=[
+            ("/imu_sensor_node/imu", "/imu/data_raw"),
             ("~/motors_cmd", "/motors_cmd"),
             ("~/motors_response", "/motors_response"),
             ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
@@ -88,6 +89,16 @@ def generate_launch_description():
         ],
     )
 
+    imu_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "imu_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
+
     # Delay start of robot_controller after `joint_state_broadcaster`
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
         RegisterEventHandler(
@@ -102,6 +113,7 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
+        imu_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
     ]
 

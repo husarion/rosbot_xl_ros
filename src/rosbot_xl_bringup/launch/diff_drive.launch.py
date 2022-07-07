@@ -61,6 +61,7 @@ def generate_launch_description():
             ("~/motors_cmd", "/motors_cmd"),
             ("~/motors_response", "/motors_response"),
             ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
+            ("/imu_sensor_node/imu", "/imu/data_raw"),
         ],
     )
 
@@ -86,6 +87,16 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             "rosbot_xl_base_controller",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
+
+    imu_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "imu_broadcaster",
             "--controller-manager",
             "/controller_manager",
         ],
@@ -137,6 +148,7 @@ def generate_launch_description():
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        imu_broadcaster_spawner,
         description_node,
         robot_localization_node,
     ]

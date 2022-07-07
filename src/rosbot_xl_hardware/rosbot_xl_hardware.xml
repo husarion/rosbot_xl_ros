@@ -6,4 +6,12 @@
       Hardware system controller for Rosbot XL
     </description>
   </class>
+
+  <class name="rosbot_xl_hardware/RosbotXLImuSensor"
+         type="rosbot_xl_hardware::RosbotXLImuSensor"
+          base_class_type="hardware_interface::SensorInterface">
+    <description>
+      IMU sensor broadcaster for Rosbot XL
+    </description>
+  </class>
 </library>

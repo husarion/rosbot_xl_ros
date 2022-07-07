@@ -24,6 +24,7 @@ add_library(
   ${PROJECT_NAME}
   SHARED
   src/rosbot_xl_system.cpp
+  src/rosbot_xl_imu_sensor.cpp
 )
 target_include_directories(
   ${PROJECT_NAME}

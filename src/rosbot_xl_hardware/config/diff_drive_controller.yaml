@@ -6,6 +6,13 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
     rosbot_xl_base_controller:
       type: diff_drive_controller/DiffDriveController
+    imu_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+imu_broadcaster:
+  ros__parameters:
+    sensor_name: "imu"
+    frame_id: "imu"
 
 rosbot_xl_base_controller:
   ros__parameters:

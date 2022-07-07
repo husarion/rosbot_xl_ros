@@ -8,7 +8,7 @@ services:
     #   context: ./../
     #   dockerfile: ./Dockerfile.hardware
     restart: unless-stopped
-    command: ros2 launch rosbot_xl_bringup diff_drive.launch.py
+    command: ros2 launch rosbot_xl_bringup bringup.launch.py
 
   microros:
     image: microros/micro-ros-agent:galactic

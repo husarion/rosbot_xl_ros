@@ -135,22 +135,22 @@ controller_server:
       # is less optimal
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "dwb_core::DWBLocalPlanner"
-      angular_dist_threshold: 0.785
+      angular_dist_threshold: 0.4 # quite low value to avoid moving in arc
       forward_sampling_distance: 0.5
-      rotate_to_heading_angular_vel: 1.0
-      max_angular_accel: 3.2
+      rotate_to_heading_angular_vel: 1.5
+      max_angular_accel: 4.0
       simulate_ahead_time: 1.0
 
       debug_trajectory_details: True
 
       min_vel_x: 0.0
-      max_vel_x: 0.26
+      max_vel_x: 0.5
       acc_lim_x: 0.5
       decel_lim_x: -0.5
       min_speed_xy: 0.007
-      max_speed_xy: 0.26
+      max_speed_xy: 0.5
 
-      max_vel_theta: 1.0
+      max_vel_theta: 1.5
       min_speed_theta: 0.4
       acc_lim_theta: 4.0
       decel_lim_theta: -4.0
@@ -169,7 +169,7 @@ controller_server:
       stateful: True
 
       trajectory_generator_name: "dwb_plugins::StandardTrajectoryGenerator"
-      sim_time: 2.5
+      sim_time: 0.75 # low value to avoid slow movement near goal
       discretize_by_time: False
       linear_granularity: 0.05
       angular_granularity: 0.025

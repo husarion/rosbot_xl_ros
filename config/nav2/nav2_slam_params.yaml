@@ -12,7 +12,7 @@ slam_toolbox:
     odom_frame: odom
     map_frame: map
     base_frame: base_link
-    scan_topic: /scan
+    scan_topic: /scan_filtered
     mode: mapping #localization
 
     debug_logging: false
@@ -241,7 +241,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /scan_filtered
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -277,7 +277,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /scan_filtered
           max_obstacle_height: 2.0
           clearing: True
           marking: True

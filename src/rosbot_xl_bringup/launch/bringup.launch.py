@@ -1,12 +1,11 @@
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from ament_index_python.packages import get_package_share_directory
-import os
-
+from launch.substitutions import PathJoinSubstitution
 
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
+
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
@@ -23,15 +22,26 @@ def generate_launch_description():
         name="ekf_filter_node",
         output="screen",
         parameters=[
-            os.path.join(
-                get_package_share_directory("rosbot_xl_ekf"), "config", "ekf.yaml"
+            PathJoinSubstitution(
+                [get_package_share_directory("rosbot_xl_ekf"), "config", "ekf.yaml"]
             )
         ],
     )
 
-    nodes = [
-        diff_drive_launch,
-        robot_localization_node,
-    ]
+    laser_filter_node = Node(
+        package="laser_filters",
+        executable="scan_to_scan_filter_chain",
+        parameters=[
+            PathJoinSubstitution(
+                [
+                    get_package_share_directory("rosbot_xl_bringup"),
+                    "config",
+                    "laser_filter.yaml",
+                ]
+            )
+        ],
+    )
+
+    nodes = [diff_drive_launch, robot_localization_node, laser_filter_node]
 
     return LaunchDescription(nodes)

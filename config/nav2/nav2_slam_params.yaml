@@ -71,9 +71,13 @@ bt_navigator:
     use_sim_time: False
     global_frame: map
     robot_base_frame: base_link
-    enable_groot_monitoring: True
-    groot_zmq_publisher_port: 1666
-    groot_zmq_server_port: 1667
+
+    # groot monitoring will no longer be supported in humble https://github.com/ros-planning/navigation2/pull/2696
+    # it sometimes crashes
+    enable_groot_monitoring: False
+    # groot_zmq_publisher_port: 1666
+    # groot_zmq_server_port: 1667
+
     default_bt_xml_filename: "default_bt_xml_filename"
     plugin_lib_names:
       - nav2_compute_path_to_pose_action_bt_node

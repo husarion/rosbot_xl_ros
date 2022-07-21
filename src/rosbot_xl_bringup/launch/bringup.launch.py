@@ -11,8 +11,13 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     diff_drive_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            get_package_share_directory("rosbot_xl_hardware")
-            + "/launch/diff_drive.launch.py"
+            PathJoinSubstitution(
+                [
+                    get_package_share_directory("rosbot_xl_hardware"),
+                    "launch",
+                    "diff_drive.launch.py",
+                ]
+            )
         )
     )
 
@@ -42,6 +47,6 @@ def generate_launch_description():
         ],
     )
 
-    nodes = [diff_drive_launch, robot_localization_node, laser_filter_node]
+    actions = [diff_drive_launch, robot_localization_node, laser_filter_node]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(actions)

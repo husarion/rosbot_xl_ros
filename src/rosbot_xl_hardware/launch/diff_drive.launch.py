@@ -109,7 +109,7 @@ def generate_launch_description():
         )
     )
 
-    nodes = [
+    actions = [
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
@@ -117,4 +117,4 @@ def generate_launch_description():
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
     ]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(actions)

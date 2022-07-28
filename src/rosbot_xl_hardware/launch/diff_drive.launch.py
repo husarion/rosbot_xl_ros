@@ -55,9 +55,9 @@ def generate_launch_description():
             "stderr": "screen",
         },
         remappings=[
-            ("/imu_sensor_node/imu", "/imu/data_raw"),
-            ("~/motors_cmd", "/motors_cmd"),
-            ("~/motors_response", "/motors_response"),
+            ("/imu_sensor_node/imu", "/_imu/data_raw"),
+            ("~/motors_cmd", "/_motors_cmd"),
+            ("~/motors_response", "/_motors_response"),
             ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
     )

@@ -89,6 +89,16 @@ def generate_launch_description():
         ],
     )
 
+    # Delay start of robot_controller after joint_state_broadcaster
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=joint_state_broadcaster_spawner,
+                on_exit=[robot_controller_spawner],
+            )
+        )
+    )
+
     imu_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -99,13 +109,12 @@ def generate_launch_description():
         ],
     )
 
-    # Delay start of robot_controller after `joint_state_broadcaster`
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=joint_state_broadcaster_spawner,
-                on_exit=[robot_controller_spawner],
-            )
+    # Delay start of imu_broadcaster after robot_controller
+    # when spawning without delay ros2_control_node sometimes crashed
+    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[imu_broadcaster_spawner],
         )
     )
 
@@ -113,8 +122,8 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
-        imu_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        delay_imu_broadcaster_spawner_after_robot_controller_spawner,
     ]
 
     return LaunchDescription(actions)

@@ -81,7 +81,7 @@ controller_server:
 
       min_vel_x: 0.0
       max_vel_x: 0.5
-      acc_lim_x: 0.5
+      acc_lim_x: 1.0
       decel_lim_x: -0.5
       min_speed_xy: 0.007
       max_speed_xy: 0.5

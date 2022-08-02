@@ -79,8 +79,8 @@ std::vector<StateInterface> RosbotXLSystem::export_state_interfaces()
   {
     state_interfaces.emplace_back(
         StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &pos_state_[info_.joints[i].name]));
-    state_interfaces.emplace_back(hardware_interface::StateInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[info_.joints[i].name]));
+    state_interfaces.emplace_back(
+        StateInterface(info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[info_.joints[i].name]));
   }
 
   return state_interfaces;

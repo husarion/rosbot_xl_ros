@@ -40,14 +40,18 @@ rosbot_xl_base_controller:
     # Whether to use feedback or commands for odometry calculations
     open_loop: false
 
-    # Update odometry from position (at the time of writing velocity update is still bugged)
-    position_feedback: true
+    # Update odometry from velocity
+    #! IMPORTANT at the time of writing it is bugged on deb galactic version and require fork of diff drive controller installed from sources
+    # in sensor fusion only velocity is used and with this setting it is more accurate
+    position_feedback: false
+    # velocity computation filtering
+    velocity_rolling_window_size: 1
+
     enable_odom_tf: false
 
     cmd_vel_timeout: 0.5
     #publish_limited_velocity: true
     use_stamped_vel: false
-    #velocity_rolling_window_size: 10
 
     # Velocity and acceleration limits
     # Whenever a min_* is unspecified, default to -max_*
@@ -56,7 +60,7 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 0.5 # m/s
+        max_velocity: 0.7 # m/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 1.0 # m/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.

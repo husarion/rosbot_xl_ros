@@ -61,7 +61,7 @@ controller_server:
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.1
-      yaw_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.25
       stateful: True
 
     # DWB parameters
@@ -97,7 +97,7 @@ controller_server:
       decel_lim_y: 0.0
 
       vx_samples: 20
-      vy_samples: 5
+      vy_samples: 0
       vtheta_samples: 20
 
       transform_tolerance: 1.0
@@ -248,7 +248,7 @@ planner_server:
       max_iterations: -1 # maximum total iterations to search for before failing
       max_on_approach_iterations: 1000 # maximum number of iterations to attempt to reach goal once in tolerance, 2D only
       max_planning_time: 2.0 # max time in s for planner to plan, smooth, and upsample. Will scale maximum smoothing and upsampling times based on remaining time after planning.
-      smooth_path: false # Whether to smooth searched path
+      smooth_path: true # Whether to smooth searched path
       motion_model_for_search: "MOORE" # 2D Moore, Von Neumann
       angle_quantization_bins: 72 # For SE2 node: Number of angle bins for search, must be 1 for 2D node (no angle search)
       minimum_turning_radius: 0.20 # For SE2 node & smoother: minimum turning radius in m of path / vehicle

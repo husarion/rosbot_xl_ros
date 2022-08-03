@@ -16,12 +16,22 @@ services:
     command: udp4 --port 8888
 
   # modified behaviour tree that doesn't replane global path
+  # nav2:
+  #   image: husarion/navigation2:galactic
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ../config/nav2_params.yaml:/nav2_params.yaml
+  #     - ../config/navigate_w_recovery.xml:/navigate_w_recovery.xml
+  #   command: >
+  #     ros2 launch nav2_bringup navigation_launch.py    
+  #       params_file:=/nav2_params.yaml
+
+  # pure pursuit nav2
   nav2:
     image: husarion/navigation2:galactic
     restart: unless-stopped
     volumes:
-      - ../config/nav2_params.yaml:/nav2_params.yaml
-      - ../config/navigate_w_recovery.xml:/navigate_w_recovery.xml
+      - ../config/nav2_params_pure_pursuit.yaml:/nav2_params.yaml
     command: >
       ros2 launch nav2_bringup navigation_launch.py    
         params_file:=/nav2_params.yaml

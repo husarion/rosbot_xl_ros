@@ -213,6 +213,9 @@ global_costmap:
 
       footprint: "[[0.165, 0.145], [0.165, -0.145], [-0.165, -0.145], [-0.165, 0.145]]"
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True

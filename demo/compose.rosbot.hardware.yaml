@@ -1,0 +1,23 @@
+# Quick Star
+# $ docker compose -f compose.rosbot.hardware.yaml up
+
+services:
+  rosbot-xl:
+    image: husarion/rosbot-xl:galactic
+    # build:
+    #   context: ./../
+    #   dockerfile: ./Dockerfile.hardware
+    restart: unless-stopped
+    command: ros2 launch rosbot_xl_bringup bringup.launch.py
+
+  microros:
+    image: microros/micro-ros-agent:galactic
+    restart: unless-stopped
+    command: udp4 --port 8888
+
+  rplidar:
+    image: husarion/rplidar:galactic
+    restart: unless-stopped
+    devices:
+      - /dev/ttyUSB0
+    command: ros2 launch rplidar_ros2 rplidar_s1_launch.py inverted:=true

@@ -275,7 +275,7 @@ recoveries_server:
 
     global_frame: odom
     robot_base_frame: base_link
-    transform_timeout: 0.1
+    transform_tolerance: 0.1
 
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/published_footprint

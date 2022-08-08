@@ -25,6 +25,7 @@ services:
 
   localization-mapping:
     image: husarion/slam-toolbox:galactic
+    container_name: slam-toolbox
     restart: unless-stopped
     volumes:
       - ../config/slam_toolbox_params.yaml:/slam_params.yaml

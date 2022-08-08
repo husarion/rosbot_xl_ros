@@ -10,7 +10,7 @@ bt_navigator:
     # groot_zmq_publisher_port: 1666
     # groot_zmq_server_port: 1667
 
-    default_nav_to_pose_bt_xml: /navigate_w_recovery.xml
+    # default_nav_to_pose_bt_xml: /navigate_w_recovery.xml
     plugin_lib_names:
       - nav2_compute_path_to_pose_action_bt_node
       - nav2_follow_path_action_bt_node
@@ -116,7 +116,7 @@ local_costmap:
 
       footprint: "[[0.165, 0.145], [0.165, -0.145], [-0.165, -0.145], [-0.165, 0.145]]"
 
-      plugins: ["static_layer", "voxel_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True # QoS setting; durability policy transient local, combined with any depth, provides functionality similar to that of latching publishers

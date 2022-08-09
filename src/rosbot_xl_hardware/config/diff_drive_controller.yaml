@@ -20,7 +20,7 @@ rosbot_xl_base_controller:
     right_wheel_names: ["front_right_wheel_joint", "rear_right_wheel_joint"]
 
     wheel_separation: 0.252
-    wheel_radius: 0.05
+    wheel_radius: 0.048
 
     # For skid drive kinematics it will act as ICR coefficient
     # Kinematic model with ICR coefficient isn't totally accurate and this coefficient can differ
@@ -60,7 +60,8 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 0.7 # m/s
+        # top speed is around 1.2m/s
+        max_velocity: 0.9 # m/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 1.0 # m/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.
@@ -71,7 +72,7 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 1.0 # rad/s
+        max_velocity: 3.0 # rad/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 4.0 # rad/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.

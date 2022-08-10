@@ -174,7 +174,7 @@ CallbackReturn RosbotXLSystem::on_error(const rclcpp_lifecycle::State&)
   return CallbackReturn::SUCCESS;
 }
 
-return_type RosbotXLSystem::read()
+return_type RosbotXLSystem::read(const rclcpp::Time&, const rclcpp::Duration&)
 {
   std::shared_ptr<JointState> motor_state;
   received_motor_state_msg_ptr_.get(motor_state);
@@ -208,7 +208,7 @@ return_type RosbotXLSystem::read()
   return return_type::OK;
 }
 
-return_type RosbotXLSystem::write()
+return_type RosbotXLSystem::write(const rclcpp::Time&, const rclcpp::Duration&)
 {
   if (realtime_motor_command_publisher_->trylock())
   {

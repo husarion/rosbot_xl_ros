@@ -59,10 +59,10 @@ public:
   CallbackReturn on_error(const rclcpp_lifecycle::State& previous_state) override;
 
   ROSBOT_XL_HARDWARE_PUBLIC
-  return_type read() override;
+  return_type read(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
   ROSBOT_XL_HARDWARE_PUBLIC
-  return_type write() override;
+  return_type write(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
 protected:
   realtime_tools::RealtimeBox<std::shared_ptr<JointState>> received_motor_state_msg_ptr_{ nullptr };

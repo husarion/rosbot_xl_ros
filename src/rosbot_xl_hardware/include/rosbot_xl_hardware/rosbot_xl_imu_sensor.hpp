@@ -47,7 +47,7 @@ public:
   std::vector<StateInterface> export_state_interfaces() override;
 
   ROSBOT_XL_HARDWARE_PUBLIC
-  return_type read() override;
+  return_type read(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
 protected:
   realtime_tools::RealtimeBox<std::shared_ptr<Imu>> received_imu_msg_ptr_{ nullptr };

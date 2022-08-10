@@ -82,7 +82,7 @@ void RosbotXLImuSensor::imu_cb(const std::shared_ptr<Imu> msg)
   received_imu_msg_ptr_.set(std::move(msg));
 }
 
-return_type RosbotXLImuSensor::read()
+return_type RosbotXLImuSensor::read(const rclcpp::Time&, const rclcpp::Duration&)
 {
   std::shared_ptr<Imu> imu_msg;
   received_imu_msg_ptr_.get(imu_msg);

@@ -1,5 +1,5 @@
 
-FROM ros:galactic-ros-base
+FROM ros:humble-ros-base
 
 # Use bash instead of sh for the RUN steps
 SHELL ["/bin/bash", "-c"]

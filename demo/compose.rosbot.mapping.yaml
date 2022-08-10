@@ -4,7 +4,7 @@
 services:
   # modified behaviour tree that doesn't replane global path
   # nav2:
-  #   image: husarion/navigation2:galactic
+  #   image: husarion/navigation2:humble
   #   restart: unless-stopped
   #   volumes:
   #     - ../config/nav2_params.yaml:/nav2_params.yaml
@@ -15,7 +15,7 @@ services:
 
   # pure pursuit nav2
   navigation:
-    image: husarion/navigation2:galactic
+    image: husarion/navigation2:humble
     restart: unless-stopped
     volumes:
       - ../config/nav2_params_pure_pursuit.yaml:/nav2_params.yaml
@@ -24,7 +24,7 @@ services:
         params_file:=/nav2_params.yaml
 
   localization-mapping:
-    image: husarion/slam-toolbox:galactic
+    image: husarion/slam-toolbox:humble
     container_name: slam-toolbox
     restart: unless-stopped
     volumes:

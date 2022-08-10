@@ -1,4 +1,4 @@
-FROM osrf/ros:galactic-desktop
+FROM osrf/ros:humble-desktop
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -9,9 +9,9 @@ COPY . .
 
 # install everything needed
 RUN apt-get update && apt-get install -y \
-        python3-pip \
-        python3-colcon-common-extensions \
-        python3-rosdep && \
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
@@ -21,9 +21,9 @@ RUN apt-get update && apt-get install -y \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \
-        python3-pip \
-        python3-colcon-common-extensions \
-        python3-rosdep && \       
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep && \       
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

@@ -84,6 +84,8 @@ protected:
   void motor_state_cb(const std::shared_ptr<JointState> msg);
   rclcpp::executors::MultiThreadedExecutor executor_;
   std::unique_ptr<std::thread> executor_thread_;
+
+  double wheel_radius_;
 };
 
 }  // namespace rosbot_xl_hardware

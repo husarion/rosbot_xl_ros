@@ -58,6 +58,16 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
 
   node_ = std::make_shared<rclcpp::Node>("hardware_node");
 
+  try
+  {
+    node_->declare_parameter<double>("wheel_radius");
+  }
+  catch (rclcpp::exceptions::UninitializedStaticallyTypedParameterException& e)
+  {
+    RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"), "Required parameter wheel_radius missing");
+    return CallbackReturn::ERROR;
+  }
+
   for (auto& j : info_.joints)
   {
     RCLCPP_INFO(rclcpp::get_logger("RosbotXLSystem"), "Joint '%s' found", j.name.c_str());
@@ -113,6 +123,8 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
   executor_.add_node(node_);
   executor_thread_ =
       std::make_unique<std::thread>(std::bind(&rclcpp::executors::MultiThreadedExecutor::spin, &executor_));
+
+  node_->get_parameter("wheel_radius", wheel_radius_);
 
   return CallbackReturn::SUCCESS;
 }
@@ -197,7 +209,7 @@ return_type RosbotXLSystem::read(const rclcpp::Time&, const rclcpp::Duration&)
     }
 
     pos_state_[motor_state->name[i]] = motor_state->position[i];
-    vel_state_[motor_state->name[i]] = motor_state->velocity[i];
+    vel_state_[motor_state->name[i]] = motor_state->velocity[i] * wheel_radius_;
 
     RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Position feedback: %f, velocity feedback: %f",
                  pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);

@@ -18,9 +18,7 @@ CallbackReturn RosbotXLImuSensor::on_init(const hardware_interface::HardwareInfo
 
   imu_sensor_state_.resize(info_.sensors[0].state_interfaces.size(), std::numeric_limits<double>::quiet_NaN());
 
-  node_ = std::make_shared<rclcpp::Node>(
-      "imu_sensor_node",
-      rclcpp::NodeOptions().allow_undeclared_parameters(true).automatically_declare_parameters_from_overrides(true));
+  node_ = std::make_shared<rclcpp::Node>("imu_sensor_node");
 
   return CallbackReturn::SUCCESS;
 }

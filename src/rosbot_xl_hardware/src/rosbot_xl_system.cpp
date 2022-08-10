@@ -56,9 +56,7 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
     }
   }
 
-  node_ = std::make_shared<rclcpp::Node>(
-      "hardware_node",
-      rclcpp::NodeOptions().allow_undeclared_parameters(true).automatically_declare_parameters_from_overrides(true));
+  node_ = std::make_shared<rclcpp::Node>("hardware_node");
 
   for (auto& j : info_.joints)
   {

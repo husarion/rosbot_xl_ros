@@ -4,7 +4,7 @@
   <name>rosbot_xl_kinematics</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="nicolas.duc@op.pl">nicolas</maintainer>
+  <maintainer email="contact@husarion.com">Husarion</maintainer>
   <license>Apache License 2.0</license>
 
   <depend>std_msgs</depend>

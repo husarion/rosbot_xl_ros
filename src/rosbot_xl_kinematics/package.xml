@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="nicolas.duc@op.pl">nicolas</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <depend>std_msgs</depend>
   <depend>rclpy</depend>

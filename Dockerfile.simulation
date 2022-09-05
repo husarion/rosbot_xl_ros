@@ -20,6 +20,7 @@ RUN apt-get update --fix-missing && apt-get install -y \
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
+    git clone https://github.com/husarion/rosbot_hardware_interfaces.git && \
     colcon build --merge-install && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \

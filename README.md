@@ -28,7 +28,7 @@ Ported [panther_gazebo](https://github.com/husarion/panther_simulation/tree/ros2
 
 ### `rosbot_xl_hardware`
 
-ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros. Current state: controller compiles and loads. Crashes in runtime.
+ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros.
 
 
 ## Docker Image

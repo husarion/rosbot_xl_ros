@@ -28,7 +28,7 @@
     <ros2_control name="imu" type="sensor">
       <!-- TODO integrate with gazebo -->
       <hardware>
-        <plugin>rosbot_xl_hardware/RosbotXLImuSensor</plugin>
+        <plugin>rosbot_hardware_interfaces/RosbotImuSensor</plugin>
       </hardware>
       <sensor name="imu">
         <state_interface name="orientation.x"/>
@@ -50,7 +50,7 @@
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </xacro:if>
         <xacro:unless value="${use_sim}">
-          <plugin>rosbot_xl_hardware/RosbotXLSystem</plugin>
+          <plugin>rosbot_hardware_interfaces/RosbotSystem</plugin>
         </xacro:unless>
       </hardware>
 

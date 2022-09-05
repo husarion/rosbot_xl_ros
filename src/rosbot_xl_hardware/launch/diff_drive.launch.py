@@ -50,13 +50,10 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
-        output={
-            "stdout": "screen",
-            "stderr": "screen",
-        },
         remappings=[
-            ("~/motors_cmd", "/motors_cmd"),
-            ("~/motors_response", "/motors_response"),
+            ("/imu_sensor_node/imu", "/_imu/data_raw"),
+            ("~/motors_cmd", "/_motors_cmd"),
+            ("~/motors_response", "/_motors_response"),
             ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
     )
@@ -88,7 +85,7 @@ def generate_launch_description():
         ],
     )
 
-    # Delay start of robot_controller after `joint_state_broadcaster`
+    # Delay start of robot_controller after joint_state_broadcaster
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
         RegisterEventHandler(
             event_handler=OnProcessExit(
@@ -98,11 +95,31 @@ def generate_launch_description():
         )
     )
 
-    nodes = [
+    imu_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "imu_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
+
+    # Delay start of imu_broadcaster after robot_controller
+    # when spawning without delay ros2_control_node sometimes crashed
+    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[imu_broadcaster_spawner],
+        )
+    )
+
+    actions = [
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        delay_imu_broadcaster_spawner_after_robot_controller_spawner,
     ]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(actions)

@@ -1,0 +1,36 @@
+# Quick Star
+# $ docker compose -f compose.rosbot.localization.yaml up
+
+services:
+  # modified behaviour tree that doesn't replane global path
+  # nav2:
+  #   image: husarion/navigation2:humble
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ../config/nav2_params.yaml:/nav2_params.yaml
+  #     - ../config/navigate_w_recovery.xml:/navigate_w_recovery.xml
+  #   command: >
+  #     ros2 launch nav2_bringup navigation_launch.py    
+  #       params_file:=/nav2_params.yaml
+
+  # pure pursuit nav2
+  navigation:
+    image: husarion/navigation2:humble
+    restart: unless-stopped
+    volumes:
+      - ../config/nav2_params_pure_pursuit.yaml:/nav2_params.yaml
+    command: >
+      ros2 launch nav2_bringup navigation_launch.py    
+        params_file:=/nav2_params.yaml
+
+  localization-mapping:
+    image: husarion/navigation2:humble
+    restart: unless-stopped
+    volumes:
+      - ../config/amcl_params.yaml:/amcl_params.yaml
+      - ./maps:/maps
+    command: >
+      ros2 launch nav2_bringup localization_launch.py    
+        params_file:=/amcl_params.yaml
+        map:=/maps/map.yaml
+        use_sim_time:=${USE_SIM_TIME}

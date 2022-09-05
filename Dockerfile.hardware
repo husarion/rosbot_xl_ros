@@ -2,13 +2,13 @@ FROM ubuntu:20.04 AS stm32flash_builder
 
 # official releases are only for intel archs, so we need to build stm32flash from sources
 RUN apt-get update && apt-get install -y \
-        git \
-        build-essential && \
+    git \
+    build-essential && \
     git clone https://github.com/stm32duino/stm32flash.git && \
     cd stm32flash/ && \
     make all
 
-FROM ros:galactic-ros-core
+FROM ros:humble-ros-core
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -23,12 +23,12 @@ ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 # install everything needed
 RUN rm -rf src/rosbot_xl_gazebo && \
     apt-get update && apt-get install -y \
-        python3-pip \
-        python3-colcon-common-extensions \
-        python3-rosdep \
-        ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
-        curl \
-        ros-$ROS_DISTRO-teleop-twist-keyboard && \
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
+    curl \
+    ros-$ROS_DISTRO-teleop-twist-keyboard && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
@@ -41,10 +41,10 @@ RUN rm -rf src/rosbot_xl_gazebo && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \
-        python3-pip \
-        python3-colcon-common-extensions \
-        python3-rosdep \
-        curl && \       
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    curl && \       
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

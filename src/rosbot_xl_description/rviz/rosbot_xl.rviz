@@ -63,7 +63,7 @@ Visualization Manager:
           Value: true
         front_right_wheel_link:
           Value: true
-        imu_link:
+        imu:
           Value: true
         rear_left_wheel_link:
           Value: true
@@ -83,7 +83,7 @@ Visualization Manager:
               {}
             front_right_wheel_link:
               {}
-            imu_link:
+            imu:
               {}
             rear_left_wheel_link:
               {}
@@ -131,7 +131,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        imu_link:
+        imu:
           Alpha: 1
           Show Axes: false
           Show Trail: false

@@ -1,5 +1,4 @@
-
-FROM osrf/ros:galactic-desktop
+FROM osrf/ros:humble-desktop
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -12,7 +11,6 @@ ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 # install everything needed
 RUN apt-get update --fix-missing && apt-get install -y \
-        ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
         python3-pip \
         python3-colcon-common-extensions \
         python3-rosdep \

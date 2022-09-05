@@ -22,20 +22,15 @@
       </collision>
 
       <inertial>
-          <mass value="3.0" />
-          <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                             iyy="1.0" iyz="0.0"
-                                       izz="0.0" />
+          <mass value="3.5" />
+        <origin xyz="-0.016319 -0.004036 0.02819" rpy="0.0 0.0 0.0"/>
+        <inertia ixx="0.0254042524427888" ixy="-0.0002000608350169362" ixz="-0.0009754256573561553"
+                                          iyy="0.028746423126319035"   iyz="-0.0002603325647592511"
+                                                                       izz="0.046227102375569866" />
       </inertial>
     </link>
 
     <link name="cover_link">
-      <inertial>
-        <mass value="0.0000001" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                           iyy="1.0" iyz="0.0"
-                                     izz="0.0" />
-      </inertial>
     </link> 
 
     <link name="imu">

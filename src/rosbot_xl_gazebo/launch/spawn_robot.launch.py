@@ -21,16 +21,6 @@ def generate_launch_description():
   pos_z = LaunchConfiguration('pos_z', default='0.0')
 
   use_sim = use_sim_time
-
-
-  robot_controllers = PathJoinSubstitution(
-        [
-            rosbot_xl_description,
-            "config",
-            "controllers.yaml",
-        ]
-    )
-
     
 
   robot_description = {
@@ -52,20 +42,6 @@ def generate_launch_description():
         robot_description
       ]
     ),
-
-
-    Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
-    ),
-
-    Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["velocity_controller", "--controller-manager", "/controller_manager"],
-    ),
-
     
     Node(
       package='gazebo_ros',

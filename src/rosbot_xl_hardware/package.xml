@@ -4,7 +4,7 @@
   <name>rosbot_xl_hardware</name>
   <version>1.0.0</version>
   <description>Rosbot XL hardware controller</description>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <maintainer email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</maintainer>
 

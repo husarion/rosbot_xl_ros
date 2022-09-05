@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>The rosbot_xl_gazebo package</description>
   <maintainer email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</maintainer>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>controller_interface</depend>
@@ -22,6 +22,7 @@
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rosbot_xl_description</exec_depend>
   <exec_depend>gazebo_ros2_control</exec_depend>
+  <exec_depend>gazebo_ros_pkgs</exec_depend>
   <exec_depend>xacro</exec_depend>
 
   <export>

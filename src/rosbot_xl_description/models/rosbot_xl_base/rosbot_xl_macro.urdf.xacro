@@ -2,7 +2,7 @@
 
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
-  <xacro:macro name="rosbot_xl_robot" params="use_sim">
+  <xacro:macro name="rosbot_xl_robot" params="use_sim use_gpu">
 
     <xacro:property name="wheel_diameter" value="0.082" />
     <xacro:property name="wheel_radius" value="${wheel_diameter/2.0}" />
@@ -10,7 +10,7 @@
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
-    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl/gazebo_plugins.gazebo.xacro" ns="gazebo" /> -->
+    <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.gazebo.xacro" ns="gazebo" />
 
     <!-- BODY DECLARATION -->
     <xacro:body.body wheel_diameter="${wheel_diameter}" />
@@ -21,7 +21,9 @@
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_left" />
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_right" />
 
-
+    <xacro:gazebo.wheel_plugins />
+    <xacro:gazebo.rplidar_s1 xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" use_gpu="${use_gpu}" />
+    
     <ros2_control name="imu" type="sensor">
       <!-- TODO integrate with gazebo -->
       <hardware>

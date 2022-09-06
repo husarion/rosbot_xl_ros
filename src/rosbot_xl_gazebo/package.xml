@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>The rosbot_xl_gazebo package</description>
   <maintainer email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</maintainer>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   

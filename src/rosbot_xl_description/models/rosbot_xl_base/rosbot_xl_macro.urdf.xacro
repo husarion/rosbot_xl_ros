@@ -26,58 +26,10 @@
     <xacro:gazebo.rplidar_s1 xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" use_gpu="${use_gpu}" /> -->
     <!-- <xacro:ignition.rosbot_ign_plugins /> -->
     
-    <ros2_control name="imu" type="sensor">
-      <!-- TODO integrate with gazebo -->
-      <hardware>
-        <plugin>rosbot_hardware_interfaces/RosbotImuSensor</plugin>
-      </hardware>
-      <sensor name="imu">
-        <state_interface name="orientation.x"/>
-        <state_interface name="orientation.y"/>
-        <state_interface name="orientation.z"/>
-        <state_interface name="orientation.w"/>
-        <state_interface name="angular_velocity.x"/>
-        <state_interface name="angular_velocity.y"/>
-        <state_interface name="angular_velocity.z"/>
-        <state_interface name="linear_acceleration.x"/>
-        <state_interface name="linear_acceleration.y"/>
-        <state_interface name="linear_acceleration.z"/>
-      </sensor>
-    </ros2_control>
+    <!-- TODO integrate with gazebo -->
 
-    <ros2_control name="wheels" type="system">
-      <hardware>
-        <xacro:if value="${use_sim}">
-          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-          <!-- <plugin>ign_ros2_control/IgnitionSystem</plugin> -->
-        </xacro:if>
-        <xacro:unless value="${use_sim}">
-          <plugin>rosbot_hardware_interfaces/RosbotSystem</plugin>
-        </xacro:unless>
-      </hardware>
-
-      <joint name="front_left_wheel_joint">
-        <command_interface name="velocity"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-      <joint name="front_right_wheel_joint">
-        <command_interface name="velocity"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-      <joint name="rear_left_wheel_joint">
-        <command_interface name="velocity"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-      <joint name="rear_right_wheel_joint">
-        <command_interface name="velocity"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-    </ros2_control>
-
+    <xacro:include filename="$(find rosbot_hardware_interfaces)/urdf/ros2_control.urdf.xacro" />
+    <xacro:ros2_control_system/>
 
     <!-- <gazebo>
       <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">

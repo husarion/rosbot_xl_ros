@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <description>The rosbot_xl EKF configuration package</description>
   <maintainer email="support@husarion.com">Husarion</maintainer>
-  <license>MIT</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

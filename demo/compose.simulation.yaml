@@ -17,5 +17,4 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./../src:/ros2_ws/src
     command: watch ls
-    # command: ros2 launch rosbot_xl_ignition sim.launch.py
-  
+    # command: ros2 launch rosbot_xl_gazebo sim.launch.py

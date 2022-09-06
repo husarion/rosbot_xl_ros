@@ -13,9 +13,9 @@ jobs:
       matrix:
         include:
           - dockerfile: Dockerfile.hardware
-            docker-tag: galactic
+            docker-tag: humble
           - dockerfile: Dockerfile.simulation
-            docker-tag: galactic-simulation
+            docker-tag: humble-simulation
 
     steps:
     - name: Checkout

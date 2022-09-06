@@ -28,7 +28,7 @@
   <depend>rosbot_xl_ekf</depend>
   <depend>rosbot_xl_hardware</depend>
 
-  <depend condition="$ROSBOT_XL_ROS_BUILD == simulation">rosbot_xl_ignition</depend>
+  <depend condition="$ROSBOT_XL_ROS_BUILD == simulation">rosbot_xl_gazebo</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -2,6 +2,8 @@
 
 ROS2 packages for ROSbot XL.
 
+[![Build a Docker Image](https://github.com/husarion/rosbot_xl_ros/actions/workflows/build_push.yaml/badge.svg)](https://github.com/husarion/rosbot_xl_ros/actions/workflows/build_push.yaml)
+
 ## ROS packages
 
 ### `rosbot_xl_description`
@@ -10,9 +12,9 @@ URDF model used for both simulation and as a source of transforms on physical ro
 
 Available models:
 
-| Model | Description |
-| - | - |
-| `rosbot_xl` | Final configuration of rosbot_xl with ability to attach external hardware. |
+| Model            | Description                                                                                                                                                                                  |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rosbot_xl`      | Final configuration of rosbot_xl with ability to attach external hardware.                                                                                                                   |
 | `rosbot_xl_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
 
 
@@ -20,7 +22,7 @@ Available models:
 
 Draft Kalman filter configuration for a ROSbot XL. Currently inputs odometry published by microros and creates transform between `/odom` and `/base_link`. IMU not implemented. Covariances were not tweaked.
 
-### `rosbot_xl_ignition`
+### `rosbot_xl_gazebo`
 
 Launch files for Ignition Gazebo working with ROS2 control.
 

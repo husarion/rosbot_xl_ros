@@ -1,4 +1,4 @@
-FROM osrf/ros:galactic-desktop
+FROM osrf/ros:humble-desktop
 
 # select bash as default shell
 SHELL ["/bin/bash", "-c"]
@@ -8,6 +8,9 @@ ENV ROSBOT_XL_ROS_BUILD simulation
 
 WORKDIR /ros2_ws
 
+COPY . .
+
+ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 # install everything needed
 RUN apt-get update --fix-missing && apt-get install -y \
@@ -15,25 +18,23 @@ RUN apt-get update --fix-missing && apt-get install -y \
         python3-colcon-common-extensions \
         python3-rosdep \
         python3-vcstool && \
-    apt-get upgrade -y
+    apt-get upgrade -y && \
     # build & install ROSbot XL packages
-COPY . .
-RUN source "/opt/ros/$ROS_DISTRO/setup.bash" && \
+    source "/opt/ros/$ROS_DISTRO/setup.bash" && \
     vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos && \
     vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    colcon build --merge-install --packages-up-to rosbot_xl
+    colcon build --packages-up-to rosbot_xl && \
     # make the image smaller
-    # export SUDO_FORCE_REMOVE=yes && \
-    # apt-get remove -y \
-    #     python3-pip \
-    #     python3-colcon-common-extensions \
-    #     python3-rosdep \
-    #     python3-vcstool && \   
-    # apt-get autoremove -y && \
-    # apt-get clean && \
-    # rm -rf /var/lib/apt/lists/*
+    export SUDO_FORCE_REMOVE=yes && \
+    apt-get remove -y \
+        python3-pip \
+        python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-vcstool && \   
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/ros2_ws/ros_entrypoint.sh"]
-

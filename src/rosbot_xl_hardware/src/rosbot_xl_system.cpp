@@ -56,9 +56,17 @@ CallbackReturn RosbotXLSystem::on_init(const hardware_interface::HardwareInfo& h
     }
   }
 
-  node_ = std::make_shared<rclcpp::Node>(
-      "hardware_node",
-      rclcpp::NodeOptions().allow_undeclared_parameters(true).automatically_declare_parameters_from_overrides(true));
+  node_ = std::make_shared<rclcpp::Node>("hardware_node");
+
+  try
+  {
+    node_->declare_parameter<double>("wheel_radius");
+  }
+  catch (rclcpp::exceptions::UninitializedStaticallyTypedParameterException& e)
+  {
+    RCLCPP_FATAL(rclcpp::get_logger("RosbotXLSystem"), "Required parameter wheel_radius missing");
+    return CallbackReturn::ERROR;
+  }
 
   for (auto& j : info_.joints)
   {
@@ -79,8 +87,8 @@ std::vector<StateInterface> RosbotXLSystem::export_state_interfaces()
   {
     state_interfaces.emplace_back(
         StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &pos_state_[info_.joints[i].name]));
-    state_interfaces.emplace_back(hardware_interface::StateInterface(
-        info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[info_.joints[i].name]));
+    state_interfaces.emplace_back(
+        StateInterface(info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_state_[info_.joints[i].name]));
   }
 
   return state_interfaces;
@@ -115,6 +123,8 @@ CallbackReturn RosbotXLSystem::on_configure(const rclcpp_lifecycle::State&)
   executor_.add_node(node_);
   executor_thread_ =
       std::make_unique<std::thread>(std::bind(&rclcpp::executors::MultiThreadedExecutor::spin, &executor_));
+
+  node_->get_parameter("wheel_radius", wheel_radius_);
 
   return CallbackReturn::SUCCESS;
 }
@@ -174,7 +184,7 @@ CallbackReturn RosbotXLSystem::on_error(const rclcpp_lifecycle::State&)
   return CallbackReturn::SUCCESS;
 }
 
-return_type RosbotXLSystem::read()
+return_type RosbotXLSystem::read(const rclcpp::Time&, const rclcpp::Duration&)
 {
   std::shared_ptr<JointState> motor_state;
   received_motor_state_msg_ptr_.get(motor_state);
@@ -199,7 +209,7 @@ return_type RosbotXLSystem::read()
     }
 
     pos_state_[motor_state->name[i]] = motor_state->position[i];
-    vel_state_[motor_state->name[i]] = motor_state->velocity[i];
+    vel_state_[motor_state->name[i]] = motor_state->velocity[i] * wheel_radius_;
 
     RCLCPP_DEBUG(rclcpp::get_logger("RosbotXLSystem"), "Position feedback: %f, velocity feedback: %f",
                  pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);
@@ -208,7 +218,7 @@ return_type RosbotXLSystem::read()
   return return_type::OK;
 }
 
-return_type RosbotXLSystem::write()
+return_type RosbotXLSystem::write(const rclcpp::Time&, const rclcpp::Duration&)
 {
   if (realtime_motor_command_publisher_->trylock())
   {

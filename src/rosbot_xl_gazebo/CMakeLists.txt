@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(rosbot_xl_ignition)
+project(rosbot_xl_gazebo)
 
 # Default to C++14
 if(NOT CMAKE_C_STANDARD)
@@ -17,7 +17,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY launch
+  DIRECTORY launch worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

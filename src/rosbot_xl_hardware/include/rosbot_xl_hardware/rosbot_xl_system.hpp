@@ -1,5 +1,5 @@
-#ifndef ROSBOT_XL_HARDWARE__ROSBOT_XL_HARDWARE_HPP_
-#define ROSBOT_XL_HARDWARE__ROSBOT_XL_HARDWARE_HPP_
+#ifndef ROSBOT_XL_HARDWARE__ROSBOT_XL_SYSTEM_HPP_
+#define ROSBOT_XL_HARDWARE__ROSBOT_XL_SYSTEM_HPP_
 
 #include "rosbot_xl_hardware/visibility_control.hpp"
 
@@ -59,10 +59,10 @@ public:
   CallbackReturn on_error(const rclcpp_lifecycle::State& previous_state) override;
 
   ROSBOT_XL_HARDWARE_PUBLIC
-  return_type read() override;
+  return_type read(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
   ROSBOT_XL_HARDWARE_PUBLIC
-  return_type write() override;
+  return_type write(const rclcpp::Time& time, const rclcpp::Duration& period) override;
 
 protected:
   realtime_tools::RealtimeBox<std::shared_ptr<JointState>> received_motor_state_msg_ptr_{ nullptr };
@@ -84,8 +84,10 @@ protected:
   void motor_state_cb(const std::shared_ptr<JointState> msg);
   rclcpp::executors::MultiThreadedExecutor executor_;
   std::unique_ptr<std::thread> executor_thread_;
+
+  double wheel_radius_;
 };
 
 }  // namespace rosbot_xl_hardware
 
-#endif  // ROSBOT_XL_HARDWARE__ROSBOT_XL_HARDWARE_HPP_
+#endif  // ROSBOT_XL_HARDWARE__ROSBOT_XL_SYSTEM_HPP_

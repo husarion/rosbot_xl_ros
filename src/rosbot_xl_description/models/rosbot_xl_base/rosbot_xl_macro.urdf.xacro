@@ -2,14 +2,16 @@
 
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
-  <xacro:macro name="rosbot_xl_robot" params="use_sim">
+  <xacro:macro name="rosbot_xl_robot" params="use_sim use_gpu">
 
     <xacro:property name="wheel_diameter" value="0.082" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
-    <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.ign.xacro" ns="ignition" />
+    <!-- TODO fix integration with gazebo -->
+    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.gazebo.xacro" ns="gazebo" /> -->
+    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.ign.xacro" ns="ignition" /> -->
 
     <!-- BODY DECLARATION -->
     <xacro:body.body wheel_diameter="${wheel_diameter}" />
@@ -20,13 +22,34 @@
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_left" />
     <xacro:wheel.wheel wheel_type="differential" wheel_diameter="${wheel_diameter}" prefix="rear_right" />
 
-    <!-- IGNITION PLUGINS DECLARATION -->
-    <xacro:ignition.rosbot_ign_plugins />
+    <!-- <xacro:gazebo.wheel_plugins />
+    <xacro:gazebo.rplidar_s1 xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" use_gpu="${use_gpu}" /> -->
+    <!-- <xacro:ignition.rosbot_ign_plugins /> -->
+    
+    <ros2_control name="imu" type="sensor">
+      <!-- TODO integrate with gazebo -->
+      <hardware>
+        <plugin>rosbot_xl_hardware/RosbotXLImuSensor</plugin>
+      </hardware>
+      <sensor name="imu">
+        <state_interface name="orientation.x"/>
+        <state_interface name="orientation.y"/>
+        <state_interface name="orientation.z"/>
+        <state_interface name="orientation.w"/>
+        <state_interface name="angular_velocity.x"/>
+        <state_interface name="angular_velocity.y"/>
+        <state_interface name="angular_velocity.z"/>
+        <state_interface name="linear_acceleration.x"/>
+        <state_interface name="linear_acceleration.y"/>
+        <state_interface name="linear_acceleration.z"/>
+      </sensor>
+    </ros2_control>
 
-    <!-- <ros2_control name="wheels" type="system">
+    <ros2_control name="wheels" type="system">
       <hardware>
         <xacro:if value="${use_sim}">
-          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+          <!-- <plugin>ign_ros2_control/IgnitionSystem</plugin> -->
         </xacro:if>
         <xacro:unless value="${use_sim}">
           <plugin>rosbot_xl_hardware/RosbotXLSystem</plugin>
@@ -53,6 +76,16 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
       </joint>
-    </ros2_control> -->
+    </ros2_control>
+
+
+    <!-- <gazebo>
+      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+        <robot_param>robot_description</robot_param>
+        <robot_param_node>robot_state_publisher</robot_param_node>
+        <parameters>$(find rosbot_xl_description)/config/controllers_gazebo.yaml</parameters>
+      </plugin>
+    </gazebo> -->
+
   </xacro:macro>
 </robot>

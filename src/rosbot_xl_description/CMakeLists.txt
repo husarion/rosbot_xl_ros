@@ -7,7 +7,6 @@ find_package(ament_cmake REQUIRED)
 install(DIRECTORY
   config
   models
-  rviz
   DESTINATION share/${PROJECT_NAME}
 )
 

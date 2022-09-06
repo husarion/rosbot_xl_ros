@@ -5,12 +5,8 @@
   <version>2.4.0</version>
   <description>Meta package that contains all packages of Rosbot XL</description>
   
-  <maintainer email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</maintainer>
-  <maintainer email="maciej.stepien@husarion.com">Maciej Stepien</maintainer>
-  <maintainer email="nikolas.duc@husarion.com">Nikolas Duc</maintainer>
-  <maintainer email="dominik.nowak@husarion.com">Dominik Nowak</maintainer>
-
-  <license>BSD</license>
+  <maintainer email="support@husarion.com">Husarion</maintainer>
+  <license>Apache License 2.0</license>
 
   <url type="website">https://husarion.com/</url>
   <url type="repository">https://github.com/husarion/rosbot_xl_ros</url>

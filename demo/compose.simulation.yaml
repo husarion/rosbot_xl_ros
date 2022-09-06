@@ -6,8 +6,6 @@ services:
     # image: husarion/rosbot-xl:galactic-simulation
     container_name: rosbot_xl
     runtime: nvidia
-    tty: true
-    stdin_open: true
     environment:
       - "DISPLAY"
       - "QT_X11_NO_MITSHM=1"
@@ -16,5 +14,4 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./../src:/ros2_ws/src
-    command: watch ls
-    # command: ros2 launch rosbot_xl_gazebo sim.launch.py
+    command: ros2 launch rosbot_xl_gazebo sim.launch.py

@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="rplidar_s1" params="parent_link xyz rpy use_gpu:=false topic:=laser/scan">
+    <xacro:if value="${use_gpu}">
+      <xacro:property name="ray_type" value="gpu_lidar" />
+    </xacro:if>
+    <xacro:unless value="${use_gpu}">
+      <xacro:property name="ray_type" value="lidar" />
+    </xacro:unless>
+
+    <link name="rplidar_s1_link">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find rosbot_xl_description)/models/rosbot_xl_components/meshes/slamtec_s1.stl" scale="0.0001 0.0001 0.0001" />
+        </geometry>
+        <origin xyz="0 0 ${0.051/2}" rpy="0 0 -${pi/2}"/>
+        <material name="DarkGrey"/>
+      </visual>
+
+      <collision>
+        <geometry>
+          <cylinder radius="${0.0555/2}" length="0.051" />
+        </geometry>
+        <origin xyz="0 0 ${0.051/2}" rpy="0 0 0"/>
+      </collision>
+
+      <inertial>
+        <mass value="0.105" />
+        <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+
+    <link name="rplidar_s1_laser_link"></link>
+    
+
+    <joint name="body_link_to_rplidar_s1_link_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="rplidar_s1_link" />
+    </joint>
+
+    <joint name="rplidar_s1_laser_link_joint" type="fixed">
+      <origin xyz="0 0 0.04" rpy="0 0 0" />
+      <parent link="rplidar_s1_link" />
+      <child link="rplidar_s1_laser_link" />
+    </joint>
+
+
+    <gazebo reference="rplidar_s1_link">
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <gazebo reference="rplidar_s1_laser_link">
+      <sensor name='rplidar_s1' type='${ray_type}'>"
+      <!-- <pose relative_to='rplidar_s1_laser_link'>0 0 0 0 0 0</pose> -->
+
+        <!-- <frame name="rplidar_s1_laser_link" attached_to='odom'>
+          <pose>0 0 0 0 0 0</pose>
+        </frame> -->
+
+        <ignition_frame_id>rplidar_s1_laser_link</ignition_frame_id>
+        <topic>${topic}</topic>
+        <update_rate>10</update_rate>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>9200</samples>
+              <resolution>1</resolution>
+              <min_angle>-${pi}</min_angle>
+              <max_angle>${pi}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>1</samples>
+              <resolution>0.01</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.3</min>
+            <max>40.0</max>
+            <resolution>0.03</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </ray>
+        <always_on>1</always_on>
+        <visualize>true</visualize>
+      </sensor>
+    </gazebo> 
+  </xacro:macro>
+</robot>

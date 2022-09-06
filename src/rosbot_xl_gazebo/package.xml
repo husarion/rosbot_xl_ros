@@ -8,27 +8,37 @@
   <license>Apache License 2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>controller_interface</depend>
-  <depend>hardware_interface</depend>
   
-  <exec_depend>gazebo_ros</exec_depend>
   <build_depend>rosbot_xl_description</build_depend>
 
+  <!-- Ignition Fortress -->
+  <exec_depend>ignition-gazebo6</exec_depend>
+
+  <exec_depend>controller_interface</exec_depend>
+  <exec_depend>hardware_interface</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ros_ign_gazebo</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>controller_manager</exec_depend>
-  <exec_depend>joint_state_broadcaster</exec_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rosbot_xl_description</exec_depend>
-  <exec_depend>gazebo_ros2_control</exec_depend>
-  <exec_depend>gazebo_ros_pkgs</exec_depend>
-  <exec_depend>xacro</exec_depend>
+  <exec_depend>ign_ros2_control</exec_depend>
+  <exec_depend>ignition-plugin</exec_depend>
+  <exec_depend>ros_ign_bridge</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+
+  <exec_depend>effort_controllers</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>ros2controlcli</exec_depend>
+  <exec_depend>velocity_controllers</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
-    <gazebo_ros gazebo_plugin_path="lib"/>
-    <gazebo_ros gazebo_model_path="${prefix}/models"/>
-    <gazebo_ros gazebo_media_path="${prefix}/worlds:${prefix}/media"/>
   </export>
 </package>

@@ -24,7 +24,7 @@ Draft Kalman filter configuration for a ROSbot XL. Currently inputs odometry pub
 
 ### `rosbot_xl_gazebo`
 
-Ported [panther_gazebo](https://github.com/husarion/panther_simulation/tree/ros2/panther_gazebo) simulation modified to work with ROS2 control.
+Launch files for Ignition Gazebo working with ROS2 control.
 
 ### `rosbot_xl_hardware`
 

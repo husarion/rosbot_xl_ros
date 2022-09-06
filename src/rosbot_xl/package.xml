@@ -21,7 +21,6 @@
 
   <depend>rosbot_xl_bringup</depend>
   <depend>rosbot_xl_description</depend>
-  <depend>rosbot_xl_ekf</depend>
   <depend>rosbot_xl_hardware</depend>
 
   <depend condition="$ROSBOT_XL_ROS_BUILD == simulation">rosbot_xl_gazebo</depend>

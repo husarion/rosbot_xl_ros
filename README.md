@@ -18,10 +18,6 @@ Available models:
 | `rosbot_xl_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
 
 
-### `rosbot_xl_ekf`
-
-Draft Kalman filter configuration for a ROSbot XL. Currently inputs odometry published by microros and creates transform between `/odom` and `/base_link`. IMU not implemented. Covariances were not tweaked.
-
 ### `rosbot_xl_gazebo`
 
 Launch files for Ignition Gazebo working with ROS2 control.

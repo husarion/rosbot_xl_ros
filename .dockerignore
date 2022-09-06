@@ -1,8 +1,10 @@
 .devcontainer/
 .github/
+.git/
 .vscode/
 demo/
+docs/
 .dockerignore
 .gitignore
-Dockerfile
+Dockerfile.*
 README.md

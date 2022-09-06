@@ -5,13 +5,13 @@
   <xacro:macro name="rosbot_xl_robot" params="use_sim use_gpu">
 
     <xacro:property name="wheel_diameter" value="0.082" />
-    <xacro:property name="wheel_radius" value="${wheel_diameter/2.0}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/body.urdf.xacro" ns="body" />
     <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/wheel.urdf.xacro" ns="wheel" />
     <!-- TODO fix integration with gazebo -->
     <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.gazebo.xacro" ns="gazebo" /> -->
+    <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/plugins.ign.xacro" ns="ignition" /> -->
 
     <!-- BODY DECLARATION -->
     <xacro:body.body wheel_diameter="${wheel_diameter}" />
@@ -24,6 +24,7 @@
 
     <!-- <xacro:gazebo.wheel_plugins />
     <xacro:gazebo.rplidar_s1 xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" use_gpu="${use_gpu}" /> -->
+    <!-- <xacro:ignition.rosbot_ign_plugins /> -->
     
     <ros2_control name="imu" type="sensor">
       <!-- TODO integrate with gazebo -->
@@ -48,6 +49,7 @@
       <hardware>
         <xacro:if value="${use_sim}">
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+          <!-- <plugin>ign_ros2_control/IgnitionSystem</plugin> -->
         </xacro:if>
         <xacro:unless value="${use_sim}">
           <plugin>rosbot_xl_hardware/RosbotXLSystem</plugin>
@@ -77,13 +79,13 @@
     </ros2_control>
 
 
-    <gazebo>
+    <!-- <gazebo>
       <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
         <robot_param>robot_description</robot_param>
         <robot_param_node>robot_state_publisher</robot_param_node>
         <parameters>$(find rosbot_xl_description)/config/controllers_gazebo.yaml</parameters>
       </plugin>
-    </gazebo>
+    </gazebo> -->
 
   </xacro:macro>
 </robot>

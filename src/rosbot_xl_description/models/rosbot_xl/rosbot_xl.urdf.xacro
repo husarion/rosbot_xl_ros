@@ -6,5 +6,8 @@
   <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_base/rosbot_xl_macro.urdf.xacro" ns="husarion" />
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" use_gpu="$(arg use_gpu)" />
 
+  <!-- <xacro:include filename="$(find rosbot_xl_description)/models/rosbot_xl_components/slamtec_s1.ign.xacro" ns="lidar" />
+  <xacro:lidar.rplidar_s1 parent_link="cover_link" xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" use_gpu="$(arg use_gpu)" /> -->
+
 </robot>
 

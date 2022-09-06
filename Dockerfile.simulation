@@ -25,7 +25,6 @@ RUN apt-get update --fix-missing && apt-get install -y \
     vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    git clone https://github.com/husarion/rosbot_hardware_interfaces.git && \
     colcon build --packages-up-to rosbot_xl && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \

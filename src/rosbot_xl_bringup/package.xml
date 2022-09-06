@@ -2,10 +2,17 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rosbot_xl_bringup</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="ed@todo.todo">ed</maintainer>
+  <version>0.0.1</version>
+
+  <description>The rosbot_xl_bringup package</description>
   <license>Apache License 2.0</license>
+
+  <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
+  <maintainer email="contact@husarion.com">Husarion</maintainer>
+
+  <url type="website">https://husarion.com/</url>
+  <url type="repository">https://github.com/husarion/rosbot_xl_ros</url>
+  <url type="bugtracker">https://github.com/husarion/rosbot_xl_ros/issues</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -14,9 +21,6 @@
   
   <exec_depend>laser_filters</exec_depend>
   <exec_depend>robot_localization</exec_depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

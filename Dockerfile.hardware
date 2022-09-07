@@ -23,28 +23,32 @@ ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 # install everything needed
 RUN rm -rf src/rosbot_xl_gazebo && \
     apt-get update && apt-get install -y \
-    python3-pip \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
-    curl \
-    ros-$ROS_DISTRO-teleop-twist-keyboard && \
+        python3-pip \
+        python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-vcstool \
+        ros-${ROS_DISTRO}-rmw-fastrtps-cpp \
+        curl \
+        git && \
     apt-get upgrade -y && \
     # build & install ROSbot XL packages
     source "/opt/ros/$ROS_DISTRO/setup.bash" && \
+    vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y && \
-    colcon build --symlink-install && \
+    colcon build --packages-up-to rosbot_xl && \
     # download a firmware binary release
     curl -L https://github.com/husarion/rosbot_xl_firmware/releases/download/v0.0.1/firmware.bin -o /firmware.bin && \
     # make the image smaller
     export SUDO_FORCE_REMOVE=yes && \
     apt-get remove -y \
-    python3-pip \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    curl && \       
+        python3-pip \
+        python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-vcstool \
+        curl \
+        git && \       
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

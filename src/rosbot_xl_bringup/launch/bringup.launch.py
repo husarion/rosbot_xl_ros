@@ -21,30 +21,17 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
-    mecanum_drive_controller_launch = IncludeLaunchDescription(
+    controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
                     get_package_share_directory("rosbot_xl_hardware"),
                     "launch",
-                    "mecanum_drive.launch.py",
+                    "controller.launch.py",
                 ]
             )
         ),
-        condition=IfCondition(mecanum),
-    )
-
-    diff_drive_controller_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_hardware"),
-                    "launch",
-                    "diff_drive.launch.py",
-                ]
-            )
-        ),
-        condition=IfCondition(PythonExpression(["not ", mecanum])),
+        launch_arguments={"mecanum": mecanum}.items(),
     )
 
     robot_localization_node = Node(
@@ -75,8 +62,7 @@ def generate_launch_description():
 
     actions = [
         declare_mecanum_cmd,
-        mecanum_drive_controller_launch,
-        diff_drive_controller_launch,
+        controller_launch,
         robot_localization_node,
         laser_filter_node,
     ]

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10.2)
 project(rosbot_xl_hardware)
 
 find_package(ament_cmake REQUIRED)

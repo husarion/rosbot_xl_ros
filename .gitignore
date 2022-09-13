@@ -1,8 +1,5 @@
 .vscode/*
-!.vscode/settings_template.json
-!.vscode/c_cpp_properties_template.json
-.devcontainer/devcontainer.json
-.devcontainer/Dockerfile
+.devcontainer/*
 demo/.env
 demo/test/.env
 demo/id

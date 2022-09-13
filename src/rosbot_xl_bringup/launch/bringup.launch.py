@@ -28,7 +28,7 @@ def generate_launch_description():
         output="screen",
         parameters=[
             PathJoinSubstitution(
-                [get_package_share_directory("rosbot_xl_ekf"), "config", "ekf.yaml"]
+                [get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"]
             )
         ],
     )

@@ -14,8 +14,8 @@ jobs:
         include:
           - dockerfile: Dockerfile.hardware
             docker-tag: humble
-          - dockerfile: Dockerfile.simulation
-            docker-tag: humble-simulation
+          # - dockerfile: Dockerfile.simulation
+          #   docker-tag: humble-simulation
 
     steps:
     - name: Checkout

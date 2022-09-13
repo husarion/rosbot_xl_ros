@@ -3,3 +3,7 @@ repositories:
     type: git
     url: https://github.com/husarion/rosbot_hardware_interfaces.git
     version: main
+  rosbot_controllers:
+    type: git
+    url: https://github.com/husarion/rosbot_controllers
+    version: main

@@ -13,15 +13,35 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler
+from launch.actions import RegisterEventHandler, DeclareLaunchArgument
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
+from launch.substitutions import (
+    Command,
+    PythonExpression,
+    FindExecutable,
+    PathJoinSubstitution,
+    LaunchConfiguration,
+)
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    mecanum = LaunchConfiguration("mecanum")
+    declare_mecanum_cmd = DeclareLaunchArgument(
+        "mecanum",
+        default_value="False",
+        description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+    )
+    controller_config_name = PythonExpression(
+        [
+            "'mecanum_drive_controller.yaml' if ",
+            mecanum,
+            " else 'diff_drive_controller.yaml'",
+        ]
+    )
+
     # Get URDF via xacro
     robot_description_content = Command(
         [
@@ -42,7 +62,7 @@ def generate_launch_description():
         [
             FindPackageShare("rosbot_xl_hardware"),
             "config",
-            "diff_drive_controller.yaml",
+            controller_config_name,
         ]
     )
 
@@ -115,6 +135,7 @@ def generate_launch_description():
     )
 
     actions = [
+        declare_mecanum_cmd,
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,

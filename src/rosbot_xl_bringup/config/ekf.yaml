@@ -14,9 +14,10 @@ ekf_filter_node:
         world_frame: odom
 
         odom0: /rosbot_xl_base_controller/odom
+        # in diff drive dY will be always 0, but it should be taken into account, as covariances won't be calculated correctly otherwise (they blow up in y direction)
         odom0_config: [false, false, false, # X , Y , Z
                       false, false, false, # roll , pitch ,yaw
-                      true, false, false, # dX , dY , dZ
+                      true, true, false, # dX , dY , dZ
                       false, false, false, # droll , dpitch ,dyaw
                       false, false, false] # ddX , ddY , ddZ
 

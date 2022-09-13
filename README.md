@@ -4,6 +4,14 @@ ROS2 packages for ROSbot XL
 
 ## ROS packages
 
+### `rosbot_xl`
+
+Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used. 
+
+### `rosbot_xl_bringup`
+
+Package that contains launch, which starts all base functionalities. Also configs for `robot_localization` and `laser_filters` are defined there.
+
 ### `rosbot_xl_description`
 
 URDF model used for both simulation and as a source of transforms on physical robot. It was written to be compatible with ROS Industrial and preconfigured for ROS2 control.

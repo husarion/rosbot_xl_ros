@@ -1,7 +1,12 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import (
+    PathJoinSubstitution,
+    LaunchConfiguration,
+    PythonExpression,
+)
+from launch.conditions import IfCondition
 
 from launch_ros.actions import Node
 
@@ -9,7 +14,27 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    diff_drive_launch = IncludeLaunchDescription(
+    mecanum = LaunchConfiguration("mecanum")
+    declare_mecanum_cmd = DeclareLaunchArgument(
+        "mecanum",
+        default_value="False",
+        description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+    )
+
+    mecanum_drive_controller_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [
+                    get_package_share_directory("rosbot_xl_hardware"),
+                    "launch",
+                    "mecanum_drive.launch.py",
+                ]
+            )
+        ),
+        condition=IfCondition(mecanum),
+    )
+
+    diff_drive_controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
@@ -18,7 +43,8 @@ def generate_launch_description():
                     "diff_drive.launch.py",
                 ]
             )
-        )
+        ),
+        condition=IfCondition(PythonExpression(["not ", mecanum])),
     )
 
     robot_localization_node = Node(
@@ -47,6 +73,12 @@ def generate_launch_description():
         ],
     )
 
-    actions = [diff_drive_launch, robot_localization_node, laser_filter_node]
+    actions = [
+        declare_mecanum_cmd,
+        mecanum_drive_controller_launch,
+        diff_drive_controller_launch,
+        robot_localization_node,
+        laser_filter_node,
+    ]
 
     return LaunchDescription(actions)

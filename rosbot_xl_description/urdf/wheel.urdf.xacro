@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- wheel defining macro -->
+  <xacro:macro name="wheel" params="wheel_type wheel_radius wheel_separation_y prefix">
+
+    <xacro:property name="wheel_separation_x" value="0.170" />
+    <xacro:property name="wheel_thickness" value="0.032" />
+
+    <xacro:if value="${prefix == 'front_left'}">
+      <xacro:property name="x" value="${wheel_separation_x/2}" />
+      <xacro:property name="y" value="${wheel_separation_y/2}" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_a.dae" />
+    </xacro:if>
+    <xacro:if value="${prefix == 'front_right'}">
+      <xacro:property name="x" value="${wheel_separation_x/2}" />
+      <xacro:property name="y" value="-${wheel_separation_y/2}" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_b.dae" />
+    </xacro:if>
+    <xacro:if value="${prefix == 'rear_left'}">
+      <xacro:property name="x" value="-${wheel_separation_x/2}" />
+      <xacro:property name="y" value="${wheel_separation_y/2}" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_a.dae" />
+    </xacro:if>
+    <xacro:if value="${prefix == 'rear_right'}">
+      <xacro:property name="x" value="-${wheel_separation_x/2}" />
+      <xacro:property name="y" value="-${wheel_separation_y/2}" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_b.dae" />
+    </xacro:if>
+    
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="body_link" />
+      <child link="${prefix}_wheel_link" />
+      <origin xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 1.0 0.0" />
+
+      <limit effort="1.2" velocity="21.0" />
+
+      <dynamics damping="0.001" friction="0.001" />
+    </joint>
+
+    <link name="${prefix}_wheel_link">
+      <visual>
+        <geometry>
+          <mesh filename="${mesh}" scale="1 1 1" />
+        </geometry>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      </visual>
+
+      <collision>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
+        </geometry>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+      </collision>
+
+      <inertial>
+        <mass value="0.051" />
+        <inertia  ixx="3.954e-05" ixy="0.000"     ixz="0.000"
+                                  iyy="7.116e-05" iyz="0.000"
+                                                  izz="4.032e-05" />
+      </inertial>
+    </link>
+    
+  </xacro:macro>
+</robot>

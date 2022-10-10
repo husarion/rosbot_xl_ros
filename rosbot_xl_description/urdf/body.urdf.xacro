@@ -3,7 +3,7 @@
   <!-- body defining macro -->
   <xacro:macro name="body" params="wheel_radius">
 
-    <link name="base_link"></link>
+    <link name="base_link" />
 
     <joint name="base_link_to_body_joint" type="fixed">
       <origin xyz="0.0 0.0 ${wheel_radius}" rpy="0.0 0.0 0.0" />
@@ -43,13 +43,13 @@
 
     <link name="cover_link" />
 
-    <joint name="body_link_to_imu_joint" type="fixed">
+    <joint name="body_to_imu_joint" type="fixed">
       <origin xyz="-0.1369 -0.0419 0.0370" rpy="3.14159 0.0 0.0" />
       <parent link="body_link" />
-      <child link="imu" />
+      <child link="imu_link" />
     </joint>
 
-    <link name="imu">
+    <link name="imu_link">
       <inertial>
         <mass value="0.0000001" />
         <inertia ixx="1" ixy="0" ixz="0" 

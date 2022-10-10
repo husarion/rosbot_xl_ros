@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- wheel defining macro -->
-  <xacro:macro name="wheel" params="wheel_type wheel_radius wheel_separation_y prefix">
+  <xacro:macro name="wheel" params="wheel_radius wheel_separation_y prefix">
 
     <xacro:property name="wheel_separation_x" value="0.170" />
     <xacro:property name="wheel_thickness" value="0.032" />
@@ -26,7 +26,7 @@
       <xacro:property name="y" value="-${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_b.dae" />
     </xacro:if>
-    
+
     <joint name="${prefix}_wheel_joint" type="continuous">
       <parent link="body_link" />
       <child link="${prefix}_wheel_link" />
@@ -60,6 +60,6 @@
                                                   izz="4.032e-05" />
       </inertial>
     </link>
-    
+
   </xacro:macro>
 </robot>

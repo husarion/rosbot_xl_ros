@@ -6,22 +6,22 @@
     <xacro:property name="wheel_separation_x" value="0.170" />
     <xacro:property name="wheel_thickness" value="0.032" />
 
-    <xacro:if value="${prefix == 'front_left'}">
+    <xacro:if value="${prefix == 'fl'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_a.dae" />
     </xacro:if>
-    <xacro:if value="${prefix == 'front_right'}">
+    <xacro:if value="${prefix == 'fr'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="-${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_b.dae" />
     </xacro:if>
-    <xacro:if value="${prefix == 'rear_left'}">
+    <xacro:if value="${prefix == 'rl'}">
       <xacro:property name="x" value="-${wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_a.dae" />
     </xacro:if>
-    <xacro:if value="${prefix == 'rear_right'}">
+    <xacro:if value="${prefix == 'rr'}">
       <xacro:property name="x" value="-${wheel_separation_x/2}" />
       <xacro:property name="y" value="-${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/wheel_b.dae" />

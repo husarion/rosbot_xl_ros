@@ -92,6 +92,8 @@ def generate_launch_description():
             "joint_state_broadcaster",
             "--controller-manager",
             "/controller_manager",
+            "--controller-manager-timeout",
+            "120",
         ],
     )
 
@@ -102,6 +104,8 @@ def generate_launch_description():
             "rosbot_xl_base_controller",
             "--controller-manager",
             "/controller_manager",
+            "--controller-manager-timeout",
+            "120",
         ],
     )
 
@@ -122,6 +126,8 @@ def generate_launch_description():
             "imu_broadcaster",
             "--controller-manager",
             "/controller_manager",
+            "--controller-manager-timeout",
+            "120",
         ],
     )
 

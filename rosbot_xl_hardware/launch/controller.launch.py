@@ -50,7 +50,7 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [
                     FindPackageShare("rosbot_xl_description"),
-                    "models/rosbot_xl",
+                    "urdf",
                     "rosbot_xl.urdf.xacro",
                 ]
             ),

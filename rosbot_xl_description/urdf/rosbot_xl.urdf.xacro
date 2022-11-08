@@ -9,15 +9,12 @@
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" use_gpu="$(arg use_gpu)" simulation_engine="$(arg simulation_engine)" />
 
   <!-- material used in rplidar -->
-  <!-- <material name="DarkGrey">
-    <color rgba="0.05 0.05 0.05 1.0"/>
-  </material>
   <xacro:include filename="$(find ros_components_description)/urdf/rplidar_s1.gazebo.xacro" ns="lidar" />
   <xacro:lidar.rplidar_s1
     parent_link="cover_link"
     xyz="0.0 0.0 0.0"
     rpy="0.0 0.0 ${pi}"
     use_gpu="$(arg use_gpu)"
-    simulation_engine="$(arg simulation_engine)" /> -->
+    simulation_engine="$(arg simulation_engine)" />
     
 </robot>

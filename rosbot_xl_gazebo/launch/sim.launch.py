@@ -3,7 +3,11 @@ import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
-from launch.actions import RegisterEventHandler, DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (
+    RegisterEventHandler,
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+)
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
@@ -20,8 +24,8 @@ def generate_launch_description():
                 "xacro --verbosity 0 ",
                 xacro_file,
                 " use_sim:=true",
-                " use_gpu:=false",
-                " simulation_engine:=ignition",
+                " use_gpu:=true",
+                " simulation_engine:=ignition-gazebo",
             ]
         )
     }
@@ -115,14 +119,26 @@ def generate_launch_description():
         )
     )
 
+    ign_bridge = Node(
+        package="ros_ign_bridge",
+        executable="parameter_bridge",
+        name="ign_bridge",
+        arguments=[
+            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
+            "/imu/data_raw" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
+        ],
+        output="screen",
+    )
+
     return LaunchDescription(
         [
             gz_sim,
             robot_state_publisher_node,
-            gz_spawn_entity,
             joint_state_broadcaster_spawner,
             delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
             delay_imu_broadcaster_spawner_after_robot_controller_spawner,
+            ign_bridge,
+            gz_spawn_entity,
         ]
     )
 

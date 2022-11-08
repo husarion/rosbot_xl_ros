@@ -18,6 +18,8 @@ def generate_launch_description():
     xacro_file = PathJoinSubstitution(
         [rosbot_xl_description, "urdf", "rosbot_xl.urdf.xacro"]
     )
+
+    # use_gpu is necessary, CPU lidar doesn't work in ignition - https://github.com/gazebosim/gz-sensors/issues/26
     robot_description = {
         "robot_description": Command(
             [
@@ -33,7 +35,7 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[robot_description],
+        parameters=[{"use_sim_time": True}, robot_description],
     )
 
     gz_sim = IncludeLaunchDescription(
@@ -61,6 +63,7 @@ def generate_launch_description():
             "-z",
             "0.2",
         ],
+        parameters=[{"use_sim_time": True}],
         output="screen",
     )
 
@@ -74,6 +77,7 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
+        parameters=[{"use_sim_time": True}],
     )
 
     robot_controller_spawner = Node(
@@ -86,6 +90,7 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
+        parameters=[{"use_sim_time": True}],
     )
 
     # Delay start of robot_controller after joint_state_broadcaster
@@ -108,6 +113,7 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
+        parameters=[{"use_sim_time": True}],
     )
 
     # Delay start of imu_broadcaster after robot_controller
@@ -120,14 +126,28 @@ def generate_launch_description():
     )
 
     ign_bridge = Node(
-        package="ros_ign_bridge",
+        package="ros_gz_bridge",
         executable="parameter_bridge",
         name="ign_bridge",
         arguments=[
             "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
-            "/imu/data_raw" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
+            "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
         ],
         output="screen",
+        parameters=[{"use_sim_time": True}],
+    )
+
+    robot_localization_node = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[
+            PathJoinSubstitution(
+                [get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"]
+            ),
+            {"use_sim_time": True},
+        ],
     )
 
     return LaunchDescription(
@@ -138,6 +158,7 @@ def generate_launch_description():
             delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
             delay_imu_broadcaster_spawner_after_robot_controller_spawner,
             ign_bridge,
+            robot_localization_node,
             gz_spawn_entity,
         ]
     )

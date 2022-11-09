@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import os
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
+from launch_ros.actions import Node, SetParameter
+from launch.substitutions import PathJoinSubstitution, Command
 from launch.actions import (
     RegisterEventHandler,
-    DeclareLaunchArgument,
     IncludeLaunchDescription,
 )
 from launch.event_handlers import OnProcessExit
@@ -35,7 +34,7 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[{"use_sim_time": True}, robot_description],
+        parameters=[robot_description],
     )
 
     gz_sim = IncludeLaunchDescription(
@@ -63,7 +62,6 @@ def generate_launch_description():
             "-z",
             "0.2",
         ],
-        parameters=[{"use_sim_time": True}],
         output="screen",
     )
 
@@ -77,7 +75,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
-        parameters=[{"use_sim_time": True}],
     )
 
     robot_controller_spawner = Node(
@@ -90,7 +87,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
-        parameters=[{"use_sim_time": True}],
     )
 
     # Delay start of robot_controller after joint_state_broadcaster
@@ -113,7 +109,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "120",
         ],
-        parameters=[{"use_sim_time": True}],
     )
 
     # Delay start of imu_broadcaster after robot_controller
@@ -134,7 +129,6 @@ def generate_launch_description():
             "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
         ],
         output="screen",
-        parameters=[{"use_sim_time": True}],
     )
 
     robot_localization_node = Node(
@@ -146,12 +140,13 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"]
             ),
-            {"use_sim_time": True},
         ],
     )
 
     return LaunchDescription(
         [
+            # Sets use_sim_time for all nodes started below (doesn't work for nodes started from ignition gazebo)
+            SetParameter(name="use_sim_time", value=True),
             gz_sim,
             robot_state_publisher_node,
             joint_state_broadcaster_spawner,

@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
-import os
 from launch import LaunchDescription
 from launch_ros.actions import Node, SetParameter
 from launch.substitutions import PathJoinSubstitution, Command
-from launch.actions import (
-    RegisterEventHandler,
-    IncludeLaunchDescription,
-)
+from launch.actions import RegisterEventHandler, IncludeLaunchDescription
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
     xacro_file = PathJoinSubstitution(
-        [rosbot_xl_description, "urdf", "rosbot_xl.urdf.xacro"]
+        [
+            get_package_share_directory("rosbot_xl_description"),
+            "urdf",
+            "rosbot_xl.urdf.xacro",
+        ]
     )
 
     robot_description = {
@@ -44,7 +43,7 @@ def generate_launch_description():
                 ]
             )
         ),
-        launch_arguments={"gz_args": "-r empty.sdf"}.items(),
+        launch_arguments={"gz_args": "-r shapes.sdf"}.items(),
     )
     gz_spawn_entity = Node(
         package="ros_gz_sim",
@@ -56,6 +55,8 @@ def generate_launch_description():
             "true",
             "-topic",
             "robot_description",
+            "-x",
+            "-1.5",
             "-z",
             "0.2",
         ],

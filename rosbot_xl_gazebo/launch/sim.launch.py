@@ -143,6 +143,20 @@ def generate_launch_description():
         ],
     )
 
+    laser_filter_node = Node(
+        package="laser_filters",
+        executable="scan_to_scan_filter_chain",
+        parameters=[
+            PathJoinSubstitution(
+                [
+                    get_package_share_directory("rosbot_xl_bringup"),
+                    "config",
+                    "laser_filter.yaml",
+                ]
+            )
+        ],
+    )
+
     return LaunchDescription(
         [
             # Sets use_sim_time for all nodes started below (doesn't work for nodes started from ignition gazebo)
@@ -154,6 +168,7 @@ def generate_launch_description():
             delay_imu_broadcaster_spawner_after_robot_controller_spawner,
             ign_bridge,
             robot_localization_node,
+            laser_filter_node,
             gz_spawn_entity,
         ]
     )

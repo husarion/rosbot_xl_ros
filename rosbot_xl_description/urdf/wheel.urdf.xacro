@@ -51,6 +51,21 @@
           <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+        <surface>
+          <!-- Surface settings based on https://github.com/gazebosim/gz-sim/blob/gz-sim7/examples/worlds/diff_drive_skid.sdf -->
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+            </ode>
+            <bullet>
+              <friction>1</friction>
+              <friction2>1</friction2>
+              <rolling_friction>0.1</rolling_friction>
+            </bullet>
+          </friction>
+        </surface>
       </collision>
 
       <inertial>

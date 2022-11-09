@@ -3,10 +3,9 @@
 
   <xacro:arg name="use_sim" default="false" />
   <xacro:arg name="use_gpu" default="false" />
-  <xacro:arg name="simulation_engine" default="gazebo-classic" /> 
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro" ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" use_gpu="$(arg use_gpu)" simulation_engine="$(arg simulation_engine)" />
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" use_gpu="$(arg use_gpu)" />
 
   <!-- material used in rplidar -->
   <xacro:include filename="$(find ros_components_description)/urdf/rplidar_s1.gazebo.xacro" ns="lidar" />
@@ -15,6 +14,6 @@
     xyz="0.0 0.0 0.0"
     rpy="0.0 0.0 ${pi}"
     use_gpu="$(arg use_gpu)"
-    simulation_engine="$(arg simulation_engine)" />
+    simulation_engine="ignition-gazebo" />
     
 </robot>

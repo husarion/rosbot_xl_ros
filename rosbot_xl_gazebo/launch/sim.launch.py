@@ -26,7 +26,6 @@ def generate_launch_description():
                 xacro_file,
                 " use_sim:=true",
                 " use_gpu:=true",
-                " simulation_engine:=ignition-gazebo",
             ]
         )
     }

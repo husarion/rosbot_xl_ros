@@ -7,6 +7,7 @@
   <description>The rosbot_xl_gazebo package</description>
   <license>Apache License 2.0</license>
 
+  <author email="maciej.stepien@husarion.com">Maciej Stępień</author>
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <maintainer email="contact@husarion.com">Husarion</maintainer>
 
@@ -18,32 +19,36 @@
   
   <build_depend>rosbot_xl_description</build_depend>
 
+  <exec_depend>rosbot_xl_description</exec_depend>
+
   <!-- Ignition Fortress -->
   <exec_depend>ignition-gazebo6</exec_depend>
+  <exec_depend>ros_ign_gazebo</exec_depend>
+  <exec_depend>ros_ign_bridge</exec_depend>
+  <exec_depend>ign_ros2_control</exec_depend>
+  <exec_depend>ignition-plugin</exec_depend>
 
   <exec_depend>controller_interface</exec_depend>
   <exec_depend>hardware_interface</exec_depend>
+
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
-  <exec_depend>ros_ign_gazebo</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
+
+  <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
-  <exec_depend>pluginlib</exec_depend>
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>rosbot_xl_description</exec_depend>
-  <exec_depend>ign_ros2_control</exec_depend>
-  <exec_depend>ignition-plugin</exec_depend>
-  <exec_depend>ros_ign_bridge</exec_depend>
-  <exec_depend>control_msgs</exec_depend>
-  <exec_depend>joint_state_broadcaster</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
 
-  <exec_depend>effort_controllers</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+  
+  <exec_depend>std_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>ros2controlcli</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>effort_controllers</exec_depend>
   <exec_depend>velocity_controllers</exec_depend>
   <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

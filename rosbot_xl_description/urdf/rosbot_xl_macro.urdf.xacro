@@ -107,6 +107,9 @@
       <gazebo>
         <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
           <parameters>$(find rosbot_xl_gazebo)/config/diff_drive_controller.yaml</parameters>
+          <ros>
+            <remapping>/rosbot_xl_base_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+          </ros>
         </plugin>
       </gazebo>
       <gazebo reference="imu_link">

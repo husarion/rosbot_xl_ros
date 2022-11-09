@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="rosbot_xl_robot" params="use_sim use_gpu">
+  <xacro:macro name="rosbot_xl_robot" params="use_sim">
 
     <xacro:property name="wheel_radius" value="0.048" />
     <xacro:property name="wheel_separation_y" value="0.236" />

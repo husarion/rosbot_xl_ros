@@ -18,14 +18,12 @@ def generate_launch_description():
         [rosbot_xl_description, "urdf", "rosbot_xl.urdf.xacro"]
     )
 
-    # use_gpu is necessary, CPU lidar doesn't work in ignition - https://github.com/gazebosim/gz-sensors/issues/26
     robot_description = {
         "robot_description": Command(
             [
                 "xacro --verbosity 0 ",
                 xacro_file,
                 " use_sim:=true",
-                " use_gpu:=true",
             ]
         )
     }

@@ -12,7 +12,7 @@ controller_manager:
 imu_broadcaster:
   ros__parameters:
     sensor_name: "imu"
-    frame_id: "imu"
+    frame_id: "imu_link"
 
 rosbot_xl_base_controller:
   ros__parameters:

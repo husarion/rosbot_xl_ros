@@ -110,7 +110,7 @@
     <xacro:if value="${use_sim and simulation_engine == 'ignition-gazebo'}">
       <gazebo>
         <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-          <parameters>$(find rosbot_xl_hardware)/config/diff_drive_controller.yaml</parameters>
+          <parameters>$(find rosbot_xl_gazebo)/config/diff_drive_controller.yaml</parameters>
         </plugin>
       </gazebo>
     </xacro:if>

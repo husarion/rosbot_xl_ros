@@ -9,30 +9,7 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    xacro_file = PathJoinSubstitution(
-        [
-            get_package_share_directory("rosbot_xl_description"),
-            "urdf",
-            "rosbot_xl.urdf.xacro",
-        ]
-    )
-
-    robot_description = {
-        "robot_description": Command(
-            [
-                "xacro --verbosity 0 ",
-                xacro_file,
-                " use_sim:=true",
-            ]
-        )
-    }
-
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        parameters=[robot_description],
-    )
-
+    # Simulation
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -62,7 +39,43 @@ def generate_launch_description():
         ],
         output="screen",
     )
+    ign_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="ign_bridge",
+        arguments=[
+            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
+            "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
+        ],
+        output="screen",
+    )
 
+    # Desctiption
+    xacro_file = PathJoinSubstitution(
+        [
+            get_package_share_directory("rosbot_xl_description"),
+            "urdf",
+            "rosbot_xl.urdf.xacro",
+        ]
+    )
+
+    robot_description = {
+        "robot_description": Command(
+            [
+                "xacro --verbosity 0 ",
+                xacro_file,
+                " use_sim:=true",
+            ]
+        )
+    }
+
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        parameters=[robot_description],
+    )
+
+    # ROS2 Controls
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -118,17 +131,7 @@ def generate_launch_description():
         )
     )
 
-    ign_bridge = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        name="ign_bridge",
-        arguments=[
-            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
-            "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
-        ],
-        output="screen",
-    )
-
+    # EKF
     robot_localization_node = Node(
         package="robot_localization",
         executable="ekf_node",
@@ -141,6 +144,7 @@ def generate_launch_description():
         ],
     )
 
+    # Laser filter
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",

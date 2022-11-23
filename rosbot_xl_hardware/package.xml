@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rosbot_xl_hardware</name>
-  <version>0.0.1</version>
+  <version>0.0.5</version>
 
   <description>Hardware configuration for ROSbot XL</description>
   <license>Apache License 2.0</license>
@@ -22,6 +22,9 @@
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>diff_drive_controller</exec_depend>
   <exec_depend>imu_sensor_broadcaster</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

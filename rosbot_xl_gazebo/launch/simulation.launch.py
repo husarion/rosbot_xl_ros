@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from launch import LaunchDescription
 from launch_ros.actions import Node, SetParameter
-from launch.substitutions import PathJoinSubstitution, Command
-from launch.actions import RegisterEventHandler, IncludeLaunchDescription
+from launch.substitutions import PathJoinSubstitution, Command, LaunchConfiguration, TextSubstitution
+from launch.actions import RegisterEventHandler, IncludeLaunchDescription, DeclareLaunchArgument
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
@@ -10,6 +10,11 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     # Simulation
+    map_package = get_package_share_directory("husarion_office_gz")
+    world_file = PathJoinSubstitution([map_package, "worlds", "husarion_world.sdf"])
+    world_cfg = LaunchConfiguration('world')
+    declare_world_arg = DeclareLaunchArgument('world', default_value=["-r ", world_file], description='SDF world file')
+
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -20,7 +25,9 @@ def generate_launch_description():
                 ]
             )
         ),
-        launch_arguments={"gz_args": "-r shapes.sdf"}.items(),
+        launch_arguments={
+            "gz_args": world_cfg
+        }.items(),
     )
     gz_spawn_entity = Node(
         package="ros_gz_sim",
@@ -33,7 +40,9 @@ def generate_launch_description():
             "-topic",
             "robot_description",
             "-x",
-            "-1.5",
+            "0",
+            "-y",
+            "1.5",
             "-z",
             "0.2",
         ],
@@ -161,6 +170,7 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            declare_world_arg,
             # Sets use_sim_time for all nodes started below (doesn't work for nodes started from ignition gazebo)
             SetParameter(name="use_sim_time", value=True),
             gz_sim,

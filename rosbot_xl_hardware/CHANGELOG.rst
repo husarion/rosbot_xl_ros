@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_hardware
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2022-11-30)
+------------------
 * Merge branch 'master' into simulation-fix
 * Contributors: Maciej Stepien
 

@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl_hardware
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'master' into simulation-fix
+* Contributors: Maciej Stepien
+
 0.0.5 (2022-11-16)
 ------------------
 * Merge pull request `#20 <https://github.com/husarion/rosbot_xl_ros/issues/20>`_ from husarion/update-package-dependencies

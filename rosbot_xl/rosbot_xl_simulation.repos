@@ -1,8 +1,9 @@
 repositories:
   gazebosim/gz_ros2_control:
     type: git
-    url: https://github.com/gazebosim/gz_ros2_control
-    version: galactic
+    url: https://github.com/ros-controls/gz_ros2_control.git
+    # on branch humble hardware isn't activated
+    version: master
 
   husarion/gazebo_worlds:
     type: git

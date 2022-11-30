@@ -33,7 +33,7 @@
       <origin xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 1.0 0.0" />
 
-      <limit effort="1.2" velocity="21.0" />
+      <limit effort="1.27" velocity="21.0" />
 
       <dynamics damping="0.001" friction="0.001" />
     </joint>
@@ -60,6 +60,14 @@
                                                   izz="4.032e-05" />
       </inertial>
     </link>
+
+    <gazebo reference="${prefix}_wheel_link">
+      <mu1 value="1.0" />
+      <mu2 value="0.5" />
+      <kp value="10000000.0" />
+      <kd value="1.0" />
+      <fdir1 value="1 0 0" />
+    </gazebo>
 
   </xacro:macro>
 </robot>

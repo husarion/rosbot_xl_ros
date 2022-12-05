@@ -31,3 +31,7 @@ Launch files for Ignition Gazebo working with ROS2 control.
 ### `rosbot_xl_hardware`
 
 ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros.
+
+## ROS API
+
+Available in [ROS_API.md](./ROS_API.md)

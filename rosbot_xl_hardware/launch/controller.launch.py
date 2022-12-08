@@ -54,6 +54,8 @@ def generate_launch_description():
                     "rosbot_xl.urdf.xacro",
                 ]
             ),
+            " mecanum:=",
+            mecanum,
         ]
     )
     robot_description = {"robot_description": robot_description_content}

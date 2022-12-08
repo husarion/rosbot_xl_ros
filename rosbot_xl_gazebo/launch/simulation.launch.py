@@ -73,7 +73,7 @@ def generate_launch_description():
             [
                 "xacro --verbosity 0 ",
                 xacro_file,
-                " use_sim:=true",
+                " use_sim:=true mecanum:=true",
             ]
         )
     }

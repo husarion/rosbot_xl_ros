@@ -22,7 +22,7 @@ rosbot_xl_base_controller:
     rear_right_wheel_name: rr_wheel_joint
 
     wheel_separation_x: 0.170
-    wheel_separation_y: 0.252
+    wheel_separation_y: 0.270
     wheel_radius: 0.05
 
     wheel_separation_multiplier_x: 1.0

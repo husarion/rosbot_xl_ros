@@ -17,10 +17,11 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>rosbot_xl_description</exec_depend>
-  <exec_depend>rosbot_xl_hardware</exec_depend>
-  
   <exec_depend>laser_filters</exec_depend>
   <exec_depend>robot_localization</exec_depend>
+
+  <!-- This generates build dependencies error. It is not necessery to build this package in simulation -->
+  <!-- <exec_depend>rosbot_xl_hardware</exec_depend> -->
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -2,13 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rosbot_xl_description</name>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 
   <description>The rosbot_xl_description package</description>
   <license>Apache License 2.0</license>
 
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
+  <author email="jakub.delicat@husarion.com">Jakub Delicat</author>
   <maintainer email="contact@husarion.com">Husarion</maintainer>
 
   <url type="website">https://husarion.com/</url>

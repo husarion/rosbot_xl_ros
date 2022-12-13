@@ -2,9 +2,10 @@
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="use_sim" default="false" />
+  <xacro:arg name="simulation_engine" default="gazebo-ignition" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro" ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" />
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" simulation_engine="$(arg simulation_engine)"/>
 
   <xacro:include filename="$(find ros_components_description)/urdf/rplidar_s1.gazebo.xacro" ns="lidar" />
   <xacro:lidar.rplidar_s1
@@ -12,7 +13,6 @@
     xyz="0.0 0.0 0.0"
     rpy="0.0 0.0 ${pi}"
     use_gpu="true"
-    simulation_engine="ignition-gazebo" />
+    simulation_engine="$(arg simulation_engine)" />
   <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition - https://github.com/gazebosim/gz-sensors/issues/26 -->
-    
 </robot>

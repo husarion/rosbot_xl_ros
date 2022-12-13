@@ -3,54 +3,55 @@
   <!-- wheel defining macro -->
   <xacro:macro name="wheel" params="wheel_radius prefix mecanum">
 
-    <xacro:property name="wheel_separation_y" value="0.236" />
     <xacro:property name="wheel_separation_x" value="0.170" />
 
     <xacro:if value="${mecanum}">
       <xacro:property name="wheel_file" value="mecanum" />
       <xacro:property name="wheel_thickness" value="0.05" />
       <xacro:property name="mass" value="0.4" />
-      <!-- TODO: change -->
-      <xacro:property name="ixx" value="3.954e-05" />
-      <xacro:property name="iyy" value="7.116e-05" />
-      <xacro:property name="izz" value="4.032e-05" />
+
+      <xacro:property name="ixx" value="0.003145" />
+      <xacro:property name="iyy" value="0.004561" />
+      <xacro:property name="izz" value="0.003145" />
+      
+      <xacro:property name="wheel_separation_y" value="0.270" />
     </xacro:if>
     <xacro:unless value="${mecanum}">
+      <!-- todo: change meshes (they are old and too large) -->
       <xacro:property name="wheel_file" value="wheel" />
-      <xacro:property name="wheel_thickness" value="0.032" />
+      <xacro:property name="wheel_thickness" value="0.036" />
       <xacro:property name="mass" value="0.051" />
+      
       <xacro:property name="ixx" value="3.954e-05" />
       <xacro:property name="iyy" value="7.116e-05" />
       <xacro:property name="izz" value="4.032e-05" />
+      
+      <xacro:property name="wheel_separation_y" value="0.248" />
     </xacro:unless>
 
     <xacro:if value="${prefix == 'fl'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
-      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_a.dae" />
-      <xacro:property name="visual_rotation" value="0" />
-      <xacro:property name="visual_offset" value="-0.015" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_b.dae" />
+      <xacro:property name="visual_rotation" value="${pi}" />
     </xacro:if>
     <xacro:if value="${prefix == 'fr'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
-      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_b.dae" />
+      <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_a.dae" />
       <xacro:property name="visual_rotation" value="${pi}" />
-      <xacro:property name="visual_offset" value="0.015" />
     </xacro:if>
     <xacro:if value="${prefix == 'rl'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_a.dae" />
-      <xacro:property name="visual_rotation" value="0" />
-      <xacro:property name="visual_offset" value="-0.015" />
+      <xacro:property name="visual_rotation" value="${0.0}" />
     </xacro:if>
     <xacro:if value="${prefix == 'rr'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_b.dae" />
-      <xacro:property name="visual_rotation" value="${pi}" />
-      <xacro:property name="visual_offset" value="0.015" />
+      <xacro:property name="visual_rotation" value="${0.0}" />
     </xacro:if>
 
     <joint name="${prefix}_wheel_joint" type="continuous">
@@ -69,7 +70,7 @@
         <geometry>
           <mesh filename="${mesh}" scale="1 1 1" />
         </geometry>
-        <origin xyz="0.0 ${visual_offset} 0.0" rpy="0.0 0.0 ${visual_rotation}" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${visual_rotation}" />
       </visual>
 
       <collision>
@@ -81,8 +82,8 @@
 
       <inertial>
         <mass value="${mass}" />
-        <inertia ixx="${ixx}" ixy="0.000"  ixz="0.000"
-                              iyy="${iyy}" iyz="0.000"
+        <inertia ixx="${ixx}" ixy="0.0"    ixz="0.0"
+                              iyy="${iyy}" iyz="0.0"
                                            izz="${izz}" />
       </inertial>
     </link>

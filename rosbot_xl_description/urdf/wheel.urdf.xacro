@@ -17,14 +17,13 @@
       <xacro:property name="wheel_separation_y" value="0.270" />
     </xacro:if>
     <xacro:unless value="${mecanum}">
-      <!-- todo: change meshes (they are old and too large) -->
       <xacro:property name="wheel_file" value="wheel" />
       <xacro:property name="wheel_thickness" value="0.036" />
       <xacro:property name="mass" value="0.051" />
       
-      <xacro:property name="ixx" value="3.954e-05" />
-      <xacro:property name="iyy" value="7.116e-05" />
-      <xacro:property name="izz" value="4.032e-05" />
+      <xacro:property name="ixx" value="0.000050587413" />
+      <xacro:property name="iyy" value="0.000085933192" />
+      <xacro:property name="izz" value="0.000050587829" />
       
       <xacro:property name="wheel_separation_y" value="0.248" />
     </xacro:unless>

@@ -32,4 +32,5 @@ Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionaliti
   - `/tf` (_tf2_msgs/TFMessage_)
   - `/tf_static` (_tf2_msgs/TFMessage_)
   - `/_motors_cmd` (_std_msgs/Float32MultiArray_)
-  - `/rosbot_xl_base_controller/odom` (_nav_msgs/O
+  - `/rosbot_xl_base_controller/odom` (_nav_msgs/Odometry_)
+  - `/imu_broadcaster/imu` (_sensor_msgs/Imu_)

@@ -13,18 +13,18 @@
       <xacro:property name="ixx" value="0.003145" />
       <xacro:property name="iyy" value="0.004561" />
       <xacro:property name="izz" value="0.003145" />
-      
+
       <xacro:property name="wheel_separation_y" value="0.270" />
     </xacro:if>
     <xacro:unless value="${mecanum}">
       <xacro:property name="wheel_file" value="wheel" />
       <xacro:property name="wheel_thickness" value="0.036" />
       <xacro:property name="mass" value="0.051" />
-      
+
       <xacro:property name="ixx" value="0.000050587413" />
       <xacro:property name="iyy" value="0.000085933192" />
       <xacro:property name="izz" value="0.000050587829" />
-      
+
       <xacro:property name="wheel_separation_y" value="0.248" />
     </xacro:unless>
 
@@ -33,24 +33,28 @@
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_b.dae" />
       <xacro:property name="visual_rotation" value="${pi}" />
+      <xacro:property name="fdir" value="1 -1 0" />
     </xacro:if>
     <xacro:if value="${prefix == 'fr'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_a.dae" />
       <xacro:property name="visual_rotation" value="${pi}" />
+      <xacro:property name="fdir" value="1 1 0" />
     </xacro:if>
     <xacro:if value="${prefix == 'rl'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_a.dae" />
       <xacro:property name="visual_rotation" value="${0.0}" />
+      <xacro:property name="fdir" value="1 1 0" />
     </xacro:if>
     <xacro:if value="${prefix == 'rr'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
       <xacro:property name="mesh" value="file://$(find rosbot_xl_description)/meshes/${wheel_file}_b.dae" />
       <xacro:property name="visual_rotation" value="${0.0}" />
+      <xacro:property name="fdir" value="1 -1 0" />
     </xacro:if>
 
     <joint name="${prefix}_wheel_joint" type="continuous">
@@ -73,10 +77,18 @@
       </visual>
 
       <collision>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
-        </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+        <xacro:unless value="${mecanum}">
+          <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
+          </geometry>
+          <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+        </xacro:unless>
+        <xacro:if value="${mecanum}">
+          <!-- Mecanum simulation in ignition require wheels to be spheres -->
+          <geometry>
+            <sphere radius="${wheel_radius}" />
+          </geometry>
+        </xacro:if>
       </collision>
 
       <inertial>
@@ -87,12 +99,18 @@
       </inertial>
     </link>
 
-    <gazebo reference="${prefix}_wheel_link">
-      <mu1 value="1.0" />
-      <mu2 value="0.5" />
-      <kp value="10000000.0" />
-      <kd value="1.0" />
-      <fdir1 value="1 0 0" />
+    <gazebo reference="${prefix}_wheel_link" xmlns:ignition="http://ignitionrobotics.org/schema">
+      <collision>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>0.0</mu2>
+              <fdir1 ignition:expressed_in="base_link">${fdir}</fdir1>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
     </gazebo>
 
   </xacro:macro>

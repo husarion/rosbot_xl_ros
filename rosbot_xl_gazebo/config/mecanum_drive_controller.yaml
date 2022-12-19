@@ -56,9 +56,7 @@ rosbot_xl_base_controller:
     # Whether to use feedback or commands for odometry calculations
     open_loop: false
 
-    # Update odometry from position - velocity feedback won't work in simulation, because unit is rad/s
-    # and diff drive controller require m/s (https://github.com/ros-controls/ros2_controllers/pull/452)
-    position_feedback: true
+    position_feedback: false
     # velocity computation filtering
     velocity_rolling_window_size: 1
 

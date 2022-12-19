@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2020 ros2_control Development Team
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +16,7 @@
 
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler, DeclareLaunchArgument
+from launch.conditions import UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import (
     Command,
@@ -23,22 +26,38 @@ from launch.substitutions import (
     LaunchConfiguration,
 )
 
-from launch_ros.actions import Node
+from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
     mecanum = LaunchConfiguration("mecanum")
-    declare_mecanum_cmd = DeclareLaunchArgument(
+    declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
+
+    use_sim = LaunchConfiguration("use_sim")
+    declare_use_sim_arg = DeclareLaunchArgument(
+        "use_sim",
+        default_value="False",
+        description="Whether simulation is used",
+    )
+
     controller_config_name = PythonExpression(
         [
             "'mecanum_drive_controller.yaml' if ",
             mecanum,
             " else 'diff_drive_controller.yaml'",
+        ]
+    )
+
+    controller_manager_name = PythonExpression(
+        [
+            "'/simulation_controller_manager' if ",
+            use_sim,
+            " else '/controller_manager'",
         ]
     )
 
@@ -56,6 +75,8 @@ def generate_launch_description():
             ),
             " mecanum:=",
             mecanum,
+            " use_sim:=",
+            use_sim,
         ]
     )
     robot_description = {"robot_description": robot_description_content}
@@ -78,6 +99,7 @@ def generate_launch_description():
             ("~/motors_response", "/_motors_response"),
             ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
+        condition=UnlessCondition(use_sim),
     )
 
     robot_state_pub_node = Node(
@@ -93,7 +115,7 @@ def generate_launch_description():
         arguments=[
             "joint_state_broadcaster",
             "--controller-manager",
-            "/controller_manager",
+            controller_manager_name,
             "--controller-manager-timeout",
             "120",
         ],
@@ -105,7 +127,7 @@ def generate_launch_description():
         arguments=[
             "rosbot_xl_base_controller",
             "--controller-manager",
-            "/controller_manager",
+            controller_manager_name,
             "--controller-manager-timeout",
             "120",
         ],
@@ -127,7 +149,7 @@ def generate_launch_description():
         arguments=[
             "imu_broadcaster",
             "--controller-manager",
-            "/controller_manager",
+            controller_manager_name,
             "--controller-manager-timeout",
             "120",
         ],
@@ -143,7 +165,9 @@ def generate_launch_description():
     )
 
     actions = [
-        declare_mecanum_cmd,
+        declare_mecanum_arg,
+        declare_use_sim_arg,
+        SetParameter(name="use_sim_time", value=use_sim),
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,

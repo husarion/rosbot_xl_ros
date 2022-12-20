@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#22 <https://github.com/husarion/rosbot_xl_ros/issues/22>`_ from husarion/vel-feedback-units-change
+  Remove ros2 control wheel radius parameter
+* Contributors: Maciej Stępień
+
 0.1.0 (2022-11-30)
 ------------------
 * Merge pull request `#21 <https://github.com/husarion/rosbot_xl_ros/issues/21>`_ from husarion/simulation-fix

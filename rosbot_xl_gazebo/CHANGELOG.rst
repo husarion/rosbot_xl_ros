@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.0 (2022-11-30)
 ------------------
 * Merge pull request `#21 <https://github.com/husarion/rosbot_xl_ros/issues/21>`_ from husarion/simulation-fix

@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#23 <https://github.com/husarion/rosbot_xl_ros/issues/23>`_ from husarion/simulation-update
+  Simulation update
+* Merge branch 'master' into add-mecanum-model
+* Contributors: Maciej Stepien, Maciej Stępień
+
 0.1.1 (2022-12-20)
 ------------------
 * Merge pull request `#22 <https://github.com/husarion/rosbot_xl_ros/issues/22>`_ from husarion/vel-feedback-units-change

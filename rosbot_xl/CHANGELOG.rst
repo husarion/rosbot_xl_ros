@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'master' into add-mecanum-model
+* Contributors: Maciej Stepien
+
 0.1.1 (2022-12-20)
 ------------------
 

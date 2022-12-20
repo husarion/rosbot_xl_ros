@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2022-12-20)
+------------------
 * Merge pull request `#23 <https://github.com/husarion/rosbot_xl_ros/issues/23>`_ from husarion/simulation-update
   Simulation update
 * Merge branch 'master' into add-mecanum-model

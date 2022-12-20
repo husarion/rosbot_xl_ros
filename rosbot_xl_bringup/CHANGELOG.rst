@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.1 (2022-12-20)
+------------------
+
 0.1.0 (2022-11-30)
 ------------------
 * Merge branch 'master' into simulation-fix

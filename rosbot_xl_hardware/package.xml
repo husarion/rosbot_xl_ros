@@ -7,8 +7,8 @@
   <description>Hardware configuration for ROSbot XL</description>
   <license>Apache License 2.0</license>
   
-  <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
+  <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <maintainer email="contact@husarion.com">Husarion</maintainer>
 
   <url type="website">https://husarion.com/</url>
@@ -18,13 +18,20 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>rosbot_xl_description</exec_depend>
-  <exec_depend>rosbot_hardware_interfaces</exec_depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <exec_depend>xacro</exec_depend>
   <exec_depend>controller_manager</exec_depend>
-  <exec_depend>diff_drive_controller</exec_depend>
-  <exec_depend>imu_sensor_broadcaster</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
+
   <exec_depend>joint_state_broadcaster</exec_depend>
-  <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>imu_sensor_broadcaster</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>mecanum_drive_controller</exec_depend>
+
+  <exec_depend>rosbot_hardware_interfaces</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

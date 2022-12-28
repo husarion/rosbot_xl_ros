@@ -1,9 +1,13 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="rosbot_xl_robot" params="use_sim simulation_engine">
+  <xacro:macro name="rosbot_xl_robot" params="use_sim mecanum simulation_engine">
 
-    <xacro:property name="wheel_radius" value="0.048" />
-    <xacro:property name="wheel_separation_y" value="0.236" />
+    <xacro:if value="${mecanum}">
+      <xacro:property name="wheel_radius" value="0.05" />
+    </xacro:if>
+    <xacro:unless value="${mecanum}">
+      <xacro:property name="wheel_radius" value="0.048" />
+    </xacro:unless>
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/urdf/body.urdf.xacro" ns="body" />
@@ -13,10 +17,10 @@
     <xacro:body.body wheel_radius="${wheel_radius}" />
 
     <!-- WHEEL DECLARATION -->
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" wheel_separation_y="${wheel_separation_y}" prefix="fl" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" wheel_separation_y="${wheel_separation_y}" prefix="fr" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" wheel_separation_y="${wheel_separation_y}" prefix="rl" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" wheel_separation_y="${wheel_separation_y}" prefix="rr" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fl" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fr" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rl" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rr" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
 
     <!-- ROS2 CONTROL -->
     <xacro:unless value="$(arg use_sim)">
@@ -56,11 +60,6 @@
           <plugin>rosbot_hardware_interfaces/RosbotSystem</plugin>
           <param name="connection_timeout_ms">120000</param>
           <param name="connection_check_period_ms">500</param>
-
-          <!-- for some reason diff drive controller publishes velocities for motors in rad/s, but expects feedback in m/s
-            both commands and feedback from digital board are in rad/s, so it is necessary to convert it
-            maybe will be resolved (https://github.com/ros-controls/ros2_controllers/issues/411), then it can be removed -->
-          <param name="wheel_radius">${wheel_radius}</param>
 
           <!-- order of velocity commands to be published in motors_cmd Float32MultiArray msg -->
           <param name="velocity_command_joint_order">
@@ -115,7 +114,13 @@
       <xacro:if value="${simulation_engine == 'gazebo-ignition'}">
         <gazebo>
           <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-            <parameters>$(find rosbot_xl_gazebo)/config/diff_drive_controller.yaml</parameters>
+            <xacro:if value="${mecanum}">
+              <parameters>$(find rosbot_xl_hardware)/config/mecanum_drive_controller.yaml</parameters>
+            </xacro:if>
+            <xacro:unless value="${mecanum}">
+              <parameters>$(find rosbot_xl_hardware)/config/diff_drive_controller.yaml</parameters>
+            </xacro:unless>
+            <controller_manager_prefix_node_name>simulation</controller_manager_prefix_node_name>
             <ros>
               <remapping>/rosbot_xl_base_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
             </ros>

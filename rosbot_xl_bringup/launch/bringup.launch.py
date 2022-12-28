@@ -1,24 +1,31 @@
+#!/usr/bin/env python3
+
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     PathJoinSubstitution,
     LaunchConfiguration,
-    PythonExpression,
 )
-from launch.conditions import IfCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-from launch_ros.actions import Node
+from launch_ros.actions import Node, SetParameter
 
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
     mecanum = LaunchConfiguration("mecanum")
-    declare_mecanum_cmd = DeclareLaunchArgument(
+    declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+    )
+
+    use_sim = LaunchConfiguration("use_sim")
+    declare_use_sim_arg = DeclareLaunchArgument(
+        "use_sim",
+        default_value="False",
+        description="Whether simulation is used",
     )
 
     controller_launch = IncludeLaunchDescription(
@@ -31,7 +38,7 @@ def generate_launch_description():
                 ]
             )
         ),
-        launch_arguments={"mecanum": mecanum}.items(),
+        launch_arguments={"use_sim": use_sim, "mecanum": mecanum}.items(),
     )
 
     robot_localization_node = Node(
@@ -61,7 +68,9 @@ def generate_launch_description():
     )
 
     actions = [
-        declare_mecanum_cmd,
+        declare_mecanum_arg,
+        declare_use_sim_arg,
+        SetParameter(name="use_sim_time", value=use_sim),
         controller_launch,
         robot_localization_node,
         laser_filter_node,

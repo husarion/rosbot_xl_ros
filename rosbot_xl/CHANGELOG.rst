@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#25 <https://github.com/husarion/rosbot_xl_ros/issues/25>`_ from husarion/fix-simulation-dependency-build
+  Specify commit of gz_ros2_control dependency
+* Contributors: Maciej Stępień
+
 0.2.0 (2022-12-20)
 ------------------
 * Merge branch 'master' into add-mecanum-model

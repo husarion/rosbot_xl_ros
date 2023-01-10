@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2023-01-10)
+------------------
 * Merge pull request `#25 <https://github.com/husarion/rosbot_xl_ros/issues/25>`_ from husarion/fix-simulation-dependency-build
   Specify commit of gz_ros2_control dependency
 * Contributors: Maciej Stępień

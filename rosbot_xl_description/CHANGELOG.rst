@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2023-01-16)
+------------------
 * Merge pull request `#26 <https://github.com/husarion/rosbot_xl_ros/issues/26>`_ from husarion/update-s1-rplidar-include
   Update including rplidar s1 in rosbot urdf
 * Contributors: Maciej Stępień

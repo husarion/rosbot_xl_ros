@@ -7,11 +7,11 @@
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro" ns="husarion" />
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" />
 
-  <xacro:include filename="$(find ros_components_description)/urdf/rplidar_s1.gazebo.xacro" ns="lidar" />
-  <xacro:lidar.rplidar_s1
+  <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s1.urdf.xacro" ns="lidar" />
+  <xacro:lidar.slamtec_rplidar_s1
     parent_link="cover_link"
     xyz="0.0 0.0 0.0"
-    rpy="0.0 0.0 ${pi}"
+    rpy="0.0 0.0 0.0"
     use_gpu="true"
     simulation_engine="ignition-gazebo" />
   <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition - https://github.com/gazebosim/gz-sensors/issues/26 -->

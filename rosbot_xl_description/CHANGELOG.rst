@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.3 (2023-01-31)
+------------------
+* Merge pull request `#27 <https://github.com/husarion/rosbot_xl_ros/issues/27>`_ from husarion/fix-collision-model
+  Fix collision model
+* Contributors: Maciej Stępień
+
 0.2.2 (2023-01-16)
 ------------------
 * Merge pull request `#26 <https://github.com/husarion/rosbot_xl_ros/issues/26>`_ from husarion/update-s1-rplidar-include

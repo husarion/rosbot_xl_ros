@@ -2,6 +2,16 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#29 <https://github.com/husarion/rosbot_xl_ros/issues/29>`_ from husarion/rename-rosbot-hardware-pkg
+  Rename rosbot hardware package
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+  Conflicts:
+  rosbot_xl_controller/package.xml
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+* Contributors: Maciej Stepien, Maciej Stępień
+
 0.2.4 (2023-01-31)
 ------------------
 * Merge pull request `#28 <https://github.com/husarion/rosbot_xl_ros/issues/28>`_ from husarion/fix-mecanum-inertias

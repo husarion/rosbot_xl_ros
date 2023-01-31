@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2023-01-31)
+------------------
 * Merge branch 'master' into rename-rosbot-hardware-pkg
   Conflicts:
   rosbot_xl_controller/package.xml

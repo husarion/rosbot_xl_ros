@@ -32,7 +32,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    get_package_share_directory("rosbot_xl_hardware"),
+                    get_package_share_directory("rosbot_xl_controller"),
                     "launch",
                     "controller.launch.py",
                 ]

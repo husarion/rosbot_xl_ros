@@ -106,10 +106,10 @@
       <gazebo>
         <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
           <xacro:if value="${mecanum}">
-            <parameters>$(find rosbot_xl_hardware)/config/mecanum_drive_controller.yaml</parameters>
+            <parameters>$(find rosbot_xl_controller)/config/mecanum_drive_controller.yaml</parameters>
           </xacro:if>
           <xacro:unless value="${mecanum}">
-            <parameters>$(find rosbot_xl_hardware)/config/diff_drive_controller.yaml</parameters>
+            <parameters>$(find rosbot_xl_controller)/config/diff_drive_controller.yaml</parameters>
           </xacro:unless>
           <controller_manager_prefix_node_name>simulation</controller_manager_prefix_node_name>
           <ros>

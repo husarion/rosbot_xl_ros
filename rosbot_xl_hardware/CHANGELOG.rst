@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_hardware
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.2 (2023-01-16)
 ------------------
 

@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#28 <https://github.com/husarion/rosbot_xl_ros/issues/28>`_ from husarion/fix-mecanum-inertias
+  Fix mecanum wheels inertias
+* Contributors: Maciej Stępień
+
 0.2.3 (2023-01-31)
 ------------------
 * Merge pull request `#27 <https://github.com/husarion/rosbot_xl_ros/issues/27>`_ from husarion/fix-collision-model

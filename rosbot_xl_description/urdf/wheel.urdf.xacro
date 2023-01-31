@@ -9,9 +9,9 @@
       <xacro:property name="wheel_thickness" value="0.05" />
       <xacro:property name="mass" value="0.4" />
 
-      <xacro:property name="ixx" value="0.003145" />
-      <xacro:property name="iyy" value="0.004561" />
-      <xacro:property name="izz" value="0.003145" />
+      <xacro:property name="ixx" value="0.0003145" />
+      <xacro:property name="iyy" value="0.0004561" />
+      <xacro:property name="izz" value="0.0003145" />
 
       <xacro:property name="wheel_separation_y" value="0.270" />
     </xacro:if>

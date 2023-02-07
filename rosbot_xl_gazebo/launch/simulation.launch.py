@@ -70,6 +70,10 @@ def generate_launch_description():
         arguments=[
             "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
             "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
+            "/velodyne_points/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+        ],
+        remappings=[
+            ("/velodyne_points/points", "/velodyne_points"),
         ],
         output="screen",
     )

@@ -71,7 +71,7 @@ def generate_launch_description():
                 [
                     FindPackageShare("rosbot_xl_description"),
                     "urdf",
-                    "rosbot_xl.urdf.xacro",
+                    "rosbot_xl_velodyne.urdf.xacro",
                 ]
             ),
             " mecanum:=",

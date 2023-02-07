@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.3.0 (2023-01-31)
 ------------------
 * Merge pull request `#29 <https://github.com/husarion/rosbot_xl_ros/issues/29>`_ from husarion/rename-rosbot-hardware-pkg

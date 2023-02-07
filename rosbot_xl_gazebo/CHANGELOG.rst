@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.0 (2023-02-07)
+------------------
+
 0.3.0 (2023-01-31)
 ------------------
 * Merge branch 'master' into rename-rosbot-hardware-pkg

@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.0 (2023-02-07)
+------------------
+* Merge pull request `#30 <https://github.com/husarion/rosbot_xl_ros/issues/30>`_ from husarion/antenna-component
+  Add antenna component
+* Contributors: Maciej Stępień
+
 0.3.0 (2023-01-31)
 ------------------
 * Merge pull request `#29 <https://github.com/husarion/rosbot_xl_ros/issues/29>`_ from husarion/rename-rosbot-hardware-pkg

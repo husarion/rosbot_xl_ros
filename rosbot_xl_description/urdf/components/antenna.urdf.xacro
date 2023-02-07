@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:macro name="antenna"
-               params="parent_link xyz rpy
-                       tf_prefix:=None
-                       antenna_angle:=0.0">
+    params="parent_link xyz rpy
+            tf_prefix:=None
+            antenna_angle:=0.0">
 
     <xacro:if value="${tf_prefix == 'None'}">
       <xacro:property name="tf_prefix_ext" value="" />
@@ -11,6 +11,9 @@
     <xacro:unless value="${tf_prefix == 'None'}">
       <xacro:property name="tf_prefix_ext" value="${tf_prefix}_" />
     </xacro:unless>
+
+    <xacro:property name="antenna_length" value="0.1" />
+    <xacro:property name="antenna_radius" value="0.0052" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${tf_prefix_ext}antenna_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
@@ -21,7 +24,8 @@
     <link name="${tf_prefix_ext}antenna_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna.dae" scale="1 1 1" />
+          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna.dae"
+            scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
       </visual>
@@ -36,18 +40,17 @@
     <link name="${tf_prefix_ext}antenna_top_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna_top.dae" scale="1 1 1" />
+          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna_top.dae"
+            scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
       </visual>
-
-      <!-- TODO update collision -->
-      <!-- <collision>
+      <collision>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/antenna_top.dae" scale="1 1 1" />
+          <cylinder radius="${antenna_radius}" length="${antenna_length}" />
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-      </collision> -->
+        <origin xyz="0.0 0.0 ${antenna_length/2.}" rpy="0.0 0.0 0.0" />
+      </collision>
     </link>
 
   </xacro:macro>

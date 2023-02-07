@@ -7,6 +7,13 @@
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro" ns="husarion" />
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" />
 
+  <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro" ns="antenna" />
+  <xacro:antenna.antenna
+    parent_link="body_link"
+    xyz="-0.155 -0.055 0.065"
+    rpy="0.0 0.0 0.0"
+    antenna_angle="0.0" />
+
   <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s1.urdf.xacro" ns="lidar" />
   <xacro:lidar.slamtec_rplidar_s1
     parent_link="cover_link"
@@ -15,5 +22,5 @@
     use_gpu="true"
     simulation_engine="ignition-gazebo" />
   <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition - https://github.com/gazebosim/gz-sensors/issues/26 -->
-    
+
 </robot>

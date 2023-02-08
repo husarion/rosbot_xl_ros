@@ -25,62 +25,14 @@
     camera_mount_angle_1="0.0"
     camera_mount_angle_2="0.0" />
 
-  <!-- <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" ns="camera" /> -->
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/d435.urdf.xacro"
     ns="camera" />
-  <xacro:camera.sensor_d435 parent="camera_mount_link" use_nominal_extrinsics="true"
-    add_plug="false" use_mesh="true">
+  <xacro:camera.sensor_d435
+    parent="camera_mount_link"
+    use_nominal_extrinsics="true"
+    add_plug="false" 
+    use_mesh="true"
+    simulation_engine="ignition-gazebo">
     <origin xyz="0 0 0" rpy="0 0 0" />
   </xacro:camera.sensor_d435>
-
-  <gazebo reference="camera_link">
-    <sensor name="d435_color" type="camera">
-      <update_rate>30.0</update_rate>
-      <always_on>true</always_on>
-      <visualize>false</visualize>
-      <topic>/d435/image_raw</topic>
-
-      <ignition_frame_id>camera_color_optical_frame</ignition_frame_id>
-      <horizontal_fov>1.204277184</horizontal_fov>
-      <image>
-        <width>1280</width>
-        <height>720</height>
-        <format>R8G8B8</format>
-      </image>
-      <clip>
-        <near>0.02</near>
-        <far>300</far>
-      </clip>
-    </sensor>
-
-    <sensor name="d435_depth" type="depth_camera">
-      <update_rate>30.0</update_rate>
-      <always_on>true</always_on>
-      <visualize>false</visualize>
-      <topic>/d435/depth_camera</topic>
-
-      <!-- Pointcloud is published in rosbot_xl/base_link/d435_depth, and there seem to be no way to
-      change it, interestingly depth image is published correctly in the ignition_frame_id -->
-      <ignition_frame_id>camera_depth_frame</ignition_frame_id>
-
-      <horizontal_fov>1.518436449</horizontal_fov>
-      <image>
-        <width>1280</width>
-        <height>720</height>
-      </image>
-      <clip>
-        <near>0.28</near>
-        <far>8.0</far>
-      </clip>
-      <noise>
-        <type>gaussian</type>
-        <mean>0</mean>
-        <stddev>0.005</stddev>
-      </noise>
-      <plugin filename="libignition-gazebo-sensors-system.so"
-        name="ignition::gazebo::systems::Sensors">
-        <render_engine>ogre2</render_engine>
-      </plugin>
-    </sensor>
-  </gazebo>
 </robot>

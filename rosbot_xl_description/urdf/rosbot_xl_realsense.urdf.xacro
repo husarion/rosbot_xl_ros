@@ -25,14 +25,14 @@
     camera_mount_angle_1="0.0"
     camera_mount_angle_2="0.0" />
 
-  <xacro:include filename="$(find rosbot_xl_description)/urdf/components/d435.urdf.xacro"
+  <xacro:include filename="$(find rosbot_xl_description)/urdf/components/intel_realsense_d435.urdf.xacro"
     ns="camera" />
-  <xacro:camera.sensor_d435
+  <xacro:camera.intel_realsense_d435
     parent="camera_mount_link"
     use_nominal_extrinsics="true"
     add_plug="false" 
     use_mesh="true"
     simulation_engine="ignition-gazebo">
     <origin xyz="0 0 0" rpy="0 0 0" />
-  </xacro:camera.sensor_d435>
+  </xacro:camera.intel_realsense_d435>
 </robot>

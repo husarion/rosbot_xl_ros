@@ -60,6 +60,7 @@ aluminum peripherial evaluation case.
     <!-- The following offset is relative the the physical D435 camera peripherial
   	camera tripod mount -->
     <xacro:property name="d435_cam_depth_px" value="${d435_cam_mount_from_center_offset}" />
+    <xacro:property name="d435_collision_offset_x" value="0.00824" />
     <xacro:property name="d435_cam_depth_py" value="0.0175" />
     <xacro:property name="d435_cam_depth_pz" value="${d435_cam_height/2}" />
 
@@ -96,7 +97,7 @@ aluminum peripherial evaluation case.
         </xacro:unless>
       </visual>
       <collision>
-        <origin xyz="0 ${-d435_cam_depth_py} 0" rpy="0 0 0" />
+        <origin xyz="${-d435_collision_offset_x} ${-d435_cam_depth_py} 0" rpy="0 0 0" />
         <geometry>
           <box size="${d435_cam_depth} ${d435_cam_width} ${d435_cam_height}" />
         </geometry>

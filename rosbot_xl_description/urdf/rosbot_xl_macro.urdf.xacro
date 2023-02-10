@@ -111,34 +111,33 @@
     </ros2_control>
 
     <xacro:if value="${use_sim}">
-      <xacro:if value="${simulation_engine == 'gazebo-ignition'}">
-        <gazebo>
-          <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-            <xacro:if value="${mecanum}">
-              <parameters>$(find rosbot_xl_hardware)/config/mecanum_drive_controller.yaml</parameters>
-            </xacro:if>
-            <xacro:unless value="${mecanum}">
-              <parameters>$(find rosbot_xl_hardware)/config/diff_drive_controller.yaml</parameters>
-            </xacro:unless>
-            <controller_manager_prefix_node_name>simulation</controller_manager_prefix_node_name>
-            <ros>
-              <remapping>/rosbot_xl_base_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
-            </ros>
-          </plugin>
-        </gazebo>
-        <gazebo reference="imu_link">
-          <sensor name="imu" type="imu">
-            <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu"></plugin>
-            <always_on>true</always_on>
-            <update_rate>25</update_rate>
-            <topic>imu/data_raw</topic>
-            <visualize>false</visualize>
-            <enable_metrics>false</enable_metrics>
-            <frame_id>imu_link</frame_id>
-            <ignition_frame_id>imu_link</ignition_frame_id>
-          </sensor>
-        </gazebo>
-      </xacro:if>
+      <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <xacro:if value="${mecanum}">
+            <parameters>$(find rosbot_xl_controller)/config/mecanum_drive_controller.yaml</parameters>
+          </xacro:if>
+          <xacro:unless value="${mecanum}">
+            <parameters>$(find rosbot_xl_controller)/config/diff_drive_controller.yaml</parameters>
+          </xacro:unless>
+          <controller_manager_prefix_node_name>simulation</controller_manager_prefix_node_name>
+          <ros>
+            <remapping>/rosbot_xl_base_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+          </ros>
+        </plugin>
+      </gazebo>
+      <gazebo reference="imu_link">
+        <sensor name="imu" type="imu">
+          <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu"></plugin>
+          <always_on>true</always_on>
+          <update_rate>25</update_rate>
+          <topic>imu/data_raw</topic>
+          <visualize>false</visualize>
+          <enable_metrics>false</enable_metrics>
+          <frame_id>imu_link</frame_id>
+          <ignition_frame_id>imu_link</ignition_frame_id>
+        </sensor>
+      </gazebo>
+    </xacro:if>
 
       <xacro:if value="${simulation_engine == 'webots'}">
         <webots>

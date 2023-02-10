@@ -18,7 +18,7 @@ Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionaliti
   - `/odometry/filtered` (_nav_msgs/Odometry_)
 
 
-- `controller.launch.py` from `rosbot_xl_hardware`, it loads robot model defined in `rosbot_xl_description` as well as ros2 control [rosbot_hardware_interfaces](https://github.com/husarion/rosbot_hardware_interfaces). It also starts controllers: 
+- `controller.launch.py` from `rosbot_xl_controller`, it loads robot model defined in `rosbot_xl_description` as well as ros2 control [rosbot_hardware_interfaces](https://github.com/husarion/rosbot_hardware_interfaces). It also starts controllers: 
   * `joint_state_broadcaster`
   * `rosbot_xl_base_controller` - depending on the value of `mecanum` argument it can be `DiffDriveController` or `MecanumDriveController`
   * `imu_broadcaster`

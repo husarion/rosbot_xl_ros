@@ -2,6 +2,43 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.0 (2023-02-07)
+------------------
+* Merge pull request `#30 <https://github.com/husarion/rosbot_xl_ros/issues/30>`_ from husarion/antenna-component
+  Add antenna component
+* Contributors: Maciej Stępień
+
+0.3.0 (2023-01-31)
+------------------
+* Merge pull request `#29 <https://github.com/husarion/rosbot_xl_ros/issues/29>`_ from husarion/rename-rosbot-hardware-pkg
+  Rename rosbot hardware package
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+  Conflicts:
+  rosbot_xl_controller/package.xml
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+* Contributors: Maciej Stepien, Maciej Stępień
+
+0.2.4 (2023-01-31)
+------------------
+* Merge pull request `#28 <https://github.com/husarion/rosbot_xl_ros/issues/28>`_ from husarion/fix-mecanum-inertias
+  Fix mecanum wheels inertias
+* Contributors: Maciej Stępień
+
+0.2.3 (2023-01-31)
+------------------
+* Merge pull request `#27 <https://github.com/husarion/rosbot_xl_ros/issues/27>`_ from husarion/fix-collision-model
+  Fix collision model
+* Contributors: Maciej Stępień
+
+0.2.2 (2023-01-16)
+------------------
+* Merge pull request `#26 <https://github.com/husarion/rosbot_xl_ros/issues/26>`_ from husarion/update-s1-rplidar-include
+  Update including rplidar s1 in rosbot urdf
+* Contributors: Maciej Stępień
+
+0.2.1 (2023-01-10)
+------------------
+
 0.2.0 (2022-12-20)
 ------------------
 * Merge pull request `#23 <https://github.com/husarion/rosbot_xl_ros/issues/23>`_ from husarion/simulation-update

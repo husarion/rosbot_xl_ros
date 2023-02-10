@@ -1,6 +1,31 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package rosbot_xl_hardware
+Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+0.4.0 (2023-02-07)
+------------------
+
+0.3.0 (2023-01-31)
+------------------
+* Merge pull request `#29 <https://github.com/husarion/rosbot_xl_ros/issues/29>`_ from husarion/rename-rosbot-hardware-pkg
+  Rename rosbot hardware package
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+  Conflicts:
+  rosbot_xl_controller/package.xml
+* Merge branch 'master' into rename-rosbot-hardware-pkg
+* Contributors: Maciej Stepien, Maciej Stępień
+
+0.2.4 (2023-01-31)
+------------------
+
+0.2.3 (2023-01-31)
+------------------
+
+0.2.2 (2023-01-16)
+------------------
+
+0.2.1 (2023-01-10)
+------------------
 
 0.2.0 (2022-12-20)
 ------------------

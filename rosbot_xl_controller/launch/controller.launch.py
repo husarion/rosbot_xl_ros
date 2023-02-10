@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Copyright 2020 ros2_control Development Team
+# Copyright 2023 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -83,7 +84,7 @@ def generate_launch_description():
 
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("rosbot_xl_hardware"),
+            FindPackageShare("rosbot_xl_controller"),
             "config",
             controller_config_name,
         ]

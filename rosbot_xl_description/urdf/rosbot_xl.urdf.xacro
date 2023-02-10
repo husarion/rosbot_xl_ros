@@ -2,7 +2,7 @@
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="use_sim" default="false" />
-  <xacro:arg name="simulation_engine" default="gazebo-ignition" />
+  <xacro:arg name="simulation_engine" default="ignition-gazebo" />
   <xacro:arg name="mecanum" default="false" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro" ns="husarion" />

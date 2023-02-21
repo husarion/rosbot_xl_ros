@@ -71,13 +71,16 @@ def generate_launch_description():
                 [
                     FindPackageShare("rosbot_xl_description"),
                     "urdf",
-                    "rosbot_xl_velodyne.urdf.xacro",
+                    "rosbot_xl.urdf.xacro",
                 ]
             ),
             " mecanum:=",
             mecanum,
             " use_sim:=",
             use_sim,
+            " lidar_model:=None",
+            " camera_model:=None",
+            " include_camera_mount:=true",
         ]
     )
     robot_description = {"robot_description": robot_description_content}

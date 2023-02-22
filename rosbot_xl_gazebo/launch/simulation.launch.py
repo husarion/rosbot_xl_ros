@@ -71,9 +71,6 @@ def generate_launch_description():
             "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
             "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
             "/velodyne_points/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
-            "/d435/depth_camera" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-            "/d435/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-            "/d435/depth_camera/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
         ],
         remappings=[
             ("/velodyne_points/points", "/velodyne_points"),

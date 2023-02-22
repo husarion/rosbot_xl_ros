@@ -6,8 +6,8 @@
   <xacro:arg name="simulation_engine" default="ignition-gazebo" />
 
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
-  <xacro:arg name="camera_model" default="intel_realsense_d435" />
-  <xacro:arg name="include_camera_mount" default="true" />
+  <xacro:arg name="camera_model" default="None" />
+  <xacro:arg name="include_camera_mount" default="false" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
@@ -22,6 +22,7 @@
     antenna_angle="0.0" />
 
   <!-- INCLUDE LIDAR -->
+
   <xacro:property name="lidar_model" value="$(arg lidar_model)" />
   <xacro:property name="lidar_parent_link" value="cover_link" />
   <xacro:property name="lidar_xyz" value="0.0 0.0 0.0" />
@@ -75,42 +76,10 @@
       topic="velodyne_points" />
   </xacro:if>
 
-  <xacro:if value="${lidar_model == 'ouster_os1_32'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/ouster_os1_32.urdf.xacro"
-      ns="lidar" />
-    <xacro:lidar.ouster_os1_32
-      parent_link="${lidar_parent_link}"
-      xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)" />
-  </xacro:if>
-
-  <!-- INCLUDE CAMERA -->
-
-  <xacro:property name="camera_model" value="$(arg camera_model)" />
-  <xacro:property name="camera_parent_link" value="camera_mount_link" />
-  <xacro:property name="camera_xyz" value="0.0 0.0 0.0" />
-  <xacro:property name="camera_rpy" value="0.0 0.0 0.0" />
-
-  <xacro:if value="${camera_model == 'intel_realsense_d435'}">
-    <xacro:include
-      filename="$(find rosbot_xl_description)/urdf/components/intel_realsense_d435.urdf.xacro"
-      ns="camera" />
-    <xacro:camera.intel_realsense_d435
-      parent="${camera_parent_link}"
-      use_nominal_extrinsics="true"
-      add_plug="false"
-      use_mesh="true"
-      simulation_engine="$(arg simulation_engine)">
-      <origin xyz="${camera_xyz}" rpy="${camera_rpy}" />
-    </xacro:camera.intel_realsense_d435>
-
-    <xacro:property name="camera_set" value="True" />
-  </xacro:if>
+  <!-- INCLUDE CAMERA MOUNT -->
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <xacro:if value="${include_camera_mount or camera_set}">
+  <xacro:if value="${include_camera_mount}">
     <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount

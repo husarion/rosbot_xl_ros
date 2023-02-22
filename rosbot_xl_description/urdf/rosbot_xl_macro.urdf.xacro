@@ -141,8 +141,18 @@
       </xacro:if>
 
       <xacro:if value="${simulation_engine == 'webots'}">
-        <xacro:include filename="$(find webots_ros2_husarion)/urdf/rosbot_xl_webots.urdf.xacro"/>
-        <xacro:webots_config/>
+        <webots>
+          <plugin type="webots_ros2_control::Ros2Control" />
+          <plugin type="webots_ros2_driver::Ros2IMU">
+            <enabled>true</enabled>
+            <topicName>/imu_broadcaster/imu</topicName>
+            <alwaysOn>true</alwaysOn>
+            <frameName>imu_link</frameName>
+            <gyroName>imu gyro</gyroName>
+            <accelerometerName>imu accelerometer</accelerometerName>
+            <inertialUnitName>imu inertial_unit</inertialUnitName>
+          </plugin>
+        </webots>
       </xacro:if>
     </xacro:if>
   </xacro:macro>

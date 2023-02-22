@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 3.0.1 commit date:2022-01-25, commit time:17:19, hash:dc2d18018171</authoring_tool>
     </contributor>
-    <created>2023-02-14T12:47:05</created>
-    <modified>2023-02-14T12:47:05</modified>
+    <created>2023-02-22T13:31:44</created>
+    <modified>2023-02-22T13:31:44</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -103,7 +103,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Camera_mount" name="Camera mount" type="NODE">
-        <matrix sid="transform">7.54979e-8 -1 0 1.40171e-4 1 7.54979e-8 0 3.73686e-4 0 0 1 0.01917268 0 0 0 1</matrix>
+        <matrix sid="transform">7.54979e-8 -1 0 1.40171e-4 1 7.54979e-8 0 -0.001964141 0 0 1 0.01899977 0 0 0 1</matrix>
         <instance_geometry url="#Camera_mount_001-mesh" name="Camera mount">
           <bind_material>
             <technique_common>

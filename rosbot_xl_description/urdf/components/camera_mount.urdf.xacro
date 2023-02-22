@@ -61,7 +61,7 @@
 
     <joint name="${tf_prefix_ext}camera_mount_mid_to_${tf_prefix_ext}camera_mount_top_joint"
       type="fixed">
-      <origin xyz="0.0 0.0 0.1015" rpy="0.0 ${camera_mount_angle_2} 0.0" />
+      <origin xyz="0.0 0.0 0.086" rpy="0.0 ${camera_mount_angle_2} 0.0" />
       <parent link="${tf_prefix_ext}camera_mount_mid_link" />
       <child link="${tf_prefix_ext}camera_mount_top_link" />
     </joint>
@@ -78,13 +78,13 @@
         <geometry>
           <box size="0.023 0.023 0.025" />
         </geometry>
-        <origin xyz="0.0 0.0 0.0065" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 -0.00232 0.0065" rpy="0.0 0.0 0.0" />
       </collision>
     </link>
 
     <joint name="${tf_prefix_ext}camera_mount_top_to_${tf_prefix_ext}camera_mount_joint"
       type="fixed">
-      <origin xyz="0.0 0.0 0.016" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 -0.00232 0.019" rpy="0.0 0.0 0.0" />
       <parent link="${tf_prefix_ext}camera_mount_top_link" />
       <child link="${tf_prefix_ext}camera_mount_link" />
     </joint>

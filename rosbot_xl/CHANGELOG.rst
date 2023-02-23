@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2023-02-23)
+------------------
 * Merge branch 'master' into velodyne-realsense-model
 * Contributors: Maciej Stepien
 

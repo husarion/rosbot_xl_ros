@@ -24,6 +24,27 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
+    lidar_model = LaunchConfiguration("lidar_model")
+    declare_lidar_model_arg = DeclareLaunchArgument(
+        "lidar_model",
+        default_value="slamtec_rplidar_s1",
+        description="Lidar model added to the URDF",
+    )
+
+    camera_model = LaunchConfiguration("camera_model")
+    declare_camera_model_arg = DeclareLaunchArgument(
+        "camera_model",
+        default_value="None",
+        description="Camera model added to the URDF",
+    )
+
+    include_camera_mount = LaunchConfiguration("include_camera_mount")
+    declare_include_camera_mount_arg = DeclareLaunchArgument(
+        "include_camera_mount",
+        default_value="False",
+        description="Whether to include camera mount to the robot URDF",
+    )
+
     map_package = get_package_share_directory("husarion_office_gz")
     world_file = PathJoinSubstitution([map_package, "worlds", "husarion_world.sdf"])
     world_cfg = LaunchConfiguration("world")
@@ -70,6 +91,12 @@ def generate_launch_description():
         arguments=[
             "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
             "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
+            "/velodyne_points/points"
+            + "@sensor_msgs/msg/PointCloud2"
+            + "[ignition.msgs.PointCloudPacked",
+        ],
+        remappings=[
+            ("/velodyne_points/points", "/velodyne_points"),
         ],
         output="screen",
     )
@@ -84,12 +111,21 @@ def generate_launch_description():
                 ]
             )
         ),
-        launch_arguments={"mecanum": mecanum, "use_sim": "True"}.items(),
+        launch_arguments={
+            "mecanum": mecanum,
+            "use_sim": "True",
+            "lidar_model": lidar_model,
+            "camera_model": camera_model,
+            "include_camera_mount": include_camera_mount,
+        }.items(),
     )
 
     return LaunchDescription(
         [
             declare_mecanum_arg,
+            declare_lidar_model_arg,
+            declare_camera_model_arg,
+            declare_include_camera_mount_arg,
             declare_world_arg,
             # Sets use_sim_time for all nodes started below (doesn't work for nodes started from ignition gazebo)
             SetParameter(name="use_sim_time", value=True),

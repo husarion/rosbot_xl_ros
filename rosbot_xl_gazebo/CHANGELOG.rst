@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.0 (2023-02-23)
+------------------
+* Merge pull request `#32 <https://github.com/husarion/rosbot_xl_ros/issues/32>`_ from husarion/alt-lidars-camera-mount
+  Add alternative lidars and camera mount to rosbot xl urdf
+* Merge branch 'master' into velodyne-realsense-model
+* Contributors: Maciej Stepien, Maciej Stępień
+
 0.4.0 (2023-02-07)
 ------------------
 

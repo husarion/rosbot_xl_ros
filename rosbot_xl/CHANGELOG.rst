@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2023-03-01)
+------------------
 * Merge pull request `#24 <https://github.com/husarion/rosbot_xl_ros/issues/24>`_ from husarion/webots
   Webots
 * Merge remote-tracking branch 'origin/master' into webots

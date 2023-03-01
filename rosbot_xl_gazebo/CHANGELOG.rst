@@ -2,6 +2,16 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#24 <https://github.com/husarion/rosbot_xl_ros/issues/24>`_ from husarion/webots
+  Webots
+* Merge remote-tracking branch 'origin/master' into webots
+* Merge remote-tracking branch 'origin/alt-lidars-camera-mount' into webots
+* Merge remote-tracking branch 'origin' into webots
+* Merge remote-tracking branch 'origin/master' into webots
+* Contributors: Jakub Delicat
+
 0.5.0 (2023-02-23)
 ------------------
 * Merge pull request `#32 <https://github.com/husarion/rosbot_xl_ros/issues/32>`_ from husarion/alt-lidars-camera-mount

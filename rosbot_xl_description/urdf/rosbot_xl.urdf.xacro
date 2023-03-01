@@ -2,8 +2,8 @@
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="use_sim" default="false" />
-  <xacro:arg name="mecanum" default="false" />
   <xacro:arg name="simulation_engine" default="ignition-gazebo" />
+  <xacro:arg name="mecanum" default="false" />
 
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
   <xacro:arg name="camera_model" default="None" />
@@ -11,7 +11,7 @@
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" />
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" simulation_engine='$(arg simulation_engine)'/>
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />

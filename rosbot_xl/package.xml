@@ -6,7 +6,7 @@
 
   <description>Meta package that contains all packages of Rosbot XL</description>
   <license>Apache License 2.0</license>
-  
+
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
   <author email="nikolas.duc@husarion.com">Nikolas Duc</author>

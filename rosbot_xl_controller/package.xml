@@ -6,7 +6,7 @@
 
   <description>Hardware configuration for ROSbot XL</description>
   <license>Apache License 2.0</license>
-  
+
   <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <maintainer email="contact@husarion.com">Husarion</maintainer>

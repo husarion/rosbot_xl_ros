@@ -100,15 +100,16 @@
 
   <xacro:if value="${camera_model == 'intel_realsense_d435'}">
     <xacro:include
-      filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"
+      filename="$(find rosbot_xl_description)/urdf/components/intel_realsense_d435.urdf.xacro"
       ns="camera" />
-    <xacro:camera.sensor_d435
+    <xacro:camera.intel_realsense_d435
       parent="${camera_parent_link}"
       use_nominal_extrinsics="true"
       add_plug="false"
-      use_mesh="true">
+      use_mesh="true"
+      simulation_engine="$(arg simulation_engine)">
       <origin xyz="${camera_xyz}" rpy="${camera_rpy}" />
-    </xacro:camera.sensor_d435>
+    </xacro:camera.intel_realsense_d435>
   </xacro:if>
 
 </robot>

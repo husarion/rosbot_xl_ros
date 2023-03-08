@@ -6,12 +6,13 @@
   <xacro:arg name="mecanum" default="false" />
 
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
-  <xacro:arg name="camera_model" default="None" />
-  <xacro:arg name="include_camera_mount" default="false" />
+  <xacro:arg name="camera_model" default="intel_realsense_d435" />
+  <xacro:arg name="include_camera_mount" default="true" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" simulation_engine='$(arg simulation_engine)'/>
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)"
+    simulation_engine='$(arg simulation_engine)' />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />
@@ -79,7 +80,7 @@
   <!-- INCLUDE CAMERA MOUNT -->
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <xacro:if value="${include_camera_mount}">
+  <xacro:if value="${include_camera_mount or camera_model == 'intel_realsense_d435'}">
     <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount
@@ -88,6 +89,26 @@
       rpy="0.0 0.0 0.0"
       camera_mount_angle_1="0.0"
       camera_mount_angle_2="0.0" />
+  </xacro:if>
+
+  <!-- INCLUDE CAMERA -->
+
+  <xacro:property name="camera_model" value="$(arg camera_model)" />
+  <xacro:property name="camera_parent_link" value="camera_mount_link" />
+  <xacro:property name="camera_xyz" value="0.0 0.0 0.0" />
+  <xacro:property name="camera_rpy" value="0.0 0.0 0.0" />
+
+  <xacro:if value="${camera_model == 'intel_realsense_d435'}">
+    <xacro:include
+      filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"
+      ns="camera" />
+    <xacro:camera.sensor_d435
+      parent="${camera_parent_link}"
+      use_nominal_extrinsics="true"
+      add_plug="false"
+      use_mesh="true">
+      <origin xyz="${camera_xyz}" rpy="${camera_rpy}" />
+    </xacro:camera.sensor_d435>
   </xacro:if>
 
 </robot>

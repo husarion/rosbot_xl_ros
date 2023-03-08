@@ -56,14 +56,14 @@ def generate_launch_description():
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
-        default_value="None",
+        default_value="intel_realsense_d435",
         description="Camera model added to the URDF",
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")
     declare_include_camera_mount_arg = DeclareLaunchArgument(
         "include_camera_mount",
-        default_value="False",
+        default_value="True",
         description="Whether to include camera mount to the robot URDF",
     )
 

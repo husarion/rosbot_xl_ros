@@ -23,7 +23,7 @@
   <depend>rosbot_xl_description</depend>
   <depend>rosbot_xl_controller</depend>
 
-  <depend condition="$ROSBOT_XL_ROS_BUILD == simulation">rosbot_xl_gazebo</depend>
+  <depend condition="$HUSARION_ROS_BUILD == simulation">rosbot_xl_gazebo</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

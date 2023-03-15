@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.2 (2023-03-15)
+------------------
 * Merge pull request `#34 <https://github.com/husarion/rosbot_xl_ros/issues/34>`_ from husarion/update-simulation-launch
   Remove unnecessary main from gazebo simulation launch
 * Contributors: Maciej Stępień

@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.1 (2023-03-15)
 ------------------
 * Merge pull request `#33 <https://github.com/husarion/rosbot_xl_ros/issues/33>`_ from husarion/change-simulation-build-flag

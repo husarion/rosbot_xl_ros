@@ -2,6 +2,15 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.2 (2023-03-15)
+------------------
+
+0.6.1 (2023-03-15)
+------------------
+* Merge pull request `#33 <https://github.com/husarion/rosbot_xl_ros/issues/33>`_ from husarion/change-simulation-build-flag
+  Change simulation build flag
+* Contributors: Maciej Stępień
+
 0.6.0 (2023-03-01)
 ------------------
 * Merge pull request `#24 <https://github.com/husarion/rosbot_xl_ros/issues/24>`_ from husarion/webots

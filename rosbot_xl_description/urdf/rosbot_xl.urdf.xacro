@@ -6,8 +6,8 @@
   <xacro:arg name="mecanum" default="false" />
 
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
-  <xacro:arg name="camera_model" default="intel_realsense_d435" />
-  <xacro:arg name="include_camera_mount" default="true" />
+  <xacro:arg name="camera_model" default="None" />
+  <xacro:arg name="include_camera_mount" default="false" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />

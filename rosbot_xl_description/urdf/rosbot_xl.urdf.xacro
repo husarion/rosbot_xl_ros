@@ -12,7 +12,7 @@
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
   <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)"
-    simulation_engine='$(arg simulation_engine)' />
+    simulation_engine="$(arg simulation_engine)" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />

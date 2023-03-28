@@ -1,17 +1,20 @@
 <?xml version='1.0'?>
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:arg name="use_sim" default="false" />
-  <xacro:arg name="simulation_engine" default="ignition-gazebo" />
   <xacro:arg name="mecanum" default="false" />
-
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
   <xacro:arg name="camera_model" default="None" />
   <xacro:arg name="include_camera_mount" default="false" />
+  <xacro:arg name="use_sim" default="false" />
+  <xacro:arg name="simulation_engine" default="ignition-gazebo" />
+  <xacro:arg name="simulation_controllers_config_file"
+    default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" simulation_engine='$(arg simulation_engine)'/>
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)"
+    simulation_engine="$(arg simulation_engine)"
+    simulation_controllers_config_file="$(arg simulation_controllers_config_file)" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />

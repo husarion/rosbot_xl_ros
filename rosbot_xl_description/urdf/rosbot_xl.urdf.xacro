@@ -11,7 +11,8 @@
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
-  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)" simulation_engine='$(arg simulation_engine)'/>
+  <xacro:husarion.rosbot_xl_robot use_sim="$(arg use_sim)" mecanum="$(arg mecanum)"
+    simulation_engine="$(arg simulation_engine)" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />
@@ -76,15 +77,38 @@
       topic="velodyne_points" />
   </xacro:if>
 
+  <!-- INCLUDE CAMERA -->
+
+  <xacro:property name="camera_model" value="$(arg camera_model)" />
+  <xacro:property name="camera_parent_link" value="camera_mount_link" />
+  <xacro:property name="camera_xyz" value="0.0 0.0 0.0" />
+  <xacro:property name="camera_rpy" value="0.0 0.0 0.0" />
+
+  <!-- nominal_extrinsics should be used only in simulation, when using real camera it should publish
+    calibrated ones -->
+  <xacro:if value="${camera_model == 'intel_realsense_d435'}">
+    <xacro:include
+      filename="$(find ros_components_description)/urdf/intel_realsense_d435.urdf.xacro"
+      ns="camera" />
+    <xacro:camera.intel_realsense_d435
+      parent_link="${camera_parent_link}"
+      xyz="${camera_xyz}"
+      rpy="${camera_rpy}"
+      name="camera"
+      topic="camera"
+      use_nominal_extrinsics="$(arg use_sim)"
+      simulation_engine="$(arg simulation_engine)" />
+  </xacro:if>
+
   <!-- INCLUDE CAMERA MOUNT -->
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <xacro:if value="${include_camera_mount}">
+  <xacro:if value="${include_camera_mount or camera_model == 'intel_realsense_d435'}">
     <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount
       parent_link="cover_link"
-      xyz="-0.12 0.0 0.0"
+      xyz="-0.1 0.0 0.0"
       rpy="0.0 0.0 0.0"
       camera_mount_angle_1="0.0"
       camera_mount_angle_2="0.0" />

@@ -89,14 +89,29 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="ign_bridge",
         arguments=[
-            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
             "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
+            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
             "/velodyne_points/points"
+            + "@sensor_msgs/msg/PointCloud2"
+            + "[ignition.msgs.PointCloudPacked",
+            "/camera/color/camera_info"
+            + "@sensor_msgs/msg/CameraInfo"
+            + "[ignition.msgs.CameraInfo",
+            "/camera/color/image_raw"
+            + "@sensor_msgs/msg/Image"
+            + "[ignition.msgs.Image",
+            "/camera/camera_info"
+            + "@sensor_msgs/msg/CameraInfo"
+            + "[ignition.msgs.CameraInfo",
+            "/camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+            "/camera/depth/points"
             + "@sensor_msgs/msg/PointCloud2"
             + "[ignition.msgs.PointCloudPacked",
         ],
         remappings=[
             ("/velodyne_points/points", "/velodyne_points"),
+            ("/camera/camera_info", "/camera/depth/camera_info"),
+            ("/camera/depth", "/camera/depth/image_raw"),
         ],
         output="screen",
     )

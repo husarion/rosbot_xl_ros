@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2023-03-31)
+------------------
 * Merge pull request `#36 <https://github.com/husarion/rosbot_xl_ros/issues/36>`_ from husarion/add-realsense
   Add realsense D435
 * Merge branch 'master' into add-realsense

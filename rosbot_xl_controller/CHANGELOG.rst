@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'master' into add-realsense
+* Contributors: Maciej Stepien
+
 0.6.2 (2023-03-15)
 ------------------
 

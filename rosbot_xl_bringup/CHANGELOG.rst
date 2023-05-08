@@ -2,6 +2,15 @@
 Changelog for package rosbot_xl_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#31 <https://github.com/husarion/rosbot_xl_ros/issues/31>`_ from husarion/refactor-manipulation
+  Add manipulator support
+* Merge branch 'master' into refactor-manipulation
+  Conflicts:
+  rosbot_xl_description/urdf/rosbot_xl.urdf.xacro
+* Contributors: Maciej Stepien, Maciej Stępień
+
 0.7.0 (2023-03-31)
 ------------------
 * Merge branch 'master' into add-realsense

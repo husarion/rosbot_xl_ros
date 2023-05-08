@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'master' into refactor-manipulation
+  Conflicts:
+  rosbot_xl_description/urdf/rosbot_xl.urdf.xacro
+* Contributors: Maciej Stepien
+
 0.7.0 (2023-03-31)
 ------------------
 * Merge branch 'master' into add-realsense

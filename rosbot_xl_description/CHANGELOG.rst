@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.0 (2023-05-08)
+------------------
 * Merge pull request `#31 <https://github.com/husarion/rosbot_xl_ros/issues/31>`_ from husarion/refactor-manipulation
   Add manipulator support
 * Merge branch 'master' into refactor-manipulation

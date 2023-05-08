@@ -21,13 +21,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
-    use_sim = LaunchConfiguration("use_sim")
-    declare_use_sim_arg = DeclareLaunchArgument(
-        "use_sim",
-        default_value="False",
-        description="Whether simulation is used",
-    )
-
     lidar_model = LaunchConfiguration("lidar_model")
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
@@ -49,6 +42,20 @@ def generate_launch_description():
         description="Whether to include camera mount to the robot URDF",
     )
 
+    use_sim = LaunchConfiguration("use_sim")
+    declare_use_sim_arg = DeclareLaunchArgument(
+        "use_sim",
+        default_value="False",
+        description="Whether simulation is used",
+    )
+
+    simulation_engine = LaunchConfiguration("simulation_engine")
+    declare_simulation_engine_arg = DeclareLaunchArgument(
+        "simulation_engine",
+        default_value="ignition-gazebo",
+        description="Which simulation engine will be used",
+    )
+
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -60,11 +67,12 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            "use_sim": use_sim,
             "mecanum": mecanum,
             "lidar_model": lidar_model,
             "camera_model": camera_model,
             "include_camera_mount": include_camera_mount,
+            "use_sim": use_sim,
+            "simulation_engine": simulation_engine,
         }.items(),
     )
 
@@ -96,10 +104,11 @@ def generate_launch_description():
 
     actions = [
         declare_mecanum_arg,
-        declare_use_sim_arg,
         declare_lidar_model_arg,
         declare_camera_model_arg,
         declare_include_camera_mount_arg,
+        declare_use_sim_arg,
+        declare_simulation_engine_arg,
         SetParameter(name="use_sim_time", value=use_sim),
         controller_launch,
         robot_localization_node,

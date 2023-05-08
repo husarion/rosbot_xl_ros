@@ -1,6 +1,7 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="rosbot_xl_robot" params="use_sim mecanum simulation_engine">
+  <xacro:macro name="rosbot_xl_robot"
+    params="use_sim mecanum simulation_engine simulation_controllers_config_file">
 
     <xacro:if value="${mecanum}">
       <xacro:property name="wheel_radius" value="0.05" />
@@ -17,10 +18,14 @@
     <xacro:body.body wheel_radius="${wheel_radius}" />
 
     <!-- WHEEL DECLARATION -->
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fl" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fr" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rl" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
-    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rr" mecanum="${mecanum}" use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fl" mecanum="${mecanum}"
+      use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="fr" mecanum="${mecanum}"
+      use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rl" mecanum="${mecanum}"
+      use_sim="$(arg use_sim)" />
+    <xacro:wheel.wheel wheel_radius="${wheel_radius}" prefix="rr" mecanum="${mecanum}"
+      use_sim="$(arg use_sim)" />
 
     <!-- ROS2 CONTROL -->
     <xacro:unless value="$(arg use_sim)">
@@ -63,10 +68,10 @@
 
           <!-- order of velocity commands to be published in motors_cmd Float32MultiArray msg -->
           <param name="velocity_command_joint_order">
-                rr_wheel_joint,
-                rl_wheel_joint,
-                fr_wheel_joint,
-                fl_wheel_joint
+            rr_wheel_joint,
+            rl_wheel_joint,
+            fr_wheel_joint,
+            fl_wheel_joint
           </param>
         </xacro:unless>
       </hardware>
@@ -113,13 +118,9 @@
     <xacro:if value="${use_sim}">
       <xacro:if value="${simulation_engine == 'ignition-gazebo'}">
         <gazebo>
-          <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-            <xacro:if value="${mecanum}">
-              <parameters>$(find rosbot_xl_controller)/config/mecanum_drive_controller.yaml</parameters>
-            </xacro:if>
-            <xacro:unless value="${mecanum}">
-              <parameters>$(find rosbot_xl_controller)/config/diff_drive_controller.yaml</parameters>
-            </xacro:unless>
+          <plugin filename="ign_ros2_control-system"
+            name="ign_ros2_control::IgnitionROS2ControlPlugin">
+            <parameters>${simulation_controllers_config_file}</parameters>
             <controller_manager_prefix_node_name>simulation</controller_manager_prefix_node_name>
             <ros>
               <remapping>/rosbot_xl_base_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
@@ -139,7 +140,6 @@
           </sensor>
         </gazebo>
       </xacro:if>
-
       <xacro:if value="${simulation_engine == 'webots'}">
         <webots>
           <plugin type="webots_ros2_control::Ros2Control" />

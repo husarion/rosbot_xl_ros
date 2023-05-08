@@ -128,10 +128,11 @@ def generate_launch_description():
         ),
         launch_arguments={
             "mecanum": mecanum,
-            "use_sim": "True",
             "lidar_model": lidar_model,
             "camera_model": camera_model,
             "include_camera_mount": include_camera_mount,
+            "use_sim": "True",
+            "simulation_engine": "ignition-gazebo",
         }.items(),
     )
 

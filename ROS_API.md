@@ -1,5 +1,5 @@
-Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionalities for ROSbot XL. It consists of following parts:
-- `scan_to_scan_filter_chain` from `laser_filters`, it subscribes to `/scan` topic and removes all points that are within robots footprint (defined by config `laser_filter.yaml` in `rosbot_xl_bringup` package). Filtered laserscan is then published on `/scan_filtered` topic
+Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionalities for ROSbot XL. It consists of the following parts:
+- `scan_to_scan_filter_chain` from `laser_filters`, it subscribes to `/scan` topic and removes all points that are within the robot's footprint (defined by config `laser_filter.yaml` in `rosbot_xl_bringup` package). Filtered laserscan is then published on `/scan_filtered` topic
   
   **Subscribes**
   - `/scan` (_sensor_msgs/LaserScan_)
@@ -34,3 +34,13 @@ Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionaliti
   - `/_motors_cmd` (_std_msgs/Float32MultiArray_)
   - `/rosbot_xl_base_controller/odom` (_nav_msgs/Odometry_)
   - `/imu_broadcaster/imu` (_sensor_msgs/Imu_)
+
+Use `micro_ros_agent` to communicate with Digital Board, it provides the following interface:
+
+  **Subscribes**
+  - `/_motors_cmd` (_std_msgs/Float32MultiArray_)
+
+  **Publishes**
+  - `/_motors_responses` (_sensor_msgs/JointState_)
+  - `/_imu/data_raw` (_sensor_msgs/Imu_)
+  - `/battery_state` (_sensor_msgs/BatteryState_)

@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.8.0 (2023-05-08)
 ------------------
 * Merge branch 'master' into refactor-manipulation

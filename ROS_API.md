@@ -37,10 +37,11 @@ Use `bringup.launch.py` from `rosbot_xl_bringup` to start all base functionaliti
 
 Use `micro_ros_agent` to communicate with Digital Board, it provides the following interface:
 
-  **Subscribes**
-  - `/_motors_cmd` (_std_msgs/Float32MultiArray_)
+**Subscribes**
+- `/_motors_cmd` (_std_msgs/Float32MultiArray_)
 
-  **Publishes**
-  - `/_motors_responses` (_sensor_msgs/JointState_)
-  - `/_imu/data_raw` (_sensor_msgs/Imu_)
-  - `/battery_state` (_sensor_msgs/BatteryState_)
+
+**Publishes**
+- `/_motors_responses` (_sensor_msgs/JointState_)
+- `/_imu/data_raw` (_sensor_msgs/Imu_)
+- `/battery_state` (_sensor_msgs/BatteryState_)

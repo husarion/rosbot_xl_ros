@@ -13,14 +13,14 @@
     <link name="body_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/body.dae" scale="1 1 1" />
+          <mesh filename="package://rosbot_xl_description/meshes/body.dae" scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
       </visual>
 
       <collision>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/body_colision.stl" scale="1 1 1" />
+          <mesh filename="package://rosbot_xl_description/meshes/body_colision.stl" scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
       </collision>

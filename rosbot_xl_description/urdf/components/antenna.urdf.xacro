@@ -24,7 +24,7 @@
     <link name="${tf_prefix_ext}antenna_connector_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna_connector.dae"
+          <mesh filename="package://rosbot_xl_description/meshes/components/antenna_connector.dae"
             scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
@@ -40,7 +40,7 @@
     <link name="${tf_prefix_ext}antenna_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find rosbot_xl_description)/meshes/components/antenna.dae"
+          <mesh filename="package://rosbot_xl_description/meshes/components/antenna.dae"
             scale="1 1 1" />
         </geometry>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />

@@ -36,6 +36,12 @@ ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 contro
 
 Available in [ROS_API.md](./ROS_API.md)
 
+## Usage on hardware
+
+To run the software on real ROSbot XL, also communication with Digital Board will be necessary.
+First update your firmware to make sure that you use the latest version, then run the `micro-ROS` agent.
+For detailed instructions refer to the [rosbot_xl_firmware repository](https://github.com/husarion/rosbot_xl_firmware).
+
 ## Source build
 
 ### Prerequisites
@@ -70,6 +76,10 @@ rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
+
+> **Prerequisites**
+> 
+> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent (as described in the *Usage on hardware* step).
 
 Running:
 ```

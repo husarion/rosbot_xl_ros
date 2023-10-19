@@ -3,7 +3,7 @@
 
   <xacro:arg name="mecanum" default="false" />
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
-  <xacro:arg name="camera_model" default="None" />
+  <xacro:arg name="camera_model" default="stereolabs_zed2" />
   <xacro:arg name="include_camera_mount" default="false" />
   <xacro:arg name="use_sim" default="false" />
   <xacro:arg name="simulation_engine" default="ignition-gazebo" />
@@ -28,7 +28,7 @@
 
   <xacro:property name="lidar_model" value="$(arg lidar_model)" />
   <xacro:property name="lidar_parent_link" value="cover_link" />
-  <xacro:property name="lidar_xyz" value="0.0 0.0 0.0" />
+  <xacro:property name="lidar_xyz" value="0.02 0.0 0.0" />
   <xacro:property name="lidar_rpy" value="0.0 0.0 0.0" />
   <xacro:property name="lidar_use_gpu" value="true" />
   <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition -
@@ -102,10 +102,44 @@
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
 
-  <!-- INCLUDE CAMERA MOUNT -->
+  <xacro:if value="${camera_model.startswith('stereolabs')}">
+    <xacro:if value="${camera_model == 'stereolabs_zed'}">
+      <xacro:property name="camera_model_type" value="zed" />
+    </xacro:if>
+    <xacro:if value="${camera_model == 'stereolabs_zedm'}">
+      <xacro:property name="camera_model_type" value="zedm" />
+    </xacro:if>
+    <xacro:if value="${camera_model == 'stereolabs_zed2'}">
+      <xacro:property name="camera_model_type" value="zed2" />
+    </xacro:if>
+    <xacro:if value="${camera_model == 'stereolabs_zed2i'}">
+      <xacro:property name="camera_model_type" value="zed2i" />
+    </xacro:if>
+    <xacro:if value="${camera_model == 'stereolabs_zedx'}">
+      <xacro:property name="camera_model_type" value="zedx" />
+    </xacro:if>
+    <xacro:if value="${camera_model == 'stereolabs_zedxm'}">
+      <xacro:property name="camera_model_type" value="zedxm" />
+    </xacro:if>
+
+    <xacro:include
+    filename="$(find ros_components_description)/urdf/stereolabs_zed.urdf.xacro"
+    ns="camera" />
+    <xacro:camera.zed_camera
+      parent_link="${camera_parent_link}"
+      xyz="${camera_xyz}"
+      rpy="${camera_rpy}"
+      model="${camera_model_type}"
+      name="camera"
+      topic="camera"
+      use_nominal_extrinsics="$(arg use_sim)"
+      simulation_engine="$(arg simulation_engine)" />
+  </xacro:if>
+
+  <!-- INCLUDE CAMERA MOUNT - add if camera_model is not empty -->
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <xacro:if value="${include_camera_mount or camera_model == 'intel_realsense_d435'}">
+  <xacro:if value="${include_camera_mount or camera_model != ''}">
     <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount

@@ -6,7 +6,7 @@ ROS2 packages for ROSbot XL
 
 ### `rosbot_xl`
 
-Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used. 
+Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
 ### `rosbot_xl_bringup`
 
@@ -42,21 +42,19 @@ To run the software on real ROSbot XL, also communication with Digital Board wil
 First update your firmware to make sure that you use the latest version, then run the `micro-ROS` agent.
 For detailed instructions refer to the [rosbot_xl_firmware repository](https://github.com/husarion/rosbot_xl_firmware).
 
-## Source build
+## Prepare environment
 
-### Prerequisites
-
-Install `colcon`, `vsc` and `rosdep`:
+1. **Install `colcon`, `vsc` and `rosdep`**
 ```
 sudo apt-get update
 sudo apt-get install -y python3-colcon-common-extensions python3-vcstool python3-rosdep
 ```
 
-Create workspace folder and clone `rosbot_xl_ros` repository:
+2. **Create workspace folder and clone `rosbot_xl_ros` repository:**
 ```
 mkdir -p ros2_ws/src
-cd ros2_ws
-git clone https://github.com/husarion/rosbot_xl_ros src/
+cd ros2_ws/src
+git clone https://github.com/husarion/rosbot_xl_ros
 ```
 
 ### Build and run on hardware
@@ -67,19 +65,18 @@ export HUSARION_ROS_BUILD=hardware
 
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
+vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_hardware.repos
 
-rm -r src/rosbot_xl_gazebo
+rm -r rosbot_xl_ros/rosbot_xl_gazebo
 
+cd ..
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-> **Prerequisites**
-> 
-> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent (as described in the *Usage on hardware* step).
+> **Prerequisites:** Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
 Running:
 ```
@@ -95,12 +92,14 @@ export HUSARION_ROS_BUILD=simulation
 
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
-vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_hardware.repos
+vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_simulation.repos
 
+cd ..
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
+
 colcon build
 ```
 

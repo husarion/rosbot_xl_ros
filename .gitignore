@@ -10,3 +10,4 @@ build/
 install/
 log/
 __pycache__/
+.pre-commit-config.yaml

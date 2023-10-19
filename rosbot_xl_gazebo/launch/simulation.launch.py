@@ -28,14 +28,31 @@ def generate_launch_description():
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
         default_value="slamtec_rplidar_s1",
-        description="Lidar model added to the URDF",
+        description=f"Add LiDAR model to the robot URDF",
+        choices=[
+            "None",
+            "slamtec_rplidar_s1",
+            "slamtec_rplidar_a2",
+            "slamtec_rplidar_a3",
+            "velodyne_puck",
+        ],
     )
 
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
-        default_value="None",
-        description="Camera model added to the URDF",
+        default_value="intel_realsense_d435",
+        description=f"Add camera model to the robot URDF model",
+        choices=[
+            "None",
+            "intel_realsense_d435",
+            "stereolabs_zed",
+            "stereolabs_zedm",
+            "stereolabs_zed2",
+            "stereolabs_zed2i",
+            "stereolabs_zedx",
+            "stereolabs_zedxm",
+        ],
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")
@@ -89,24 +106,14 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="ign_bridge",
         arguments=[
-            "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
-            "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
-            "/velodyne_points/points"
-            + "@sensor_msgs/msg/PointCloud2"
-            + "[ignition.msgs.PointCloudPacked",
-            "/camera/color/camera_info"
-            + "@sensor_msgs/msg/CameraInfo"
-            + "[ignition.msgs.CameraInfo",
-            "/camera/color/image_raw"
-            + "@sensor_msgs/msg/Image"
-            + "[ignition.msgs.Image",
-            "/camera/camera_info"
-            + "@sensor_msgs/msg/CameraInfo"
-            + "[ignition.msgs.CameraInfo",
-            "/camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-            "/camera/depth/points"
-            + "@sensor_msgs/msg/PointCloud2"
-            + "[ignition.msgs.PointCloudPacked",
+            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+            "/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
+            "/velodyne_points/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked",
+            "/camera/color/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+            "/camera/color/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+            "/camera/depth@sensor_msgs/msg/Image[ignition.msgs.Image",
+            "/camera/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked",
         ],
         remappings=[
             ("/velodyne_points/points", "/velodyne_points"),

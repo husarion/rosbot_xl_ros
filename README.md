@@ -6,7 +6,7 @@ ROS2 packages for ROSbot XL
 
 ### `rosbot_xl`
 
-Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used. 
+Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
 ### `rosbot_xl_bringup`
 
@@ -78,7 +78,7 @@ colcon build
 ```
 
 > **Prerequisites**
-> 
+>
 > Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent (as described in the *Usage on hardware* step).
 
 Running:

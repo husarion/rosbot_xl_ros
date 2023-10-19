@@ -39,7 +39,7 @@ def generate_launch_description():
         description=(
             "Whether to use mecanum drive controller"
             "(otherwise diff drive controller is used)",
-        )
+        ),
     )
 
     lidar_model = LaunchConfiguration("lidar_model")

@@ -28,20 +28,31 @@ def test_rosbot_description_parsing():
 
     all_combinations = list(
         itertools.product(
-            mecanum_values, use_sim_values, use_gpu_values, simulation_engine_values,
-            lidar_model, camera_model
+            mecanum_values,
+            use_sim_values,
+            use_gpu_values,
+            simulation_engine_values,
+            lidar_model,
+            camera_model,
         )
     )
 
     for combination in all_combinations:
-        mecanum, use_sim, use_gpu, simulation_engine, lidar_model, camera_model = combination
+        (
+            mecanum,
+            use_sim,
+            use_gpu,
+            simulation_engine,
+            lidar_model,
+            camera_model,
+        ) = combination
         mappings = {
             "mecanum": mecanum,
             "use_sim": use_sim,
             "use_gpu": use_gpu,
             "simulation_engine": simulation_engine,
             "lidar_model": lidar_model,
-            "camera_model": camera_model
+            "camera_model": camera_model,
         }
         rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
         xacro_path = os.path.join(rosbot_xl_description, "urdf/rosbot_xl.urdf.xacro")

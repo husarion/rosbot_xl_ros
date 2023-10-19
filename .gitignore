@@ -1,9 +1,15 @@
-.vscode/*
 .devcontainer/*
 demo/.env
 demo/test/.env
 demo/id
 dev_utils/
+
+# ROSbots submodules
+rosbot_hardware_interfaces/
+ros_components_description/
+rosbot_controllers/
+husarion/husarion_office_gz
+gazebosim/gz_ros2_control
 
 # ROS2
 build/

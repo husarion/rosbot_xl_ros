@@ -6,7 +6,7 @@ ROS2 packages for ROSbot XL
 
 ### `rosbot_xl`
 
-Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
+Metapackage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
 ### `rosbot_xl_bringup`
 

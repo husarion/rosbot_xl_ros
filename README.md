@@ -110,6 +110,27 @@ source install/setup.bash
 ros2 launch rosbot_xl_gazebo simulation.launch.py
 ```
 
+## Testing package
+
+### Industrial CI
+```
+colcon test
+```
+
+> [!NOTE]
+> Command `colcon test` does not build the code. Remember to build your code after changes.
+
+If tests finish with errors print logs:
+```
+colcon test-result --verbose
+```
+
+### Format python code with [Black](https://github.com/psf/black)
+```
+cd src/
+black rosbot*
+```
+
 ## Demos
 
 For further usage examples check out our other repositories:

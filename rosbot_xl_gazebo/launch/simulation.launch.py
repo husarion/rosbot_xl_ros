@@ -28,31 +28,14 @@ def generate_launch_description():
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
         default_value="slamtec_rplidar_s1",
-        description=f"Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "velodyne_puck",
-        ],
+        description="Add LiDAR model to the robot URDF",
     )
 
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
         default_value="intel_realsense_d435",
-        description=f"Add camera model to the robot URDF model",
-        choices=[
-            "None",
-            "intel_realsense_d435",
-            "stereolabs_zed",
-            "stereolabs_zedm",
-            "stereolabs_zed2",
-            "stereolabs_zed2i",
-            "stereolabs_zedx",
-            "stereolabs_zedxm",
-        ],
+        description="Add camera model to the robot URDF model",
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")

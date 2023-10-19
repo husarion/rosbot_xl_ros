@@ -25,14 +25,14 @@ def generate_launch_description():
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
         default_value="slamtec_rplidar_s1",
-        description="Lidar model added to the URDF",
+        description="Add LiDAR model to the robot URDF",
     )
 
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
         default_value="None",
-        description="Camera model added to the URDF",
+        description="Add camera model to the robot URDF",
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")

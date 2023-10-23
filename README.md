@@ -53,8 +53,8 @@ sudo apt-get install -y python3-colcon-common-extensions python3-vcstool python3
 2. **Create workspace folder and clone `rosbot_xl_ros` repository:**
 ```
 mkdir -p ros2_ws/src
-cd ros2_ws/src
-git clone https://github.com/husarion/rosbot_xl_ros
+cd ros2_ws
+git clone https://github.com/husarion/rosbot_xl_ros src/
 ```
 
 ### Build and run on hardware
@@ -65,11 +65,10 @@ export HUSARION_ROS_BUILD=hardware
 
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_hardware.repos
+vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 
-rm -r rosbot_xl_ros/rosbot_xl_gazebo
+rm -r src/rosbot_xl_gazebo
 
-cd ..
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
@@ -92,14 +91,12 @@ export HUSARION_ROS_BUILD=simulation
 
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_hardware.repos
-vcs import . < rosbot_xl_ros/rosbot_xl/rosbot_xl_simulation.repos
+vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
+vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
 
-cd ..
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
-
 colcon build
 ```
 

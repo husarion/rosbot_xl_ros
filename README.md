@@ -75,7 +75,8 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-> **Prerequisites:** Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
+> [!NOTE]
+> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
 2. **Running**
 ```

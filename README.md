@@ -59,7 +59,7 @@ git clone https://github.com/husarion/rosbot_xl_ros src/
 
 ### Build and run on hardware
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=hardware
 
@@ -77,7 +77,7 @@ colcon build
 
 > **Prerequisites:** Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
-Running:
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_bringup bringup.launch.py
@@ -85,7 +85,7 @@ ros2 launch rosbot_xl_bringup bringup.launch.py
 
 ### Build and run Gazebo simulation
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=simulation
 
@@ -100,7 +100,7 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-Running:
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_gazebo simulation.launch.py

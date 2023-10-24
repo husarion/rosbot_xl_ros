@@ -4,7 +4,7 @@
   <name>rosbot_xl</name>
   <version>0.8.4</version>
 
-  <description>Meta package that contains all packages of Rosbot XL</description>
+  <description>Meta package that contains all packages of ROSbot XL</description>
   <license>Apache License 2.0</license>
 
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>

@@ -1,8 +1,16 @@
+.vscode/*
 .devcontainer/*
 demo/.env
 demo/test/.env
 demo/id
 dev_utils/
+
+# ROS 2 build folders
+build/
+install/
+log/
+__pycache__/
+
 
 # ROSbots submodules
 rosbot_hardware_interfaces/
@@ -11,8 +19,5 @@ rosbot_controllers/
 husarion/husarion_office_gz
 gazebosim/gz_ros2_control
 
-# ROS2
-build/
-install/
-log/
-__pycache__/
+# pyspelling
+*.dic

@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#45 <https://github.com/husarion/rosbot_xl_ros/issues/45>`_ from husarion/add-pyspelling
+  Add pyspelling
+* Merge remote-tracking branch 'origin/master' into add-pyspelling
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.4 (2023-10-24)
 ------------------
 * Merge remote-tracking branch 'origin/master' into add-black

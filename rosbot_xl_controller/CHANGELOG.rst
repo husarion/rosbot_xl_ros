@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.6 (2023-10-24)
+------------------
 * Merge pull request `#46 <https://github.com/husarion/rosbot_xl_ros/issues/46>`_ from husarion/test-controller
   Test controller
 * Merge remote-tracking branch 'origin/master' into test-controller

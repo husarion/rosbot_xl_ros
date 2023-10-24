@@ -76,9 +76,7 @@ class SimulationTestNode(Node):
         self.timer = None
 
     def start_node_thread(self):
-        self.ros_spin_thread = Thread(
-            target=lambda node: rclpy.spin(node), args=(self,)
-        )
+        self.ros_spin_thread = Thread(target=lambda node: rclpy.spin(node), args=(self,))
         self.ros_spin_thread.start()
         self.timer = self.create_timer(1.0 / 10.0, self.timer_callback)
 

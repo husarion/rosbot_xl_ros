@@ -59,3 +59,6 @@ msg
 lidar
 gpu
 gazebosim
+msgs
+nav
+pytest

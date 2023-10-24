@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.4 (2023-10-24)
+------------------
 * Merge remote-tracking branch 'origin/master' into add-black
 * Contributors: Jakub Delicat
 

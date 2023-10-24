@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#51 <https://github.com/husarion/rosbot_xl_ros/issues/51>`_ from husarion/workflow-test
+  Workflow test
+* Contributors: rafal-gorecki
+
 0.8.6 (2023-10-24)
 ------------------
 * Merge pull request `#46 <https://github.com/husarion/rosbot_xl_ros/issues/46>`_ from husarion/test-controller

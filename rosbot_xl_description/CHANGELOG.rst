@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.8.6 (2023-10-24)
 ------------------
 * Merge remote-tracking branch 'origin/master' into test-controller

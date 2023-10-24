@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#50 <https://github.com/husarion/rosbot_xl_ros/issues/50>`_ from husarion/add-pre-commit
+  added and applied precommit
+* Contributors: Jakub Delicat
+
 0.8.2 (2023-05-23)
 ------------------
 

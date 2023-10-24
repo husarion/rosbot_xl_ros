@@ -35,8 +35,7 @@ def generate_launch_description():
         "mecanum",
         default_value="False",
         description=(
-            "Whether to use mecanum drive controller"
-            "(otherwise diff drive controller is used)"
+            "Whether to use mecanum drive controller (otherwise diff drive controller is used)"
         ),
     )
 
@@ -132,12 +131,8 @@ def generate_launch_description():
             "/camera/color/camera_info"
             + "@sensor_msgs/msg/CameraInfo"
             + "[ignition.msgs.CameraInfo",
-            "/camera/color/image_raw"
-            + "@sensor_msgs/msg/Image"
-            + "[ignition.msgs.Image",
-            "/camera/camera_info"
-            + "@sensor_msgs/msg/CameraInfo"
-            + "[ignition.msgs.CameraInfo",
+            "/camera/color/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+            "/camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
             "/camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
             "/camera/depth/points"
             + "@sensor_msgs/msg/PointCloud2"

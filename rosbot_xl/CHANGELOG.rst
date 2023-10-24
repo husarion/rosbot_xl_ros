@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge remote-tracking branch 'origin/master' into test-controller
+* Contributors: Jakub Delicat
+
 0.8.5 (2023-10-24)
 ------------------
 * Merge pull request `#45 <https://github.com/husarion/rosbot_xl_ros/issues/45>`_ from husarion/add-pyspelling

@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#46 <https://github.com/husarion/rosbot_xl_ros/issues/46>`_ from husarion/test-controller
+  Test controller
+* Merge remote-tracking branch 'origin/master' into test-controller
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.5 (2023-10-24)
 ------------------
 * Merge remote-tracking branch 'origin/master' into add-pyspelling

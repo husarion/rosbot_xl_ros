@@ -1,3 +1,4 @@
+.vscode/*
 .devcontainer/*
 demo/.env
 demo/test/.env

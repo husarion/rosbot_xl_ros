@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge remote-tracking branch 'origin/master' into add-black
+* Contributors: Jakub Delicat
+
 0.8.3 (2023-10-24)
 ------------------
 * Merge pull request `#50 <https://github.com/husarion/rosbot_xl_ros/issues/50>`_ from husarion/add-pre-commit

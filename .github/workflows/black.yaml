@@ -3,7 +3,6 @@ name: Black python lint
 
 on:
     workflow_call:
-    push:
 
 jobs:
     lint:

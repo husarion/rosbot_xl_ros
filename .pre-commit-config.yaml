@@ -32,10 +32,10 @@ repos:
             files: ^.github|./\.yaml
 
     - repo: https://github.com/psf/black
-      rev: 22.12.0
+      rev: 23.10.1
       hooks:
         - id: black
-          args: ["--line-length=99"]
+          args: ["--line-length=99", "--experimental-string-processing"]
 
     - repo: https://github.com/PyCQA/flake8
       rev: 6.1.0

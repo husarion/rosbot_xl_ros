@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.7 (2023-10-24)
+------------------
 * Merge pull request `#51 <https://github.com/husarion/rosbot_xl_ros/issues/51>`_ from husarion/workflow-test
   Workflow test
 * Contributors: rafal-gorecki

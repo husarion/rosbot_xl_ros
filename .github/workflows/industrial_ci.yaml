@@ -2,12 +2,17 @@
 name: Industrial CI
 on:
     workflow_call:
-    pull_request:
+    workflow_dispatch:
     push:
-        branches:
-            - master
+
 
 jobs:
+    black_test:
+        uses: ./.github/workflows/black.yaml
+
+    spellcheck_test:
+        uses: ./.github/workflows/spellcheck.yaml
+
     industrial_ci:
         strategy:
             fail-fast: false

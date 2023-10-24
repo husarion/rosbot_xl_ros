@@ -12,6 +12,9 @@ on:
         types: [closed]
 
 jobs:
+    industrial_ci:
+        uses: ./.github/workflows/industrial_ci.yaml
+
     get-bump:
         name: Get version bump
         runs-on: ubuntu-latest

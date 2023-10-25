@@ -62,3 +62,4 @@ gazebosim
 msgs
 nav
 pytest
+nan

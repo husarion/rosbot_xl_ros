@@ -7,16 +7,28 @@ on:
 
 
 jobs:
-    black_test:
-        uses: ./.github/workflows/black.yaml
+    black:
+        name: Black
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: psf/black@stable
+              with:
+                  options: --line-length=99
 
-    spellcheck_test:
-        uses: ./.github/workflows/spellcheck.yaml
+    spellcheck:
+        name: Spellcheck
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: rojopolis/spellcheck-github-actions@0.33.1
+              name: Spellcheck
 
-    industrial_ci:
+    ros_industrial_ci:
+        name: ROS Industrial CI
         needs:
-            - black_test
-            - spellcheck_test
+            - black
+            - spellcheck
         strategy:
             fail-fast: false
             matrix:

@@ -14,6 +14,8 @@
 # limitations under the License.
 
 import rclpy
+import math
+import random
 
 from threading import Event
 from threading import Thread
@@ -28,7 +30,6 @@ from tf2_ros.transform_listener import TransformListener
 
 class BringupTestNode(Node):
     ROSBOT_HARDWARE_PUBLISHERS_RATE = 10.0
-
     __test__ = False
 
     def __init__(self, name="test_node"):
@@ -68,14 +69,9 @@ class BringupTestNode(Node):
             self.timer_callback,
         )
 
-    def filtered_scan_callback(self, msg):
-        if msg.ranges[0] == 5.0 and msg.ranges[-1] == 5.0:
-            for i in range(len(msg.ranges) - 2):
-                # when is not .nan
-                if msg.ranges[i + 1] == msg.ranges[i + 1]:
-                    return
-
-        self.scan_filter_event.set()
+    def filtered_scan_callback(self, msg: LaserScan):
+        if len(msg.ranges) > 0:
+            self.scan_filter_event.set()
 
     def timer_callback(self):
         self.publish_fake_hardware_messages()
@@ -105,15 +101,13 @@ class BringupTestNode(Node):
         msg = LaserScan()
         msg.header.frame_id = "base_link"
         msg.angle_min = 0.0
-        msg.angle_max = 2.0 * 3.14159265
+        msg.angle_max = 2.0 * math.pi
         msg.angle_increment = 0.05
         msg.time_increment = 0.1
         msg.scan_time = 0.1
         msg.range_min = 0.0
         msg.range_max = 10.0
 
-        # All points inside filtered box
-        msg.ranges = [0.1] * 126
-        msg.ranges[0] = 5.0
-        msg.ranges[-1] = 5.0
+        # fill ranges from 0.0m to 1.0m
+        msg.ranges = [random.random() for _ in range(int(msg.angle_max / msg.angle_increment))]
         self.scan_publisher.publish(msg)

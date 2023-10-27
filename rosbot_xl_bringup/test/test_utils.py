@@ -45,10 +45,10 @@ class BringupTestNode(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.scan_publisher = self.create_publisher(LaserScan, "scan", 10)
-        self.filtered_scan_subscriber = self.create_subscription(
-            LaserScan, "scan_filtered", self.filtered_scan_callback, 10
-        )
+        # self.scan_publisher = self.create_publisher(LaserScan, "scan", 10)
+        # self.filtered_scan_subscriber = self.create_subscription(
+        #     LaserScan, "scan_filtered", self.filtered_scan_callback, 10
+        # )
 
         self.timer = None
 

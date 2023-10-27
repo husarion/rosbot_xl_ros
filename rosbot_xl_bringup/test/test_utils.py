@@ -76,7 +76,7 @@ class BringupTestNode(Node):
     def timer_callback(self):
         self.publish_fake_hardware_messages()
         self.lookup_transform_odom()
-        self.publish_scan()
+        # self.publish_scan()
 
     def publish_fake_hardware_messages(self):
         imu_msg = Imu()

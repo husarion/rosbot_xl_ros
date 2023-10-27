@@ -99,7 +99,7 @@ class BringupTestNode(Node):
 
     def publish_scan(self):
         msg = LaserScan()
-        msg.header.frame_id = "base_link"
+        msg.header.frame_id = "laser"
         msg.angle_min = 0.0
         msg.angle_max = 2.0 * math.pi
         msg.angle_increment = 0.05

@@ -14,21 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import launch_pytest
+import launch_testing
 import pytest
-
-# import rclpy
+import rclpy
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from test_utils import BringupTestNode
 
-# from test_utils import BringupTestNode
 
-
-@launch_pytest.fixture
+@pytest.mark.launch_test
 def generate_test_description():
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     bringup_launch = IncludeLaunchDescription(
@@ -42,15 +40,30 @@ def generate_test_description():
             )
         ),
         launch_arguments={
-            "use_sim": "False",
-            "mecanum": "True",
             "use_gpu": "False",
         }.items(),
     )
 
-    return LaunchDescription([bringup_launch])
+    return LaunchDescription([launch_testing.actions.ReadyToTest(), bringup_launch]), locals()
 
 
-@pytest.mark.launch(fixture=generate_test_description)
 def test_scan_filter():
-    print("I'm here!")
+    rclpy.init()
+    try:
+        node = BringupTestNode("test_bringup")
+        node.create_test_subscribers_and_publishers()
+        node.start_publishing_fake_hardware()
+
+        node.start_node_thread()
+        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
+        assert (
+            msgs_received_flag
+        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
+
+        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
+        assert (
+            msgs_received_flag
+        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
+
+    finally:
+        rclpy.shutdown()

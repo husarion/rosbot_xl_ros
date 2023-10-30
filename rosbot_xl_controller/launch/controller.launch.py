@@ -39,20 +39,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s1",
-        description="Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "velodyne_puck",
-        ],
-    )
-
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
@@ -67,6 +53,21 @@ def generate_launch_description():
             "stereolabs_zed2i",
             "stereolabs_zedx",
             "stereolabs_zedxm",
+        ],
+    )
+
+    lidar_model = LaunchConfiguration("lidar_model")
+    declare_lidar_model_arg = DeclareLaunchArgument(
+        "lidar_model",
+        default_value="slamtec_rplidar_s1",
+        description="Add LiDAR model to the robot URDF",
+        choices=[
+            "None",
+            "ouster_os1_32"
+            "slamtec_rplidar_a2",
+            "slamtec_rplidar_a3",
+            "slamtec_rplidar_s1",
+            "velodyne_puck",
         ],
     )
 

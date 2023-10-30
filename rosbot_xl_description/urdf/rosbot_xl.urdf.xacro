@@ -3,7 +3,7 @@
 
   <xacro:arg name="mecanum" default="false" />
   <xacro:arg name="lidar_model" default="slamtec_rplidar_s1" />
-  <xacro:arg name="camera_model" default="stereolabs_zed2" />
+  <xacro:arg name="camera_model" default="intel_realsense_d435" />
   <xacro:arg name="include_camera_mount" default="false" />
   <xacro:arg name="use_sim" default="false" />
   <xacro:arg name="simulation_engine" default="ignition-gazebo" />
@@ -139,7 +139,7 @@
   <!-- INCLUDE CAMERA MOUNT - add if camera_model is not empty -->
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <xacro:if value="${include_camera_mount or camera_model != ''}">
+  <xacro:if value="${include_camera_mount or camera_model != 'None'}">
     <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount

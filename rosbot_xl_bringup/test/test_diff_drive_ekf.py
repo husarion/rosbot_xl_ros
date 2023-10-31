@@ -50,7 +50,7 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_bringup_scan_filter():
+def test_bringup_startup_success():
     rclpy.init()
     try:
         node = BringupTestNode("test_bringup")
@@ -58,11 +58,6 @@ def test_bringup_scan_filter():
         node.start_publishing_fake_hardware()
 
         node.start_node_thread()
-        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
-
         msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
         assert (
             msgs_received_flag

@@ -2,6 +2,36 @@
 Changelog for package rosbot_xl_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.8 (2023-10-25)
+------------------
+
+0.8.7 (2023-10-24)
+------------------
+* Merge pull request `#51 <https://github.com/husarion/rosbot_xl_ros/issues/51>`_ from husarion/workflow-test
+  Workflow test
+* Contributors: rafal-gorecki
+
+0.8.6 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into test-controller
+* Contributors: Jakub Delicat
+
+0.8.5 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into add-pyspelling
+* Contributors: Jakub Delicat
+
+0.8.4 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into add-black
+* Contributors: Jakub Delicat
+
+0.8.3 (2023-10-24)
+------------------
+* Merge pull request `#50 <https://github.com/husarion/rosbot_xl_ros/issues/50>`_ from husarion/add-pre-commit
+  added and applied precommit
+* Contributors: Jakub Delicat
+
 0.8.2 (2023-05-23)
 ------------------
 

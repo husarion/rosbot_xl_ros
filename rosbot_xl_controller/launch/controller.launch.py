@@ -36,7 +36,9 @@ def generate_launch_description():
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
-        description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+        description=(
+            "Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+        ),
     )
 
     camera_model = LaunchConfiguration("camera_model")
@@ -191,12 +193,10 @@ def generate_launch_description():
     )
 
     # Delay start of robot_controller after joint_state_broadcaster
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=joint_state_broadcaster_spawner,
-                on_exit=[robot_controller_spawner],
-            )
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[robot_controller_spawner],
         )
     )
 

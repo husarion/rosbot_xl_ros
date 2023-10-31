@@ -5,9 +5,18 @@ demo/test/.env
 demo/id
 dev_utils/
 
-# ROS2
+# ROS 2 build folders
 build/
 install/
 log/
 __pycache__/
-.pre-commit-config.yaml
+
+# ROSbots submodules
+rosbot_hardware_interfaces/
+ros_components_description/
+rosbot_controllers/
+husarion/husarion_office_gz
+gazebosim/gz_ros2_control
+
+# pyspelling
+*.dic

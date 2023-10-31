@@ -1,4 +1,16 @@
-#!/usr/bin/env python3
+# Copyright 2023 Husarion
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from launch import LaunchDescription, LaunchContext
 from launch.actions import (
@@ -8,7 +20,6 @@ from launch.actions import (
 )
 from launch.substitutions import (
     PathJoinSubstitution,
-    PythonExpression,
     LaunchConfiguration,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -17,36 +28,51 @@ from launch_ros.actions import Node, SetParameter
 
 from ament_index_python.packages import get_package_share_directory
 
+
 def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
-    camera_model = context.perform_substitution(LaunchConfiguration('camera_model'))
-    lidar_model = context.perform_substitution(LaunchConfiguration('lidar_model'))
+    camera_model = context.perform_substitution(LaunchConfiguration("camera_model"))
+    lidar_model = context.perform_substitution(LaunchConfiguration("lidar_model"))
 
     gz_args = ["/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock"]
     gz_remapping = []
 
     # Add camera topic
     if camera_model.startswith("intel_realsense"):
-        gz_args.append("/camera/color/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
+        gz_args.append(
+            "/camera/color/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo"
+        )
         gz_args.append("/camera/color/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image")
         gz_args.append("/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
         gz_args.append("/camera/depth@sensor_msgs/msg/Image[ignition.msgs.Image")
-        gz_args.append("/camera/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked")
+        gz_args.append(
+            "/camera/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked"
+        )
 
         gz_remapping.append(("/camera/camera_info", "/camera/depth/camera_info"))
         gz_remapping.append(("/camera/depth", "/camera/depth/image_raw"))
 
     elif camera_model.startswith("stereolabs_zed"):
-        zed = camera_model[len("stereolabs_"):]
+        zed = camera_model[len("stereolabs_") :]
 
-        gz_args.append(f"/{zed}/zed_node/rgb/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
-        gz_args.append(f"/{zed}/zed_node/rgb/image_rect_color@sensor_msgs/msg/Image[ignition.msgs.Image")
-        gz_args.append(f"/{zed}/zed_node/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
+        gz_args.append(
+            f"/{zed}/zed_node/rgb/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo"
+        )
+        gz_args.append(
+            f"/{zed}/zed_node/rgb/image_rect_color@sensor_msgs/msg/Image[ignition.msgs.Image"
+        )
+        gz_args.append(
+            f"/{zed}/zed_node/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo"
+        )
         gz_args.append(f"/{zed}/zed_node/depth@sensor_msgs/msg/Image[ignition.msgs.Image")
-        gz_args.append(f"/{zed}/zed_node/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked")
+        gz_args.append(
+            f"/{zed}/zed_node/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked"
+        )
 
         gz_remapping.append((f"{zed}/zed_node/camera_info", f"/{zed}/zed_node/depth/camera_info"))
         gz_remapping.append((f"{zed}/zed_node/depth", f"/{zed}/zed_node/depth/depth_registered"))
-        gz_remapping.append((f"{zed}/zed_node/depth/points", f"/{zed}/zed_node/point_cloud/cloud_registered"))
+        gz_remapping.append(
+            (f"{zed}/zed_node/depth/points", f"/{zed}/zed_node/point_cloud/cloud_registered")
+        )
     else:
         pass
 
@@ -55,10 +81,12 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         gz_args.append("/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan")
 
     elif lidar_model.startswith("velodyne"):
-        gz_args.append("/velodyne_points/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked")
+        gz_args.append(
+            "/velodyne_points/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked"
+        )
 
         gz_remapping.append(("/velodyne_points/points", "/velodyne_points"))
-    else: # TODO: Check ouster
+    else:  # FIXME: Checkout ouster
         pass
 
     gz_bridge_node = Node(
@@ -72,12 +100,15 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
     return [gz_bridge_node]
 
+
 def generate_launch_description():
     mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
-        description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
+        description=(
+            "Whether to use mecanum drive controller (otherwise diff drive controller is used)"
+        ),
     )
 
     camera_model = LaunchConfiguration("camera_model")

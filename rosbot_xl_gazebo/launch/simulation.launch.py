@@ -40,12 +40,14 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
         gz_args.append(f"/{zed}/zed_node/rgb/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
         gz_args.append(f"/{zed}/zed_node/rgb/image_rect_color@sensor_msgs/msg/Image[ignition.msgs.Image")
-        gz_args.append(f"/{zed}/zed_node/depth/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
-        gz_args.append(f"/{zed}/zed_node/depth/depth_registered@sensor_msgs/msg/Image[ignition.msgs.Image")
+        gz_args.append(f"/{zed}/zed_node/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
+        gz_args.append(f"/{zed}/zed_node/depth@sensor_msgs/msg/Image[ignition.msgs.Image")
         gz_args.append(f"/{zed}/zed_node/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked")
 
-        gz_remapping.append(("old_topic", f"/{zed}/zed_node/point_cloud/cloud_registered"))
-    else: 
+        gz_remapping.append((f"{zed}/zed_node/camera_info", f"/{zed}/zed_node/depth/camera_info"))
+        gz_remapping.append((f"{zed}/zed_node/depth", f"/{zed}/zed_node/depth/depth_registered"))
+        gz_remapping.append((f"{zed}/zed_node/depth/points", f"/{zed}/zed_node/point_cloud/cloud_registered"))
+    else:
         pass
 
     # Add lidar topic
@@ -102,7 +104,7 @@ def generate_launch_description():
         description="Add LiDAR model to the robot URDF",
         choices=[
             "None",
-            "ouster_os1_32"
+            "ouster_os1_32",
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",

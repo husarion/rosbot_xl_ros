@@ -59,11 +59,11 @@ def generate_launch_description():
     lidar_model = LaunchConfiguration("lidar_model")
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
-        default_value="slamtec_rplidar_s1",
+        default_value="None",
         description="Add LiDAR model to the robot URDF",
         choices=[
             "None",
-            "ouster_os1_32"
+            "ouster_os1_32",
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",

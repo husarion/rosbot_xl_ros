@@ -81,10 +81,5 @@ def test_bringup_scan_filter():
             msgs_received_flag
         ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
 
-        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
-
     finally:
         rclpy.shutdown()

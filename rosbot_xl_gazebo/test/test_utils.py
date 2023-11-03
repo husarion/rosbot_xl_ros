@@ -32,10 +32,9 @@ from tf2_ros.transform_listener import TransformListener
 
 class SimulationTestNode(Node):
     __test__ = False
-    XY_TOLERANCE = 0.05
     # The inaccuracies in measurement uncertainties and wheel slippage
-    # cause the rosbot_base_controller to determine inaccurate odometry.
-    YAW_TOLERANCE = 0.2
+    # cause the rosbot_xl_base_controller to determine inaccurate odometry.
+    ACCURACY = 0.20  # 20% accuracy
 
     def __init__(self, name="test_node"):
         super().__init__(name)
@@ -62,7 +61,7 @@ class SimulationTestNode(Node):
         self.cmd_vel_publisher = self.create_publisher(Twist, "cmd_vel", 10)
 
         self.controller_odom_sub = self.create_subscription(
-            Odometry, "/rosbot_base_controller/odom", self.controller_callback, 10
+            Odometry, "/rosbot_xl_base_controller/odom", self.controller_callback, 10
         )
 
         self.ekf_odom_sub = self.create_subscription(
@@ -84,13 +83,27 @@ class SimulationTestNode(Node):
 
     def is_twist_ok(self, twist: Twist):
         x_ok, y_ok, yaw_ok = False, False, False
-        if abs(twist.linear.x - self.v_x) < self.XY_TOLERANCE:
+
+        def are_close_to_zero(value1, value2, eps=0.05):
+            return abs(value1) < eps and abs(value2) < eps
+
+        def are_close_to_each_other(true_value, dest_value, tolerance=self.ACCURACY):
+            acceptable_range = true_value * (tolerance / 100)
+            return abs(true_value - dest_value) <= acceptable_range
+
+        if (are_close_to_zero(self.v_x, twist.linear.x)) or are_close_to_each_other(
+            twist.linear.x, self.v_x
+        ):
             x_ok = True
 
-        if abs(twist.linear.y - self.v_y) < self.XY_TOLERANCE:
+        if are_close_to_zero(self.v_y, twist.linear.y) or are_close_to_each_other(
+            twist.linear.y, self.v_y
+        ):
             y_ok = True
 
-        if abs(twist.angular.z - self.v_yaw) < self.YAW_TOLERANCE:
+        if are_close_to_zero(self.v_yaw, twist.angular.z) or are_close_to_each_other(
+            twist.angular.z, self.v_yaw
+        ):
             yaw_ok = True
 
         return x_ok and y_ok and yaw_ok

@@ -50,7 +50,7 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_bringup_startup_success():
+def test_bringup_scan_filter():
     rclpy.init()
     try:
         node = BringupTestNode("test_bringup")
@@ -58,10 +58,10 @@ def test_bringup_startup_success():
         node.start_publishing_fake_hardware()
 
         node.start_node_thread()
-        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
+        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
         assert (
             msgs_received_flag
-        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
+        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
 
     finally:
         rclpy.shutdown()

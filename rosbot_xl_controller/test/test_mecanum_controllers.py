@@ -60,7 +60,7 @@ def test_controllers_startup_fail():
         msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
         assert not msgs_received_flag, (
             "Received JointStates message that should not have appeared. Check whether other"
-            " robots are connected to your network.! aaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            " robots are connected to your network.!"
         )
         msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
         assert not msgs_received_flag, (

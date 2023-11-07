@@ -23,25 +23,25 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import ControllersTestNode
+from test_utils import BringupTestNode
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
+    rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    rosbot_xl_controller,
+                    rosbot_xl_bringup,
                     "launch",
-                    "controller.launch.py",
+                    "bringup.launch.py",
                 ]
             )
         ),
         launch_arguments={
             "use_sim": "False",
-            "mecanum": "False",
+            "mecanum": "True",
             "use_gpu": "False",
         }.items(),
     )
@@ -50,52 +50,36 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_controllers_startup_fail():
+def test_bringup_startup_success():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup")
+        node = BringupTestNode("test_bringup")
         node.create_test_subscribers_and_publishers()
+        node.start_publishing_fake_hardware()
 
         node.start_node_thread()
-        msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
-        assert not msgs_received_flag, (
-            "Received JointStates message that should not have appeared. Check whether other"
-            " robots are connected to your network!"
-        )
-        msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
-        assert not msgs_received_flag, (
-            "Received Odom message that should not have appeared. Check whether other robots are"
-            " connected to your network!"
-        )
-        msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
-        assert not msgs_received_flag, (
-            "Received Imu message that should not have appeared. Check whether other robots are"
-            " connected to your network!"
-        )
+        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
+        assert (
+            msgs_received_flag
+        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
+
     finally:
         rclpy.shutdown()
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_controllers_startup_success():
+def test_bringup_scan_filter():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup")
+        node = BringupTestNode("test_bringup")
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 
         node.start_node_thread()
-        msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
+        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
         assert (
             msgs_received_flag
-        ), "Expected JointStates message but it was not received. Check joint_state_broadcaster!"
-        msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected Odom message but it was not received. Check rosbot_base_controller!"
-        msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected Imu message but it was not received. Check imu_broadcaster!"
+        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
+
     finally:
         rclpy.shutdown()

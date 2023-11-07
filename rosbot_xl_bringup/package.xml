@@ -4,17 +4,16 @@
   <name>rosbot_xl_bringup</name>
   <version>0.8.8</version>
 
-  <description>The rosbot_xl_bringup package</description>
+  <description>ROSbot XL bringup package</description>
   <license>Apache License 2.0</license>
 
   <author email="maciej.stepien@husarion.com">Maciej Stepien</author>
+  <author email="jakub.delicat@husarion.com">Jakub Delicat</author>
   <maintainer email="support@husarion.com">Husarion</maintainer>
 
   <url type="website">https://husarion.com/</url>
   <url type="repository">https://github.com/husarion/rosbot_xl_ros</url>
   <url type="bugtracker">https://github.com/husarion/rosbot_xl_ros/issues</url>
-
-  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>rosbot_xl_controller</exec_depend>
 
@@ -24,7 +23,16 @@
   <exec_depend>laser_filters</exec_depend>
   <exec_depend>robot_localization</exec_depend>
 
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>launch</test_depend>
+  <test_depend>launch_ros</test_depend>
+  <test_depend>launch_pytest</test_depend>
+
+  <test_depend>laser_filters</test_depend>
+  <test_depend>robot_localization</test_depend>
+  <test_depend>rosbot_xl_controller</test_depend>
+
   <export>
-    <build_type>ament_cmake</build_type>
+    <build_type>ament_python</build_type>
   </export>
 </package>

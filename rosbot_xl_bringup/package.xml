@@ -28,6 +28,7 @@
   <test_depend>launch_ros</test_depend>
   <test_depend>launch_pytest</test_depend>
 
+  <test_depend>laser_filters</test_depend>
   <test_depend>robot_localization</test_depend>
   <test_depend>rosbot_xl_controller</test_depend>
 

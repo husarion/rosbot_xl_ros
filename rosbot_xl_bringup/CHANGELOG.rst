@@ -2,6 +2,14 @@
 Changelog for package rosbot_xl_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#47 <https://github.com/husarion/rosbot_xl_ros/issues/47>`_ from husarion/test-bringup
+  Test bringup
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.8 (2023-10-25)
 ------------------
 

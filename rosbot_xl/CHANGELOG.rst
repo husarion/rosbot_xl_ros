@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.9 (2023-11-07)
+------------------
 * Merge remote-tracking branch 'origin/master' into test-bringup
 * Merge remote-tracking branch 'origin/master' into test-bringup
 * Contributors: Jakub Delicat

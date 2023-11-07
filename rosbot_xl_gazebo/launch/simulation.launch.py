@@ -35,6 +35,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
     gz_args = ["/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock"]
     gz_remapping = []
+    depth_camera_parent_tf = None
 
     # Add camera topic
     if camera_model.startswith("intel_realsense"):
@@ -50,6 +51,8 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
         gz_remapping.append(("/camera/camera_info", "/camera/depth/camera_info"))
         gz_remapping.append(("/camera/depth", "/camera/depth/image_raw"))
+
+        depth_camera_parent_tf = "camera_depth_frame"
 
     elif camera_model.startswith("stereolabs_zed"):
         zed = camera_model[len("stereolabs_") :]
@@ -73,6 +76,8 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         gz_remapping.append(
             (f"{zed}/zed_node/depth/points", f"/{zed}/zed_node/point_cloud/cloud_registered")
         )
+
+        depth_camera_parent_tf = "camera_center_optical_frame"
     else:
         pass
 
@@ -98,7 +103,29 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         output="screen",
     )
 
-    return [gz_bridge_node]
+    # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
+    # See https://github.com/gazebosim/gz-sensors/issues/239
+    point_cloud_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="point_cloud_tf",
+        output="log",
+        arguments=[
+            "0.0",
+            "0.0",
+            "0.0",
+            "0.0",
+            "0.0",
+            "0.0",
+            depth_camera_parent_tf,
+            "rosbot_xl/base_link/camera_depth",
+        ],
+    )
+
+    if depth_camera_parent_tf:
+        return [gz_bridge_node, point_cloud_tf]
+    else:
+        return [gz_bridge_node]
 
 
 def generate_launch_description():

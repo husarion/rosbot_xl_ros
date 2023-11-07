@@ -65,3 +65,21 @@ def test_bringup_startup_success():
 
     finally:
         rclpy.shutdown()
+
+
+@pytest.mark.launch(fixture=generate_test_description)
+def test_bringup_scan_filter():
+    rclpy.init()
+    try:
+        node = BringupTestNode("test_bringup")
+        node.create_test_subscribers_and_publishers()
+        node.start_publishing_fake_hardware()
+
+        node.start_node_thread()
+        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
+        assert (
+            msgs_received_flag
+        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
+
+    finally:
+        rclpy.shutdown()

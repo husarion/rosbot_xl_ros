@@ -2,6 +2,15 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#48 <https://github.com/husarion/rosbot_xl_ros/issues/48>`_ from husarion/test-gazebo
+  Test gazebo
+* Merge pull request `#54 <https://github.com/husarion/rosbot_xl_ros/issues/54>`_ from husarion/add-controller-odom-test
+  Add raw odom test
+* Merge remote-tracking branch 'origin/master' into test-gazebo
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.9 (2023-11-07)
 ------------------
 * Merge remote-tracking branch 'origin/master' into test-bringup

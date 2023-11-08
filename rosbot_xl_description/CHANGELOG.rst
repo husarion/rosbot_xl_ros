@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#48 <https://github.com/husarion/rosbot_xl_ros/issues/48>`_ from husarion/test-gazebo
+  Test gazebo
+* Merge remote-tracking branch 'origin/master' into test-gazebo
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.9 (2023-11-07)
 ------------------
 * Merge remote-tracking branch 'origin/master' into test-bringup

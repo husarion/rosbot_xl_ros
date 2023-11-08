@@ -2,6 +2,13 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.11 (2023-11-08)
+-------------------
+* Merge pull request `#53 <https://github.com/husarion/rosbot_xl_ros/issues/53>`_ from husarion/ekf-update
+  Upgrade EKF
+* Merge remote-tracking branch 'origin/master' into ekf-update
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.10 (2023-11-08)
 -------------------
 * Merge remote-tracking branch 'origin/master' into test-gazebo

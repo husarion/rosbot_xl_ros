@@ -34,6 +34,7 @@ jobs:
             matrix:
                 ROS_DISTRO: [humble]
         runs-on: ubuntu-latest
+        timeout-minutes: 12
         steps:
             - uses: actions/checkout@v3
             - name: Clone installation requirements
@@ -42,3 +43,4 @@ jobs:
             - uses: ros-industrial/industrial_ci@master
               env:
                   ROS_DISTRO: ${{matrix.ROS_DISTRO}}
+                  HUSARION_ROS_BUILD: simulation

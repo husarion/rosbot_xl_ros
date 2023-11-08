@@ -2,6 +2,19 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.10 (2023-11-08)
+-------------------
+* Merge remote-tracking branch 'origin/master' into test-gazebo
+* Contributors: Jakub Delicat
+
+0.8.9 (2023-11-07)
+------------------
+* Merge pull request `#47 <https://github.com/husarion/rosbot_xl_ros/issues/47>`_ from husarion/test-bringup
+  Test bringup
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Contributors: Jakub Delicat, rafal-gorecki
+
 0.8.8 (2023-10-25)
 ------------------
 

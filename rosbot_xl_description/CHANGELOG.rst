@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge remote-tracking branch 'origin/master' into ekf-update
+* Contributors: Jakub Delicat
+
 0.8.10 (2023-11-08)
 -------------------
 * Merge pull request `#48 <https://github.com/husarion/rosbot_xl_ros/issues/48>`_ from husarion/test-gazebo

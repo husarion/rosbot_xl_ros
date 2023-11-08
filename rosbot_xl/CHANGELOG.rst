@@ -2,6 +2,11 @@
 Changelog for package rosbot_xl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge remote-tracking branch 'origin/master' into ekf-update
+* Contributors: Jakub Delicat
+
 0.8.10 (2023-11-08)
 -------------------
 * Merge remote-tracking branch 'origin/master' into test-gazebo

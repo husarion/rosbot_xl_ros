@@ -2,8 +2,8 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.10 (2023-11-08)
+-------------------
 * Merge remote-tracking branch 'origin/master' into test-gazebo
 * Contributors: Jakub Delicat
 

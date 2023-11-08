@@ -69,7 +69,8 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         )
         gz_args.append(f"/{zed}/zed_node/depth@sensor_msgs/msg/Image[ignition.msgs.Image")
         gz_args.append(
-            f"/{zed}/zed_node/depth/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked"
+            f"/{zed}/zed_node/depth/points@sensor_msgs/msg/PointCloud2"
+            "[ignition.msgs.PointCloudPacked"
         )
 
         gz_remapping.append((f"{zed}/zed_node/camera_info", f"/{zed}/zed_node/depth/camera_info"))
@@ -192,24 +193,20 @@ def generate_launch_description():
         description="Run Gazebo Ignition in the headless mode",
     )
 
-    headless_cfg = PythonExpression(
-        [
-            "'--headless-rendering -s -r' if ",
-            headless,
-            " else '-r'",
-        ]
-    )
+    headless_cfg = PythonExpression([
+        "'--headless-rendering -s -r' if ",
+        headless,
+        " else '-r'",
+    ])
     gz_args = [headless_cfg, " ", world_cfg]
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("ros_gz_sim"),
-                    "launch",
-                    "gz_sim.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("ros_gz_sim"),
+                "launch",
+                "gz_sim.launch.py",
+            ])
         ),
         launch_arguments={
             "gz_args": gz_args,
@@ -239,13 +236,11 @@ def generate_launch_description():
 
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_bringup"),
-                    "launch",
-                    "bringup.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_bringup"),
+                "launch",
+                "bringup.launch.py",
+            ])
         ),
         launch_arguments={
             "mecanum": mecanum,
@@ -257,20 +252,18 @@ def generate_launch_description():
         }.items(),
     )
 
-    return LaunchDescription(
-        [
-            declare_mecanum_arg,
-            declare_lidar_model_arg,
-            declare_camera_model_arg,
-            declare_include_camera_mount_arg,
-            declare_world_arg,
-            declare_headless_arg,
-            # Sets use_sim_time for all nodes started below
-            # (doesn't work for nodes started from ignition gazebo)
-            SetParameter(name="use_sim_time", value=True),
-            gz_sim,
-            OpaqueFunction(function=launch_gz_bridge),
-            gz_spawn_entity,
-            bringup_launch,
-        ]
-    )
+    return LaunchDescription([
+        declare_mecanum_arg,
+        declare_lidar_model_arg,
+        declare_camera_model_arg,
+        declare_include_camera_mount_arg,
+        declare_world_arg,
+        declare_headless_arg,
+        # Sets use_sim_time for all nodes started below
+        # (doesn't work for nodes started from ignition gazebo)
+        SetParameter(name="use_sim_time", value=True),
+        gz_sim,
+        OpaqueFunction(function=launch_gz_bridge),
+        gz_spawn_entity,
+        bringup_launch,
+    ])

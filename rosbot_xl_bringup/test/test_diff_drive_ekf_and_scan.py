@@ -31,13 +31,11 @@ def generate_test_description():
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    rosbot_xl_bringup,
-                    "launch",
-                    "bringup.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                rosbot_xl_bringup,
+                "launch",
+                "bringup.launch.py",
+            ])
         ),
         launch_arguments={
             "use_sim": "False",

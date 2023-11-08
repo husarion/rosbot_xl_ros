@@ -90,13 +90,11 @@ def generate_launch_description():
 
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_controller"),
-                    "launch",
-                    "controller.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_controller"),
+                "launch",
+                "controller.launch.py",
+            ])
         ),
         launch_arguments={
             "mecanum": mecanum,
@@ -114,9 +112,9 @@ def generate_launch_description():
         name="ekf_filter_node",
         output="screen",
         parameters=[
-            PathJoinSubstitution(
-                [get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"
+            ])
         ],
     )
 
@@ -124,13 +122,11 @@ def generate_launch_description():
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
         parameters=[
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_bringup"),
-                    "config",
-                    "laser_filter.yaml",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_bringup"),
+                "config",
+                "laser_filter.yaml",
+            ])
         ],
     )
 

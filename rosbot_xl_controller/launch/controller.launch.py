@@ -94,58 +94,48 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
-    controller_config_name = PythonExpression(
-        [
-            "'mecanum_drive_controller.yaml' if ",
-            mecanum,
-            " else 'diff_drive_controller.yaml'",
-        ]
-    )
+    controller_config_name = PythonExpression([
+        "'mecanum_drive_controller.yaml' if ",
+        mecanum,
+        " else 'diff_drive_controller.yaml'",
+    ])
 
-    robot_controllers = PathJoinSubstitution(
-        [
-            FindPackageShare("rosbot_xl_controller"),
-            "config",
-            controller_config_name,
-        ]
-    )
+    robot_controllers = PathJoinSubstitution([
+        FindPackageShare("rosbot_xl_controller"),
+        "config",
+        controller_config_name,
+    ])
 
-    controller_manager_name = PythonExpression(
-        [
-            "'/simulation_controller_manager' if ",
-            use_sim,
-            " else '/controller_manager'",
-        ]
-    )
+    controller_manager_name = PythonExpression([
+        "'/simulation_controller_manager' if ",
+        use_sim,
+        " else '/controller_manager'",
+    ])
 
     # Get URDF via xacro
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("rosbot_xl_description"),
-                    "urdf",
-                    "rosbot_xl.urdf.xacro",
-                ]
-            ),
-            " mecanum:=",
-            mecanum,
-            " lidar_model:=",
-            lidar_model,
-            " camera_model:=",
-            camera_model,
-            " include_camera_mount:=",
-            include_camera_mount,
-            " use_sim:=",
-            use_sim,
-            " simulation_engine:=",
-            simulation_engine,
-            " simulation_controllers_config_file:=",
-            robot_controllers,
-        ]
-    )
+    robot_description_content = Command([
+        PathJoinSubstitution([FindExecutable(name="xacro")]),
+        " ",
+        PathJoinSubstitution([
+            FindPackageShare("rosbot_xl_description"),
+            "urdf",
+            "rosbot_xl.urdf.xacro",
+        ]),
+        " mecanum:=",
+        mecanum,
+        " lidar_model:=",
+        lidar_model,
+        " camera_model:=",
+        camera_model,
+        " include_camera_mount:=",
+        include_camera_mount,
+        " use_sim:=",
+        use_sim,
+        " simulation_engine:=",
+        simulation_engine,
+        " simulation_controllers_config_file:=",
+        robot_controllers,
+    ])
     robot_description = {"robot_description": robot_description_content}
 
     control_node = Node(

@@ -120,6 +120,9 @@ pre-commit install
 
 # manually run tests
 pre-commit run -a
+
+# update revision
+pre-commit autoupdate
 ```
 
 After initialization [pre-commit configuration](.pre-commit-config.yaml) will applied on every commit.

@@ -23,8 +23,23 @@ def test_rosbot_description_parsing():
     use_sim_values = ["true", "false"]
     use_gpu_values = ["true", "false"]
     simulation_engine_values = ["ignition-gazebo", "webots"]  # 'gazebo-classic'
-    lidar_model = ["slamtec_rplidar_s1", "slamtec_rplidar_a2", "slamtec_rplidar_a3"]
-    camera_model = ["intel_realsense_d435"]
+    lidar_model = [
+        "None",
+        "slamtec_rplidar_s1",
+        "slamtec_rplidar_a2",
+        "slamtec_rplidar_a3",
+        "velodyne_puck",
+    ]
+    camera_model = [
+        "None",
+        "intel_realsense_d435",
+        "stereolabs_zed",
+        "stereolabs_zedm",
+        "stereolabs_zed2",
+        "stereolabs_zed2i",
+        "stereolabs_zedx",
+        "stereolabs_zedxm",
+    ]
 
     all_combinations = list(
         itertools.product(
@@ -62,5 +77,5 @@ def test_rosbot_description_parsing():
             assert False, (
                 f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
                 f"use_sim: {use_sim}, use_gpu: {use_gpu}, simulation_engine: {simulation_engine}, "
-                f"lidar_model: {lidar_model}, camera_model{camera_model}"
+                f"lidar_model: {lidar_model}, camera_model: {camera_model}"
             )

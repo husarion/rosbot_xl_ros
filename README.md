@@ -42,17 +42,15 @@ To run the software on real ROSbot XL, also communication with Digital Board wil
 First update your firmware to make sure that you use the latest version, then run the `micro-ROS` agent.
 For detailed instructions refer to the [rosbot_xl_firmware repository](https://github.com/husarion/rosbot_xl_firmware).
 
-## Source build
+## Prepare environment
 
-### Prerequisites
-
-Install `colcon`, `vsc` and `rosdep`:
+1. **Install `colcon`, `vsc` and `rosdep`**
 ```
 sudo apt-get update
 sudo apt-get install -y python3-colcon-common-extensions python3-vcstool python3-rosdep
 ```
 
-Create workspace folder and clone `rosbot_xl_ros` repository:
+2. **Create workspace folder and clone `rosbot_xl_ros` repository:**
 ```
 mkdir -p ros2_ws/src
 cd ros2_ws
@@ -61,7 +59,7 @@ git clone https://github.com/husarion/rosbot_xl_ros src/
 
 ### Build and run on hardware
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=hardware
 
@@ -77,11 +75,10 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-> **Prerequisites**
->
-> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent (as described in the *Usage on hardware* step).
+> [!NOTE]
+> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
-Running:
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_bringup bringup.launch.py
@@ -89,7 +86,7 @@ ros2 launch rosbot_xl_bringup bringup.launch.py
 
 ### Build and run Gazebo simulation
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=simulation
 
@@ -104,7 +101,7 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-Running:
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_gazebo simulation.launch.py
@@ -123,6 +120,9 @@ pre-commit install
 
 # manually run tests
 pre-commit run -a
+
+# update revision
+pre-commit autoupdate
 ```
 
 After initialization [pre-commit configuration](.pre-commit-config.yaml) will applied on every commit.

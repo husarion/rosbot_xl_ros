@@ -35,18 +35,36 @@ def generate_launch_description():
         ),
     )
 
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s1",
-        description="Lidar model added to the URDF",
-    )
-
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
         default_value="None",
-        description="Camera model added to the URDF",
+        description="Add camera model to the robot URDF",
+        choices=[
+            "None",
+            "intel_realsense_d435",
+            "stereolabs_zed",
+            "stereolabs_zedm",
+            "stereolabs_zed2",
+            "stereolabs_zed2i",
+            "stereolabs_zedx",
+            "stereolabs_zedxm",
+        ],
+    )
+
+    lidar_model = LaunchConfiguration("lidar_model")
+    declare_lidar_model_arg = DeclareLaunchArgument(
+        "lidar_model",
+        default_value="slamtec_rplidar_s1",
+        description="Add LiDAR model to the robot URDF",
+        choices=[
+            "None",
+            "ouster_os1_32",
+            "slamtec_rplidar_a2",
+            "slamtec_rplidar_a3",
+            "slamtec_rplidar_s1",
+            "velodyne_puck",
+        ],
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")
@@ -72,13 +90,11 @@ def generate_launch_description():
 
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_controller"),
-                    "launch",
-                    "controller.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_controller"),
+                "launch",
+                "controller.launch.py",
+            ])
         ),
         launch_arguments={
             "mecanum": mecanum,
@@ -96,9 +112,9 @@ def generate_launch_description():
         name="ekf_filter_node",
         output="screen",
         parameters=[
-            PathJoinSubstitution(
-                [get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"
+            ])
         ],
     )
 
@@ -106,13 +122,11 @@ def generate_launch_description():
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
         parameters=[
-            PathJoinSubstitution(
-                [
-                    get_package_share_directory("rosbot_xl_bringup"),
-                    "config",
-                    "laser_filter.yaml",
-                ]
-            )
+            PathJoinSubstitution([
+                get_package_share_directory("rosbot_xl_bringup"),
+                "config",
+                "laser_filter.yaml",
+            ])
         ],
     )
 

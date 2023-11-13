@@ -33,13 +33,11 @@ def generate_test_description():
     rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    rosbot_xl_gazebo,
-                    "launch",
-                    "simulation.launch.py",
-                ]
-            )
+            PathJoinSubstitution([
+                rosbot_xl_gazebo,
+                "launch",
+                "simulation.launch.py",
+            ])
         ),
         launch_arguments={
             "headless": "True",

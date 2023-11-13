@@ -41,18 +41,36 @@ def generate_launch_description():
         ),
     )
 
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s1",
-        description="Lidar model added to the URDF",
-    )
-
     camera_model = LaunchConfiguration("camera_model")
     declare_camera_model_arg = DeclareLaunchArgument(
         "camera_model",
         default_value="None",
-        description="Camera model added to the URDF",
+        description="Add camera model to the robot URDF",
+        choices=[
+            "None",
+            "intel_realsense_d435",
+            "stereolabs_zed",
+            "stereolabs_zedm",
+            "stereolabs_zed2",
+            "stereolabs_zed2i",
+            "stereolabs_zedx",
+            "stereolabs_zedxm",
+        ],
+    )
+
+    lidar_model = LaunchConfiguration("lidar_model")
+    declare_lidar_model_arg = DeclareLaunchArgument(
+        "lidar_model",
+        default_value="None",
+        description="Add LiDAR model to the robot URDF",
+        choices=[
+            "None",
+            "ouster_os1_32",
+            "slamtec_rplidar_a2",
+            "slamtec_rplidar_a3",
+            "slamtec_rplidar_s1",
+            "velodyne_puck",
+        ],
     )
 
     include_camera_mount = LaunchConfiguration("include_camera_mount")
@@ -76,58 +94,48 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
-    controller_config_name = PythonExpression(
-        [
-            "'mecanum_drive_controller.yaml' if ",
-            mecanum,
-            " else 'diff_drive_controller.yaml'",
-        ]
-    )
+    controller_config_name = PythonExpression([
+        "'mecanum_drive_controller.yaml' if ",
+        mecanum,
+        " else 'diff_drive_controller.yaml'",
+    ])
 
-    robot_controllers = PathJoinSubstitution(
-        [
-            FindPackageShare("rosbot_xl_controller"),
-            "config",
-            controller_config_name,
-        ]
-    )
+    robot_controllers = PathJoinSubstitution([
+        FindPackageShare("rosbot_xl_controller"),
+        "config",
+        controller_config_name,
+    ])
 
-    controller_manager_name = PythonExpression(
-        [
-            "'/simulation_controller_manager' if ",
-            use_sim,
-            " else '/controller_manager'",
-        ]
-    )
+    controller_manager_name = PythonExpression([
+        "'/simulation_controller_manager' if ",
+        use_sim,
+        " else '/controller_manager'",
+    ])
 
     # Get URDF via xacro
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("rosbot_xl_description"),
-                    "urdf",
-                    "rosbot_xl.urdf.xacro",
-                ]
-            ),
-            " mecanum:=",
-            mecanum,
-            " lidar_model:=",
-            lidar_model,
-            " camera_model:=",
-            camera_model,
-            " include_camera_mount:=",
-            include_camera_mount,
-            " use_sim:=",
-            use_sim,
-            " simulation_engine:=",
-            simulation_engine,
-            " simulation_controllers_config_file:=",
-            robot_controllers,
-        ]
-    )
+    robot_description_content = Command([
+        PathJoinSubstitution([FindExecutable(name="xacro")]),
+        " ",
+        PathJoinSubstitution([
+            FindPackageShare("rosbot_xl_description"),
+            "urdf",
+            "rosbot_xl.urdf.xacro",
+        ]),
+        " mecanum:=",
+        mecanum,
+        " lidar_model:=",
+        lidar_model,
+        " camera_model:=",
+        camera_model,
+        " include_camera_mount:=",
+        include_camera_mount,
+        " use_sim:=",
+        use_sim,
+        " simulation_engine:=",
+        simulation_engine,
+        " simulation_controllers_config_file:=",
+        robot_controllers,
+    ])
     robot_description = {"robot_description": robot_description_content}
 
     control_node = Node(

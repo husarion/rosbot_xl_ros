@@ -11,7 +11,6 @@ install/
 log/
 __pycache__/
 
-
 # ROSbots submodules
 rosbot_hardware_interfaces/
 ros_components_description/

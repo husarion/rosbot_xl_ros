@@ -23,14 +23,14 @@ def test_rosbot_description_parsing():
     use_sim_values = ["true", "false"]
     use_gpu_values = ["true", "false"]
     simulation_engine_values = ["ignition-gazebo", "webots"]  # 'gazebo-classic'
-    lidar_model = [
+    lidar_models = [
         "None",
         "slamtec_rplidar_s1",
         "slamtec_rplidar_a2",
         "slamtec_rplidar_a3",
         "velodyne_puck",
     ]
-    camera_model = [
+    camera_models = [
         "None",
         "intel_realsense_d435",
         "stereolabs_zed",
@@ -40,6 +40,7 @@ def test_rosbot_description_parsing():
         "stereolabs_zedx",
         "stereolabs_zedxm",
     ]
+    tf_prefixes = ["rosbotxl", "rosbotxl2", "husarion", "", "None"]
 
     all_combinations = list(
         itertools.product(
@@ -47,8 +48,9 @@ def test_rosbot_description_parsing():
             use_sim_values,
             use_gpu_values,
             simulation_engine_values,
-            lidar_model,
-            camera_model,
+            lidar_models,
+            camera_models,
+            tf_prefixes,
         )
     )
 
@@ -60,6 +62,7 @@ def test_rosbot_description_parsing():
             simulation_engine,
             lidar_model,
             camera_model,
+            tf_prefix,
         ) = combination
         mappings = {
             "mecanum": mecanum,
@@ -68,14 +71,42 @@ def test_rosbot_description_parsing():
             "simulation_engine": simulation_engine,
             "lidar_model": lidar_model,
             "camera_model": camera_model,
+            "tf_prefix": tf_prefix,
         }
         rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
         xacro_path = os.path.join(rosbot_xl_description, "urdf/rosbot_xl.urdf.xacro")
         try:
-            xacro.process_file(xacro_path, mappings=mappings)
+            urdf = xacro.process_file(xacro_path, mappings=mappings)
+
+            namespace = tf_prefix
+            # Namespaces for camera are not implemented jet
+            links = urdf.getElementsByTagName("link")
+            for link in links:
+                link_name = link.getAttribute("name")
+                if namespace != "None":
+                    if tf_prefix not in link_name and "camera" not in link_name:
+                        assert False, f"Link name '{link_name}' does not contain '{namespace}'!"
+                else:
+                    if tf_prefix in link_name:
+                        assert (
+                            False
+                        ), f"Link name '{link_name}' contains '{namespace}' but should not!"
+
+            joints = urdf.getElementsByTagName("joint")
+            for joint in joints:
+                joint_name = joint.getAttribute("name")
+                if namespace != "None":
+                    if tf_prefix not in joint_name and "camera" not in link_name:
+                        assert False, f"Joint name '{joint_name}' does not contain '{namespace}'"
+                else:
+                    if tf_prefix in joint_name:
+                        assert (
+                            False
+                        ), f"Joint name '{joint_name}' contains '{namespace}' but should not!"
         except xacro.XacroException as e:
             assert False, (
                 f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
                 f"use_sim: {use_sim}, use_gpu: {use_gpu}, simulation_engine: {simulation_engine}, "
-                f"lidar_model: {lidar_model}, camera_model: {camera_model}"
+                f"lidar_model: {lidar_model}, camera_model: {camera_model}, "
+                f"tf_prefix: {tf_prefix}"
             )

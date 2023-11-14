@@ -40,6 +40,9 @@ jobs:
             - name: Clone installation requirements
               shell: bash
               run: python3 -m pip install -U vcstool && vcs import . < ./rosbot_xl/rosbot_xl_hardware.repos && vcs import . < ./rosbot_xl/rosbot_xl_simulation.repos
+            - name: Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
+              shell: bash
+              run: cp -r ros2_controllers/diff_drive_controller . && cp -r ros2_controllers/imu_sensor_broadcaster . && rm -rf ros2_controllers
             - uses: ros-industrial/industrial_ci@master
               env:
                   ROS_DISTRO: ${{matrix.ROS_DISTRO}}

@@ -82,6 +82,7 @@
             fr_wheel_joint,
             fl_wheel_joint
           </param>
+          <param name="tf_prefix">${tf_prefix_ext}</param>
         </xacro:unless>
       </hardware>
 

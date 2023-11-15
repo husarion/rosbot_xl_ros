@@ -76,7 +76,10 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         gz_remapping.append((f"{zed}/zed_node/camera_info", f"/{zed}/zed_node/depth/camera_info"))
         gz_remapping.append((f"{zed}/zed_node/depth", f"/{zed}/zed_node/depth/depth_registered"))
         gz_remapping.append(
-            (f"{zed}/zed_node/depth/points", f"/{zed}/zed_node/point_cloud/cloud_registered")
+            (
+                f"{zed}/zed_node/depth/points",
+                f"/{zed}/zed_node/point_cloud/cloud_registered",
+            )
         )
 
         depth_camera_parent_tf = "camera_center_optical_frame"

@@ -32,6 +32,13 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration("namespace")
+    declare_namespace_arg = DeclareLaunchArgument(
+        "namespace",
+        default_value="",
+        description="Namespace for all topics and tfs",
+    )
+
     mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
@@ -106,11 +113,19 @@ def generate_launch_description():
         controller_config_name,
     ])
 
-    controller_manager_name = PythonExpression([
-        "'/simulation_controller_manager' if ",
+    controller_manager_type_name = PythonExpression([
+        "'simulation_controller_manager' if ",
         use_sim,
-        " else '/controller_manager'",
+        " else 'controller_manager'",
     ])
+
+    namespace_for_controller_name = PythonExpression([
+        "''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"
+    ])
+    controller_manager_name = LaunchConfiguration(
+        "controller_manager_name",
+        default=[namespace_for_controller_name, controller_manager_type_name],
+    )
 
     # Get URDF via xacro
     robot_description_content = Command([
@@ -135,20 +150,31 @@ def generate_launch_description():
         simulation_engine,
         " simulation_controllers_config_file:=",
         robot_controllers,
+        " tf_prefix:=",
+        namespace,
     ])
     robot_description = {"robot_description": robot_description_content}
 
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[robot_description, robot_controllers],
+        parameters=[
+            robot_description,
+            robot_controllers,
+            {
+                "tf_frame_prefix": LaunchConfiguration(
+                    "rosbot_base_tf_frame_prefix", default=[namespace]
+                )
+            },
+        ],
         remappings=[
-            ("/imu_sensor_node/imu", "/_imu/data_raw"),
+            ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
-            ("/rosbot_xl_base_controller/cmd_vel_unstamped", "/cmd_vel"),
+            ("rosbot_xl_base_controller/cmd_vel_unstamped", "cmd_vel"),
         ],
         condition=UnlessCondition(use_sim),
+        namespace=namespace,
     )
 
     robot_state_pub_node = Node(
@@ -156,6 +182,7 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[robot_description],
+        namespace=namespace,
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -167,6 +194,8 @@ def generate_launch_description():
             controller_manager_name,
             "--controller-manager-timeout",
             "120",
+            "--namespace",
+            namespace,
         ],
     )
 
@@ -179,6 +208,8 @@ def generate_launch_description():
             controller_manager_name,
             "--controller-manager-timeout",
             "120",
+            "--namespace",
+            namespace,
         ],
     )
 
@@ -199,6 +230,8 @@ def generate_launch_description():
             controller_manager_name,
             "--controller-manager-timeout",
             "120",
+            "--namespace",
+            namespace,
         ],
     )
 
@@ -212,6 +245,7 @@ def generate_launch_description():
     )
 
     actions = [
+        declare_namespace_arg,
         declare_mecanum_arg,
         declare_lidar_model_arg,
         declare_camera_model_arg,

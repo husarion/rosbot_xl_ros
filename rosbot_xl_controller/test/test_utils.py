@@ -37,18 +37,23 @@ class ControllersTestNode(Node):
 
     def create_test_subscribers_and_publishers(self):
         self.joint_state_sub = self.create_subscription(
-            JointState, "/joint_states", self.joint_states_callback, 10
+            JointState, "/rosbotxl/joint_states", self.joint_states_callback, 10
         )
 
         self.odom_sub = self.create_subscription(
-            Odometry, "/rosbot_xl_base_controller/odom", self.odometry_callback, 10
+            Odometry,
+            "/rosbotxl/rosbot_xl_base_controller/odom",
+            self.odometry_callback,
+            10,
         )
 
-        self.imu_sub = self.create_subscription(Imu, "/imu_broadcaster/imu", self.imu_callback, 10)
+        self.imu_sub = self.create_subscription(
+            Imu, "/rosbotxl/imu_broadcaster/imu", self.imu_callback, 10
+        )
 
-        self.imu_publisher = self.create_publisher(Imu, "_imu/data_raw", 10)
+        self.imu_publisher = self.create_publisher(Imu, "/_imu/data_raw", 10)
 
-        self.joint_states_publisher = self.create_publisher(JointState, "_motors_response", 10)
+        self.joint_states_publisher = self.create_publisher(JointState, "/_motors_response", 10)
 
         self.timer = None
 

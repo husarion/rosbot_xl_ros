@@ -38,23 +38,25 @@ class BringupTestNode(Node):
         self.scan_filter_event = Event()
 
     def create_test_subscribers_and_publishers(self):
-        self.imu_publisher = self.create_publisher(Imu, "_imu/data_raw", 10)
+        self.imu_publisher = self.create_publisher(Imu, "/_imu/data_raw", 10)
 
-        self.joint_states_publisher = self.create_publisher(JointState, "_motors_response", 10)
+        self.joint_states_publisher = self.create_publisher(JointState, "/_motors_response", 10)
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.scan_publisher = self.create_publisher(LaserScan, "scan", 10)
+        self.scan_publisher = self.create_publisher(LaserScan, "/rosbotxl/scan", 10)
         self.filtered_scan_subscriber = self.create_subscription(
-            LaserScan, "scan_filtered", self.filtered_scan_callback, 10
+            LaserScan, "/rosbotxl/scan_filtered", self.filtered_scan_callback, 10
         )
 
         self.timer = None
 
     def lookup_transform_odom(self):
         try:
-            self.tf_buffer.lookup_transform("odom", "base_link", rclpy.time.Time())
+            self.tf_buffer.lookup_transform(
+                "rosbotxl_odom", "rosbotxl_base_link", rclpy.time.Time()
+            )
             self.odom_tf_event.set()
         except TransformException as ex:
             self.get_logger().error(f"Could not transform odom to base_link: {ex}")
@@ -99,7 +101,7 @@ class BringupTestNode(Node):
 
     def publish_scan(self):
         msg = LaserScan()
-        msg.header.frame_id = "base_link"
+        msg.header.frame_id = "rosbotxl_base_link"
         msg.angle_min = 0.0
         msg.angle_max = 2.0 * math.pi
         msg.angle_increment = 0.05

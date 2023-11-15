@@ -14,10 +14,7 @@
 
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.substitutions import (
-    PathJoinSubstitution,
-    LaunchConfiguration,
-)
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node, SetParameter
@@ -26,6 +23,16 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration("namespace")
+    namespace_tf_prefix = PythonExpression([
+        "''", " if '", namespace, "' == '' ", "else ", "'", namespace, "_'"
+    ])
+    declare_namespace_arg = DeclareLaunchArgument(
+        "namespace",
+        default_value="",
+        description="Namespace for all topics and tfs",
+    )
+
     mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
@@ -88,10 +95,13 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
+    rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
+    rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
+
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_controller"),
+                rosbot_xl_controller,
                 "launch",
                 "controller.launch.py",
             ])
@@ -103,8 +113,11 @@ def generate_launch_description():
             "include_camera_mount": include_camera_mount,
             "use_sim": use_sim,
             "simulation_engine": simulation_engine,
+            "namespace": namespace,
         }.items(),
     )
+
+    ekf_config = PathJoinSubstitution([rosbot_xl_bringup, "config", "ekf.yaml"])
 
     robot_localization_node = Node(
         package="robot_localization",
@@ -112,25 +125,53 @@ def generate_launch_description():
         name="ekf_filter_node",
         output="screen",
         parameters=[
-            PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"
-            ])
+            ekf_config,
+            {
+                "map_frame": LaunchConfiguration(
+                    "ekf_map_frame", default=[namespace_tf_prefix, "map"]
+                )
+            },
+            {
+                "odom_frame": LaunchConfiguration(
+                    "ekf_odom_frame", default=[namespace_tf_prefix, "odom"]
+                )
+            },
+            {
+                "base_link_frame": LaunchConfiguration(
+                    "ekf_base_link_frame", default=[namespace_tf_prefix, "base_link"]
+                )
+            },
+            {
+                "world_frame": LaunchConfiguration(
+                    "ekf_world_frame", default=[namespace_tf_prefix, "odom"]
+                )
+            },
         ],
+        namespace=namespace,
     )
+
+    laser_filter_config = PathJoinSubstitution([
+        rosbot_xl_bringup,
+        "config",
+        "laser_filter.yaml",
+    ])
 
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
         parameters=[
-            PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_bringup"),
-                "config",
-                "laser_filter.yaml",
-            ])
+            laser_filter_config,
+            {
+                "filter1.params.box_frame": LaunchConfiguration(
+                    "laser_filter_box_frame", default=[namespace_tf_prefix, "base_link"]
+                )
+            },
         ],
+        namespace=namespace,
     )
 
-    actions = [
+    return LaunchDescription([
+        declare_namespace_arg,
         declare_mecanum_arg,
         declare_lidar_model_arg,
         declare_camera_model_arg,
@@ -141,6 +182,4 @@ def generate_launch_description():
         controller_launch,
         robot_localization_node,
         laser_filter_node,
-    ]
-
-    return LaunchDescription(actions)
+    ])

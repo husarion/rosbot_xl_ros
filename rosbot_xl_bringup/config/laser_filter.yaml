@@ -1,10 +1,11 @@
-scan_to_scan_filter_chain:
+/**/scan_to_scan_filter_chain:
   ros__parameters:
     filter1:
       name: box_filter
       type: laser_filters/LaserScanBoxFilter
       params:
-        box_frame: base_link
+        # This parameter is replaced in the launch file
+        # box_frame: base_link
 
         max_x: 0.165
         min_x: -0.195 # 0.165 + 0.03 (wifi antenna)

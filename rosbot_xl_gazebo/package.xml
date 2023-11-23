@@ -2,20 +2,19 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rosbot_xl_gazebo</name>
-  <version>0.8.2</version>
+  <version>0.8.11</version>
 
-  <description>The rosbot_xl_gazebo package</description>
+  <description>Gazebo Ignition simulation for ROSbot XL</description>
   <license>Apache License 2.0</license>
 
   <author email="maciej.stepien@husarion.com">Maciej Stępień</author>
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
+  <author email="jakub.delicat@husarion.com">Jakub Delicat</author>
   <maintainer email="support@husarion.com">Husarion</maintainer>
 
   <url type="website">https://husarion.com/</url>
   <url type="repository">https://github.com/husarion/rosbot_xl_ros</url>
   <url type="bugtracker">https://github.com/husarion/rosbot_xl_ros/issues</url>
-
-  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>rosbot_xl_bringup</exec_depend>
 
@@ -30,7 +29,19 @@
   <exec_depend>ros_gz_bridge</exec_depend>
   <exec_depend>ign_ros2_control</exec_depend>
 
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>launch</test_depend>
+  <test_depend>launch_ros</test_depend>
+  <test_depend>launch_pytest</test_depend>
+
+  <test_depend>tf_transformations</test_depend>
+  <test_depend>python-transforms3d-pip</test_depend>
+  <test_depend>nav_msgs</test_depend>
+  <test_depend>geometry_msgs</test_depend>
+
+  <test_depend>rosbot_xl_bringup</test_depend>
+
   <export>
-    <build_type>ament_cmake</build_type>
+    <build_type>ament_python</build_type>
   </export>
 </package>

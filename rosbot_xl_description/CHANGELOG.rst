@@ -2,6 +2,51 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.11 (2023-11-08)
+-------------------
+* Merge remote-tracking branch 'origin/master' into ekf-update
+* Contributors: Jakub Delicat
+
+0.8.10 (2023-11-08)
+-------------------
+* Merge pull request `#48 <https://github.com/husarion/rosbot_xl_ros/issues/48>`_ from husarion/test-gazebo
+  Test gazebo
+* Merge remote-tracking branch 'origin/master' into test-gazebo
+* Contributors: Jakub Delicat, rafal-gorecki
+
+0.8.9 (2023-11-07)
+------------------
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Merge remote-tracking branch 'origin/master' into test-bringup
+* Contributors: Jakub Delicat
+
+0.8.8 (2023-10-25)
+------------------
+
+0.8.7 (2023-10-24)
+------------------
+
+0.8.6 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into test-controller
+* Contributors: Jakub Delicat
+
+0.8.5 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into add-pyspelling
+* Contributors: Jakub Delicat
+
+0.8.4 (2023-10-24)
+------------------
+* Merge remote-tracking branch 'origin/master' into add-black
+* Contributors: Jakub Delicat
+
+0.8.3 (2023-10-24)
+------------------
+* Merge pull request `#50 <https://github.com/husarion/rosbot_xl_ros/issues/50>`_ from husarion/add-pre-commit
+  added and applied precommit
+* Contributors: Jakub Delicat
+
 0.8.2 (2023-05-23)
 ------------------
 

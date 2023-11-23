@@ -6,7 +6,7 @@ ROS2 packages for ROSbot XL
 
 ### `rosbot_xl`
 
-Metapackeage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used. 
+Metapackage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
 ### `rosbot_xl_bringup`
 
@@ -36,17 +36,21 @@ ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 contro
 
 Available in [ROS_API.md](./ROS_API.md)
 
-## Source build
+## Usage on hardware
 
-### Prerequisites
+To run the software on real ROSbot XL, also communication with Digital Board will be necessary.
+First update your firmware to make sure that you use the latest version, then run the `micro-ROS` agent.
+For detailed instructions refer to the [rosbot_xl_firmware repository](https://github.com/husarion/rosbot_xl_firmware).
 
-Install `colcon`, `vsc` and `rosdep`:
+## Prepare environment
+
+1. **Install `colcon`, `vsc` and `rosdep`**
 ```
 sudo apt-get update
 sudo apt-get install -y python3-colcon-common-extensions python3-vcstool python3-rosdep
 ```
 
-Create workspace folder and clone `rosbot_xl_ros` repository:
+2. **Create workspace folder and clone `rosbot_xl_ros` repository:**
 ```
 mkdir -p ros2_ws/src
 cd ros2_ws
@@ -55,7 +59,7 @@ git clone https://github.com/husarion/rosbot_xl_ros src/
 
 ### Build and run on hardware
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=hardware
 
@@ -71,7 +75,10 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-Running:
+> [!NOTE]
+> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
+
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_bringup bringup.launch.py
@@ -79,7 +86,7 @@ ros2 launch rosbot_xl_bringup bringup.launch.py
 
 ### Build and run Gazebo simulation
 
-Building:
+1. **Building**
 ```
 export HUSARION_ROS_BUILD=simulation
 
@@ -94,10 +101,71 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
-Running:
+2. **Running**
 ```
 source install/setup.bash
 ros2 launch rosbot_xl_gazebo simulation.launch.py
+```
+## Testing package
+
+### pre-commit
+[pre-commit configuration](.pre-commit-config.yaml) prepares plenty of tests helping for developing and contributing. Usage:
+
+```bash
+# install pre-commit
+pip install pre-commit
+
+# initialize pre-commit workspace
+pre-commit install
+
+# manually run tests
+pre-commit run -a
+
+# update revision
+pre-commit autoupdate
+```
+
+After initialization [pre-commit configuration](.pre-commit-config.yaml) will applied on every commit.
+
+### Industrial CI
+```
+colcon test
+```
+
+> [!NOTE]
+> Command `colcon test` does not build the code. Remember to build your code after changes.
+
+If tests finish with errors print logs:
+```
+colcon test-result --verbose
+```
+
+### Format python code with [Black](https://github.com/psf/black)
+```
+cd src/
+black rosbot*
+```
+
+
+## Testing package
+
+### Industrial CI
+```
+colcon test
+```
+
+> [!NOTE]
+> Command `colcon test` does not build the code. Remember to build your code after changes.
+
+If tests finish with errors print logs:
+```
+colcon test-result --verbose
+```
+
+### Format python code with [Black](https://github.com/psf/black)
+```
+cd src/
+black rosbot*
 ```
 
 ## Demos

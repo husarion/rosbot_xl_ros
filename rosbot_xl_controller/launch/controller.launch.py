@@ -49,6 +49,7 @@ def generate_launch_description():
         choices=[
             "None",
             "intel_realsense_d435",
+            "orbbec_astra",
             "stereolabs_zed",
             "stereolabs_zedm",
             "stereolabs_zed2",

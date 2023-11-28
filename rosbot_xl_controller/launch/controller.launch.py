@@ -70,6 +70,8 @@ def generate_launch_description():
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",
+            "slamtec_rplidar_s2",
+            "slamtec_rplidar_s3",
             "velodyne_puck",
         ],
     )

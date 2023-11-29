@@ -40,11 +40,7 @@ def generate_test_description():
                 "simulation.launch.py",
             ])
         ),
-        launch_arguments={
-            "mecanum": "True",
-            "headless": "True",
-            "world": "empty.sdf"
-        }.items(),
+        launch_arguments={"mecanum": "True", "headless": "True", "world": "empty.sdf"}.items(),
     )
 
     return LaunchDescription([simulation_launch])
@@ -66,22 +62,28 @@ def test_mecanum_simulation():
         # 0.9 m/s and 3.0 rad/s are controller's limits defined in
         #   rosbot_controller/config/mecanum_drive_controller.yaml
         node.set_destination_speed(0.9, 0.0, 0.0)
-        time.sleep(3) # Wait 3 seconds for the velocity ​​to stabilize
+        time.sleep(3)  # Wait 3 seconds for the velocity ​​to stabilize
         assert (
             node.controller_odom_flag
         ), "ROSbot does not move properly in x direction. Check rosbot_xl_base_controller!"
-        assert node.ekf_odom_flag, "ROSbot does not move properly in x direction. Check ekf_filter_node!"
+        assert (
+            node.ekf_odom_flag
+        ), "ROSbot does not move properly in x direction. Check ekf_filter_node!"
 
         node.set_destination_speed(0.0, 0.9, 0.0)
-        time.sleep(3) # Wait 3 seconds for the velocity ​​to stabilize
+        time.sleep(3)  # Wait 3 seconds for the velocity ​​to stabilize
         assert (
             node.controller_odom_flag
         ), "ROSbot does not move properly in y direction. Check rosbot_xl_base_controller!"
-        assert node.ekf_odom_flag, "ROSbot does not move properly in y direction. Check ekf_filter_node!"
+        assert (
+            node.ekf_odom_flag
+        ), "ROSbot does not move properly in y direction. Check ekf_filter_node!"
 
         node.set_destination_speed(0.0, 0.0, 3.0)
-        time.sleep(3) # Wait 3 seconds for the velocity ​​to stabilize
-        assert node.controller_odom_flag, "ROSbot does not rotate properly. Check rosbot_xl_base_controller!"
+        time.sleep(3)  # Wait 3 seconds for the velocity ​​to stabilize
+        assert (
+            node.controller_odom_flag
+        ), "ROSbot does not rotate properly. Check rosbot_xl_base_controller!"
         assert node.ekf_odom_flag, "ROSbot does not rotate properly. Check ekf_filter_node!"
 
         flag = node.scan_event.wait(timeout=20.0)

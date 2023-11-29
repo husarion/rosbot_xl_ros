@@ -98,7 +98,6 @@ class SimulationTestNode(Node):
         else:
             self.controller_odom_flag = False
 
-
     def ekf_callback(self, data: Odometry):
         if self.is_twist_ok(data.twist.twist):
             self.ekf_odom_flag = True

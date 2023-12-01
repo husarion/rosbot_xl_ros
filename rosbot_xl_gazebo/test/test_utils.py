@@ -33,7 +33,7 @@ class SimulationTestNode(Node):
     __test__ = False
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_xl_base_controller to determine inaccurate odometry.
-    ACCURACY = 0.20  # 20% accuracy
+    ACCURACY = 0.15  # 15% accuracy
 
     def __init__(self, name="test_node"):
         super().__init__(name)
@@ -119,8 +119,8 @@ class SimulationTestNode(Node):
         self.publish_cmd_vel_messages()
         self.lookup_transform_odom()
 
-        current_time_s = 1e-9 * self.get_clock().now().nanoseconds
-        if current_time_s > self.goal_received_time + self.VELOCITY_STABILIZATION_DELAY:
+        self.current_time = 1e-9 * self.get_clock().now().nanoseconds
+        if self.current_time > self.goal_received_time + self.VELOCITY_STABILIZATION_DELAY:
             self.vel_stabilization_time_event.set()
 
     def scan_callback(self, data: LaserScan):

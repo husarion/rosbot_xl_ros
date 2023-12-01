@@ -14,7 +14,6 @@
 # limitations under the License.
 
 import rclpy
-import math
 
 from threading import Event
 from threading import Thread
@@ -38,6 +37,10 @@ class SimulationTestNode(Node):
 
     def __init__(self, name="test_node"):
         super().__init__(name)
+
+        # Use simulation time to correct run on slow machine
+        use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
+        self.set_parameters([use_sim_time])
 
         self.VELOCITY_STABILIZATION_DELAY = 3
         self.goal_received_time = 1e-9 * self.get_clock().now().nanoseconds
@@ -122,8 +125,8 @@ class SimulationTestNode(Node):
 
     def scan_callback(self, data: LaserScan):
         for range in data.ranges:
-            # minimal distance and nan configured in rosbot_xl_bringup/config_laser_filter.yaml
-            if range < 0.145 and not math.isnan(range):
+            # minimal distance configured in rosbot_xl_bringup/config_laser_filter.yaml
+            if abs(range) < 0.145:
                 return
 
         self.scan_event.set()

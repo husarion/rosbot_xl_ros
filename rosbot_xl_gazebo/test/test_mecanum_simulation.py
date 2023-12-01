@@ -17,7 +17,6 @@
 import launch_pytest
 import pytest
 import rclpy
-import time
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -62,7 +61,7 @@ def test_mecanum_simulation():
         # 0.9 m/s and 3.0 rad/s are controller's limits defined in
         #   rosbot_controller/config/mecanum_drive_controller.yaml
         node.set_destination_speed(0.9, 0.0, 0.0)
-        time.sleep(5)  # Wait 5 seconds for the velocity ​​to stabilize
+        assert node.vel_stabilization_time_event.wait(timeout=20.0), "Simulation crashed!"
         assert (
             node.controller_odom_flag
         ), "ROSbot does not move properly in x direction. Check rosbot_xl_base_controller!"
@@ -71,7 +70,7 @@ def test_mecanum_simulation():
         ), "ROSbot does not move properly in x direction. Check ekf_filter_node!"
 
         node.set_destination_speed(0.0, 0.9, 0.0)
-        time.sleep(5)  # Wait 5 seconds for the velocity ​​to stabilize
+        assert node.vel_stabilization_time_event.wait(timeout=20.0), "Simulation crashed!"
         assert (
             node.controller_odom_flag
         ), "ROSbot does not move properly in y direction. Check rosbot_xl_base_controller!"
@@ -80,7 +79,7 @@ def test_mecanum_simulation():
         ), "ROSbot does not move properly in y direction. Check ekf_filter_node!"
 
         node.set_destination_speed(0.0, 0.0, 3.0)
-        time.sleep(5)  # Wait 5 seconds for the velocity ​​to stabilize
+        assert node.vel_stabilization_time_event.wait(timeout=20.0), "Simulation crashed!"
         assert (
             node.controller_odom_flag
         ), "ROSbot does not rotate properly. Check rosbot_xl_base_controller!"

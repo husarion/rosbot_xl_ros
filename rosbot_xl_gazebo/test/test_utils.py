@@ -33,7 +33,7 @@ class SimulationTestNode(Node):
     __test__ = False
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_xl_base_controller to determine inaccurate odometry.
-    ACCURACY = 0.15  # 15% accuracy
+    ACCURACY = 0.10 # 10% accuracy
 
     def __init__(self, name="test_node"):
         super().__init__(name)

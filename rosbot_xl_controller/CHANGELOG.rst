@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.8.11 (2023-11-08)
 -------------------
 * Merge pull request `#53 <https://github.com/husarion/rosbot_xl_ros/issues/53>`_ from husarion/ekf-update

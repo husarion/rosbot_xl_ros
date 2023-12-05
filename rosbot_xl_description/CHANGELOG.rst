@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.8.11 (2023-11-08)
 -------------------
 * Merge remote-tracking branch 'origin/master' into ekf-update

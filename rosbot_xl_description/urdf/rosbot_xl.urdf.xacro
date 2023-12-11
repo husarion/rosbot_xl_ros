@@ -28,7 +28,7 @@
 
   <xacro:property name="lidar_model" value="$(arg lidar_model)" />
   <xacro:property name="lidar_parent_link" value="cover_link" />
-  <xacro:property name="lidar_xyz" value="0.02 0.0 0.0" />
+  <xacro:property name="lidar_xyz" value="0.0 0.0 0.0" />
   <xacro:property name="lidar_rpy" value="0.0 0.0 0.0" />
   <xacro:property name="lidar_use_gpu" value="true" />
   <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition -
@@ -130,8 +130,6 @@
       parent_link="${camera_parent_link}"
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
-      name="camera"
-      topic="camera"
       use_nominal_extrinsics="$(arg use_sim)"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
@@ -144,7 +142,6 @@
       parent_link="${camera_parent_link}"
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
-      name="camera"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
 
@@ -176,7 +173,6 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       model="${camera_model_type}"
-      name="camera"
       topic="${camera_model_type}"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>

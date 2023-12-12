@@ -66,7 +66,6 @@ def generate_launch_description():
         description="Add LiDAR model to the robot URDF",
         choices=[
             "None",
-            "ouster_os1_32",
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",

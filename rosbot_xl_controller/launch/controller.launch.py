@@ -49,6 +49,7 @@ def generate_launch_description():
         choices=[
             "None",
             "intel_realsense_d435",
+            "orbbec_astra",
             "stereolabs_zed",
             "stereolabs_zedm",
             "stereolabs_zed2",
@@ -65,10 +66,11 @@ def generate_launch_description():
         description="Add LiDAR model to the robot URDF",
         choices=[
             "None",
-            "ouster_os1_32",
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",
+            "slamtec_rplidar_s2",
+            "slamtec_rplidar_s3",
             "velodyne_puck",
         ],
     )

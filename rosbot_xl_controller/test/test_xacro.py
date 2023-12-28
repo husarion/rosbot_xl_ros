@@ -25,14 +25,17 @@ def test_rosbot_description_parsing():
     simulation_engine_values = ["ignition-gazebo", "webots"]  # 'gazebo-classic'
     lidar_model = [
         "None",
-        "slamtec_rplidar_s1",
         "slamtec_rplidar_a2",
         "slamtec_rplidar_a3",
+        "slamtec_rplidar_s1",
+        "slamtec_rplidar_s2",
+        "slamtec_rplidar_s3",
         "velodyne_puck",
     ]
     camera_model = [
         "None",
         "intel_realsense_d435",
+        "orbbec_astra",
         "stereolabs_zed",
         "stereolabs_zedm",
         "stereolabs_zed2",

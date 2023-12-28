@@ -45,6 +45,28 @@
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
 
+  <xacro:if value="${lidar_model == 'slamtec_rplidar_s2'}">
+    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s2.urdf.xacro"
+      ns="lidar" />
+    <xacro:lidar.slamtec_rplidar_s2
+      parent_link="${lidar_parent_link}"
+      xyz="${lidar_xyz}"
+      rpy="${lidar_rpy}"
+      use_gpu="${lidar_use_gpu}"
+      simulation_engine="$(arg simulation_engine)" />
+  </xacro:if>
+
+  <xacro:if value="${lidar_model == 'slamtec_rplidar_s3'}">
+    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s3.urdf.xacro"
+      ns="lidar" />
+    <xacro:lidar.slamtec_rplidar_s3
+      parent_link="${lidar_parent_link}"
+      xyz="${lidar_xyz}"
+      rpy="${lidar_rpy}"
+      use_gpu="${lidar_use_gpu}"
+      simulation_engine="$(arg simulation_engine)" />
+  </xacro:if>
+
   <xacro:if value="${lidar_model == 'slamtec_rplidar_a2'}">
     <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_a2.urdf.xacro"
       ns="lidar" />
@@ -96,9 +118,18 @@
       parent_link="${camera_parent_link}"
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
-      name="camera"
-      topic="camera"
       use_nominal_extrinsics="$(arg use_sim)"
+      simulation_engine="$(arg simulation_engine)" />
+  </xacro:if>
+
+  <xacro:if value="${camera_model == 'orbbec_astra'}">
+    <xacro:include
+      filename="$(find ros_components_description)/urdf/orbbec_astra.urdf.xacro"
+      ns="camera" />
+    <xacro:camera.orbbec_astra
+      parent_link="${camera_parent_link}"
+      xyz="${camera_xyz}"
+      rpy="${camera_rpy}"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
 
@@ -130,9 +161,6 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       model="${camera_model_type}"
-      name="camera"
-      topic="camera"
-      use_nominal_extrinsics="$(arg use_sim)"
       simulation_engine="$(arg simulation_engine)" />
   </xacro:if>
 

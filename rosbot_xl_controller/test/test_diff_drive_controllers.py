@@ -41,7 +41,6 @@ def generate_test_description():
             "use_sim": "False",
             "mecanum": "False",
             "use_gpu": "False",
-            "namespace": "rosbotxl",
         }.items(),
     )
 
@@ -59,17 +58,17 @@ def test_controllers_startup_fail():
         msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
         assert not msgs_received_flag, (
             "Received JointStates message that should not have appeared. Check whether other"
-            " robots are connected to your network!"
+            " robots are connected to your network.!"
         )
         msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
         assert not msgs_received_flag, (
             "Received Odom message that should not have appeared. Check whether other robots are"
-            " connected to your network!"
+            " connected to your network.!"
         )
         msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
         assert not msgs_received_flag, (
             "Received Imu message that should not have appeared. Check whether other robots are"
-            " connected to your network!"
+            " connected to your network.!"
         )
     finally:
         rclpy.shutdown()
@@ -91,7 +90,7 @@ def test_controllers_startup_success():
         msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
         assert (
             msgs_received_flag
-        ), "Expected Odom message but it was not received. Check rosbot_base_controller!"
+        ), "Expected Odom message but it was not received. Check rosbot_xl_base_controller!"
         msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
         assert (
             msgs_received_flag

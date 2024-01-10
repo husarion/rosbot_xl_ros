@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="body" params="wheel_radius tf_prefix">
+  <xacro:macro name="body" params="wheel_radius">
 
-    <xacro:if value="${tf_prefix == 'None'}">
-      <xacro:property name="tf_prefix_ext" value="" />
-    </xacro:if>
-    <xacro:unless value="${tf_prefix == 'None'}">
-      <xacro:property name="tf_prefix_ext" value="${tf_prefix}_" />
-    </xacro:unless>
+    <link name="base_link" />
 
-    <link name="${tf_prefix_ext}base_link" />
-
-    <joint name="${tf_prefix_ext}base_to_${tf_prefix_ext}body_joint" type="fixed">
+    <joint name="base_to_body_joint" type="fixed">
       <origin xyz="0.0 0.0 ${wheel_radius}" rpy="0.0 0.0 0.0" />
-      <parent link="${tf_prefix_ext}base_link" />
-      <child link="${tf_prefix_ext}body_link" />
+      <parent link="base_link" />
+      <child link="body_link" />
     </joint>
 
-    <link name="${tf_prefix_ext}body_link">
+    <link name="body_link">
       <visual>
         <geometry>
           <mesh filename="package://rosbot_xl_description/meshes/body.dae" scale="1 1 1" />
@@ -41,21 +34,21 @@
       </inertial>
     </link>
 
-    <joint name="${tf_prefix_ext}body_to_${tf_prefix_ext}cover_joint" type="fixed">
+    <joint name="body_to_cover_joint" type="fixed">
       <origin xyz="0.0 0.0 0.08345" rpy="0.0 0.0 0.0" />
-      <parent link="${tf_prefix_ext}body_link" />
-      <child link="${tf_prefix_ext}cover_link" />
+      <parent link="body_link" />
+      <child link="cover_link" />
     </joint>
 
-    <link name="${tf_prefix_ext}cover_link" />
+    <link name="cover_link" />
 
-    <joint name="${tf_prefix_ext}body_to_${tf_prefix_ext}imu_joint" type="fixed">
+    <joint name="body_to_imu_joint" type="fixed">
       <origin xyz="-0.1369 -0.0419 0.0370" rpy="3.14159 0.0 0.0" />
-      <parent link="${tf_prefix_ext}body_link" />
-      <child link="${tf_prefix_ext}imu_link" />
+      <parent link="body_link" />
+      <child link="imu_link" />
     </joint>
 
-    <link name="${tf_prefix_ext}imu_link" />
+    <link name="imu_link" />
 
   </xacro:macro>
 </robot>

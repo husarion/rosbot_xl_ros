@@ -16,9 +16,8 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler, DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument
 from launch.conditions import UnlessCondition
-from launch.event_handlers import OnProcessExit
 from launch.substitutions import (
     Command,
     PythonExpression,
@@ -109,24 +108,13 @@ def generate_launch_description():
         " else 'diff_drive_controller.yaml'",
     ])
 
-    robot_controllers = PathJoinSubstitution([
-        FindPackageShare("rosbot_xl_controller"),
-        "config",
-        controller_config_name,
-    ])
-
-    controller_manager_type_name = PythonExpression([
-        "'simulation_controller_manager' if ",
-        use_sim,
-        " else 'controller_manager'",
-    ])
-
-    namespace_for_controller_name = PythonExpression([
+    namespace_ext = PythonExpression([
         "''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"
     ])
+
     controller_manager_name = LaunchConfiguration(
         "controller_manager_name",
-        default=[namespace_for_controller_name, controller_manager_type_name],
+        default=[namespace_ext, "controller_manager"],
     )
 
     # Get URDF via xacro
@@ -150,12 +138,16 @@ def generate_launch_description():
         use_sim,
         " simulation_engine:=",
         simulation_engine,
-        " simulation_controllers_config_file:=",
-        robot_controllers,
-        " tf_prefix:=",
+        " namespace:=",
         namespace,
     ])
     robot_description = {"robot_description": robot_description_content}
+
+    robot_controllers = PathJoinSubstitution([
+        FindPackageShare("rosbot_controller"),
+        "config",
+        controller_config_name,
+    ])
 
     control_node = Node(
         package="controller_manager",
@@ -163,17 +155,14 @@ def generate_launch_description():
         parameters=[
             robot_description,
             robot_controllers,
-            {
-                "tf_frame_prefix": LaunchConfiguration(
-                    "rosbot_base_tf_frame_prefix", default=[namespace]
-                )
-            },
         ],
         remappings=[
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
             ("rosbot_xl_base_controller/cmd_vel_unstamped", "cmd_vel"),
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
         ],
         condition=UnlessCondition(use_sim),
         namespace=namespace,
@@ -184,6 +173,7 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[robot_description],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
         namespace=namespace,
     )
 
@@ -215,14 +205,6 @@ def generate_launch_description():
         ],
     )
 
-    # Delay start of robot_controller after joint_state_broadcaster
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[robot_controller_spawner],
-        )
-    )
-
     imu_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -237,16 +219,7 @@ def generate_launch_description():
         ],
     )
 
-    # Delay start of imu_broadcaster after robot_controller
-    # when spawning without delay ros2_control_node sometimes crashed
-    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=robot_controller_spawner,
-            on_exit=[imu_broadcaster_spawner],
-        )
-    )
-
-    actions = [
+    return LaunchDescription([
         declare_namespace_arg,
         declare_mecanum_arg,
         declare_lidar_model_arg,
@@ -258,8 +231,6 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
-        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-        delay_imu_broadcaster_spawner_after_robot_controller_spawner,
-    ]
-
-    return LaunchDescription(actions)
+        robot_controller_spawner,
+        imu_broadcaster_spawner,
+    ])

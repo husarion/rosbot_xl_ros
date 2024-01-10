@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.8.12 (2023-12-05)
+-------------------
+
 0.8.11 (2023-11-08)
 -------------------
 * Merge remote-tracking branch 'origin/master' into ekf-update

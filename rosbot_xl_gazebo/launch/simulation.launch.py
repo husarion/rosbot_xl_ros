@@ -55,6 +55,17 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
         depth_camera_parent_tf = "camera_depth_frame"
 
+    if camera_model == "orbbec_astra":
+        gz_args.append("/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo")
+        gz_args.append("/camera/image@sensor_msgs/msg/Image[ignition.msgs.Image")
+        gz_args.append("/camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image")
+        gz_args.append("/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked")
+
+        gz_remapping.append(("/camera/camera_info", "/camera/depth/camera_info"))
+        gz_remapping.append(("/camera/depth", "/camera/depth/image_raw"))
+        gz_remapping.append(("/camera/depth_image", "/camera/depth/image_raw"))
+        gz_remapping.append(("/camera/points", "/camera/depth/points"))
+
     elif camera_model.startswith("stereolabs_zed"):
         zed = camera_model[len("stereolabs_") :]
 
@@ -96,8 +107,12 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         )
 
         gz_remapping.append(("/velodyne_points/points", "/velodyne_points"))
-    else:  # FIXME: Checkout ouster
-        pass
+    elif lidar_model.startswith("ouster"):
+        gz_args.append(
+            "/velodyne_points/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked"
+        )
+
+        gz_remapping.append(("/velodyne_points/points", "/points"))
 
     gz_bridge_node = Node(
         package="ros_gz_bridge",
@@ -108,26 +123,21 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         output="screen",
     )
 
-    # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
-    # See https://github.com/gazebosim/gz-sensors/issues/239
-    point_cloud_tf = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        name="point_cloud_tf",
-        output="log",
-        arguments=[
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            "0.0",
-            depth_camera_parent_tf,
-            "rosbot_xl/base_link/camera_depth",
-        ],
-    )
-
     if depth_camera_parent_tf:
+        # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
+        # See https://github.com/gazebosim/gz-sensors/issues/239
+        point_cloud_tf = Node(
+            package="tf2_ros",
+            executable="static_transform_publisher",
+            name="point_cloud_tf",
+            output="log",
+            arguments=[
+                "--child-frame-id",
+                "rosbot_xl/base_link/camera_depth",
+                "--frame-id",
+                depth_camera_parent_tf,
+            ],
+        )
         return [gz_bridge_node, point_cloud_tf]
     else:
         return [gz_bridge_node]
@@ -151,6 +161,7 @@ def generate_launch_description():
         choices=[
             "None",
             "intel_realsense_d435",
+            "orbbec_astra",
             "stereolabs_zed",
             "stereolabs_zedm",
             "stereolabs_zed2",
@@ -163,14 +174,15 @@ def generate_launch_description():
     lidar_model = LaunchConfiguration("lidar_model")
     declare_lidar_model_arg = DeclareLaunchArgument(
         "lidar_model",
-        default_value="slamtec_rplidar_s1",
+        default_value="slamtec_rplidar_s3",
         description="Add LiDAR model to the robot URDF",
         choices=[
             "None",
-            "ouster_os1_32",
             "slamtec_rplidar_a2",
             "slamtec_rplidar_a3",
             "slamtec_rplidar_s1",
+            "slamtec_rplidar_s2",
+            "slamtec_rplidar_s3",
             "velodyne_puck",
         ],
     )

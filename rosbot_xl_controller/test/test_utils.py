@@ -46,7 +46,7 @@ class ControllersTestNode(Node):
 
         self.imu_sub = self.create_subscription(Imu, "imu_broadcaster/imu", self.imu_callback, 10)
 
-        # TODO: @delipl namespaces have not been implemented in microros yet
+        # TODO: @delihus namespaces have not been implemented in microros yet
         self.imu_publisher = self.create_publisher(Imu, "/_imu/data_raw", 10)
 
         self.joint_states_publisher = self.create_publisher(JointState, "/_motors_response", 10)
@@ -72,7 +72,7 @@ class ControllersTestNode(Node):
             self.publish_fake_hardware_messages,
         )
 
-    # TODO: @delipl namespaces have not been implemented in microros yet
+    # TODO: @delihus namespaces have not been implemented in microros yet
     def publish_fake_hardware_messages(self):
         imu_msg = Imu()
         imu_msg.header.stamp = self.get_clock().now().to_msg()

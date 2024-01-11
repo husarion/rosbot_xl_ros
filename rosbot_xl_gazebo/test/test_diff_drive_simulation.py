@@ -59,7 +59,7 @@ def test_diff_drive_simulation():
         ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
 
         # 0.9 m/s and 3.0 rad/s are controller's limits defined in
-        #   rosbot_controller/config/diff_drive_controller.yaml
+        #   rosbot_xl_controller/config/diff_drive_controller.yaml
         node.set_destination_speed(0.9, 0.0, 0.0)
         assert node.vel_stabilization_time_event.wait(timeout=20.0), (
             "The simulation is running slowly or has crashed! The time elapsed since setting the"

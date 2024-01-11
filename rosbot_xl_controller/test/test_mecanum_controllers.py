@@ -78,7 +78,7 @@ def test_controllers_startup_fail():
 def test_controllers_startup_success():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup", namespace="rosbot_xl")
+        node = ControllersTestNode("test_controllers_bringup")
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 

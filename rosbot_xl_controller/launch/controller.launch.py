@@ -144,7 +144,7 @@ def generate_launch_description():
     robot_description = {"robot_description": robot_description_content}
 
     robot_controllers = PathJoinSubstitution([
-        FindPackageShare("rosbot_controller"),
+        FindPackageShare("rosbot_xl_controller"),
         "config",
         controller_config_name,
     ])

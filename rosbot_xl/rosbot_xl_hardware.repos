@@ -18,3 +18,8 @@ repositories:
     type: git
     url: https://github.com/delihus/ros2_controllers
     version: imu-sensor-broadcaster-features
+
+  geometry2:
+    type: git
+    url: https://github.com/delihus/geometry2
+    version rolling

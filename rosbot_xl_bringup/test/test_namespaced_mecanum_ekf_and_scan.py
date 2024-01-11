@@ -39,8 +39,9 @@ def generate_test_description():
         ),
         launch_arguments={
             "use_sim": "False",
-            "mecanum": "False",
+            "mecanum": "True",
             "use_gpu": "False",
+            "namespace": "rosbotxl",
         }.items(),
     )
 
@@ -48,10 +49,10 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_bringup_startup_success():
+def test_namespaced_bringup_startup_success():
     rclpy.init()
     try:
-        node = BringupTestNode("test_bringup")
+        node = BringupTestNode("test_bringup", namespace="rosbotxl")
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 
@@ -66,10 +67,10 @@ def test_bringup_startup_success():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_bringup_scan_filter():
+def test_namespaced_bringup_scan_filter():
     rclpy.init()
     try:
-        node = BringupTestNode("test_bringup")
+        node = BringupTestNode("test_bringup", namespace="rosbotxl")
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 

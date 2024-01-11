@@ -20,6 +20,7 @@ gazebosim/gz_ros2_control
 ros2_controllers/
 diff_drive_controller/
 imu_sensor_broadcaster/
+tf2_ros_py/
 
 # pyspelling
 *.dic

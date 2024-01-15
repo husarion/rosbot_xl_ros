@@ -98,6 +98,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     )
 
     depth_camera_parent_tf = "camera_depth_optical_frame"
+    depth_camera_child_tf = ("rosbot_xl/base_link/camera_" + camera_model + "_depth",)
 
     # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
     # See https://github.com/gazebosim/gz-sensors/issues/239
@@ -114,7 +115,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
             "-1.57",
             "0",
             depth_camera_parent_tf,
-            "rosbot_xl/base_link/camera_depth",
+            depth_camera_child_tf,
         ],
         remappings=[
             ("/tf", "tf"),

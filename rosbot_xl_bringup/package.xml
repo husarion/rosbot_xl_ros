@@ -27,6 +27,7 @@
   <test_depend>launch</test_depend>
   <test_depend>launch_ros</test_depend>
   <test_depend>launch_pytest</test_depend>
+  <test_depend>tf2_ros_py</test_depend>
 
   <test_depend>laser_filters</test_depend>
   <test_depend>robot_localization</test_depend>

@@ -33,6 +33,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     lidar_model = context.perform_substitution(LaunchConfiguration("lidar_model"))
+    camera_model = context.perform_substitution(LaunchConfiguration("camera_model"))
     namespace = context.perform_substitution(LaunchConfiguration("namespace"))
 
     namespace_ext = "" if namespace == "" else "/" + namespace
@@ -68,7 +69,34 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         condition=LaunchConfigurationNotEquals(lidar_model, "None"),
     )
 
-    return [ign_lidar_bridge]
+    gz_camera_remappings_file = PathJoinSubstitution([
+        get_package_share_directory("rosbot_xl_gazebo"),
+        "config",
+        LaunchConfiguration(
+            "gz_camera_remappings_file",
+            default=["gz_", camera_model, "_remappings.yaml"],
+        ),
+    ])
+    namespaced_gz_camera_remappings_file = ReplaceString(
+        source_file=gz_camera_remappings_file,
+        replacements={"<robot_namespace>": namespace_ext},
+    )
+
+    ign_camera_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="ros_gz_camera_bridge",
+        parameters=[{"config_file": namespaced_gz_camera_remappings_file}],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
+        ],
+        output="screen",
+        namespace=namespace,
+        condition=LaunchConfigurationNotEquals(camera_model, "None"),
+    )
+
+    return [ign_lidar_bridge, ign_camera_bridge]
 
 
 def generate_launch_description():
@@ -172,48 +200,6 @@ def generate_launch_description():
         output="screen",
         namespace=namespace,
     )
-
-    # gz_camera_remappings_file = PathJoinSubstitution(
-    #     [
-    #         get_package_share_directory("rosbot_xl_gazebo"),
-    #         "config",
-    #         LaunchConfiguration(
-    #             "gz_camera_remappings_file",
-    #             default=["gz_", camera_model, "_remappings.yaml"],
-    #         ),
-    #     ]
-    # )
-
-    # namespace_ext = PythonExpression([
-    #     "''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"
-    # ])
-
-    # namespaced_gz_camera_remappings_file = ReplaceString(
-    #     source_file=gz_camera_remappings_file,
-    #     replacements={"<robot_namespace>": (namespace_ext)},
-    # )
-
-    # ign_camera_bridge = Node(
-    #     package="ros_gz_bridge",
-    #     executable="parameter_bridge",
-    #     name="ros_gz_camera_bridge",
-    #     parameters=[{"config_file": namespaced_gz_camera_remappings_file}],
-    #     remappings=[
-    #         ("/tf", "tf"),
-    #         ("/tf_static", "tf_static"),
-    #     ],
-    #     output="screen",
-    #     namespace=namespace,
-    #     condition=UnlessCondition(
-    #         PythonExpression(
-    #             [
-    #                 "if '",
-    #                 camera_model,
-    #                 "' == 'None'"
-    #             ]
-    #         )
-    #     ),
-    # )
 
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

@@ -16,7 +16,6 @@
   ros_type_name: sensor_msgs/msg/Image
   gz_type_name: ignition.msgs.Image
 
-
 - ros_topic_name: <robot_namespace><zed>/zed_node/point_cloud/cloud_registered
   gz_topic_name: <robot_namespace><zed>/zed_node/depth/points
   ros_type_name: sensor_msgs/msg/PointCloud2

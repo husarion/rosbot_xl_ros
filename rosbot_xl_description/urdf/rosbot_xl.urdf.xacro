@@ -104,7 +104,8 @@
       rpy="${lidar_rpy}"
       use_gpu="${lidar_use_gpu}"
       simulation_engine="$(arg simulation_engine)"
-      topic="velodyne_points"/>
+      topic="velodyne_points"
+      namespace="$(arg namespace)" />
   </xacro:if>
 
   <!-- INCLUDE CAMERA -->
@@ -125,7 +126,8 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       use_nominal_extrinsics="$(arg use_sim)"
-      simulation_engine="$(arg simulation_engine)" />
+      simulation_engine="$(arg simulation_engine)"
+      namespace="$(arg namespace)" />
   </xacro:if>
 
   <xacro:if value="${camera_model == 'orbbec_astra'}">
@@ -136,7 +138,8 @@
       parent_link="${camera_parent_link}"
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
-      simulation_engine="$(arg simulation_engine)" />
+      simulation_engine="$(arg simulation_engine)"
+      namespace="$(arg namespace)" />
   </xacro:if>
 
   <xacro:if value="${camera_model.startswith('stereolabs')}">
@@ -167,7 +170,8 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       model="${camera_model_type}"
-      simulation_engine="$(arg simulation_engine)" />
+      simulation_engine="$(arg simulation_engine)"
+      namespace="$(arg namespace)" />
   </xacro:if>
 
   <!-- INCLUDE CAMERA MOUNT - add if camera_model is not empty -->

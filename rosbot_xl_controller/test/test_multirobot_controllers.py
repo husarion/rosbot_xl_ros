@@ -35,11 +35,13 @@ def generate_test_description():
     for i in range(len(robot_names)):
         controller_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                PathJoinSubstitution([
-                    rosbot_controller,
-                    "launch",
-                    "controller.launch.py",
-                ])
+                PathJoinSubstitution(
+                    [
+                        rosbot_controller,
+                        "launch",
+                        "controller.launch.py",
+                    ]
+                )
             ),
             launch_arguments={
                 "use_sim": "False",

@@ -31,11 +31,13 @@ def generate_test_description():
     rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                rosbot_xl_controller,
-                "launch",
-                "controller.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_controller,
+                    "launch",
+                    "controller.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "use_sim": "False",

@@ -102,15 +102,17 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
-    controller_config_name = PythonExpression([
-        "'mecanum_drive_controller.yaml' if ",
-        mecanum,
-        " else 'diff_drive_controller.yaml'",
-    ])
+    controller_config_name = PythonExpression(
+        [
+            "'mecanum_drive_controller.yaml' if ",
+            mecanum,
+            " else 'diff_drive_controller.yaml'",
+        ]
+    )
 
-    namespace_ext = PythonExpression([
-        "''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"
-    ])
+    namespace_ext = PythonExpression(
+        ["''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"]
+    )
 
     controller_manager_name = LaunchConfiguration(
         "controller_manager_name",
@@ -118,36 +120,42 @@ def generate_launch_description():
     )
 
     # Get URDF via xacro
-    robot_description_content = Command([
-        PathJoinSubstitution([FindExecutable(name="xacro")]),
-        " ",
-        PathJoinSubstitution([
-            FindPackageShare("rosbot_xl_description"),
-            "urdf",
-            "rosbot_xl.urdf.xacro",
-        ]),
-        " mecanum:=",
-        mecanum,
-        " lidar_model:=",
-        lidar_model,
-        " camera_model:=",
-        camera_model,
-        " include_camera_mount:=",
-        include_camera_mount,
-        " use_sim:=",
-        use_sim,
-        " simulation_engine:=",
-        simulation_engine,
-        " namespace:=",
-        namespace,
-    ])
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            PathJoinSubstitution(
+                [
+                    FindPackageShare("rosbot_xl_description"),
+                    "urdf",
+                    "rosbot_xl.urdf.xacro",
+                ]
+            ),
+            " mecanum:=",
+            mecanum,
+            " lidar_model:=",
+            lidar_model,
+            " camera_model:=",
+            camera_model,
+            " include_camera_mount:=",
+            include_camera_mount,
+            " use_sim:=",
+            use_sim,
+            " simulation_engine:=",
+            simulation_engine,
+            " namespace:=",
+            namespace,
+        ]
+    )
     robot_description = {"robot_description": robot_description_content}
 
-    robot_controllers = PathJoinSubstitution([
-        FindPackageShare("rosbot_xl_controller"),
-        "config",
-        controller_config_name,
-    ])
+    robot_controllers = PathJoinSubstitution(
+        [
+            FindPackageShare("rosbot_xl_controller"),
+            "config",
+            controller_config_name,
+        ]
+    )
 
     control_node = Node(
         package="controller_manager",
@@ -219,18 +227,20 @@ def generate_launch_description():
         ],
     )
 
-    return LaunchDescription([
-        declare_namespace_arg,
-        declare_mecanum_arg,
-        declare_lidar_model_arg,
-        declare_camera_model_arg,
-        declare_include_camera_mount_arg,
-        declare_use_sim_arg,
-        declare_simulation_engine_arg,
-        SetParameter(name="use_sim_time", value=use_sim),
-        control_node,
-        robot_state_pub_node,
-        joint_state_broadcaster_spawner,
-        robot_controller_spawner,
-        imu_broadcaster_spawner,
-    ])
+    return LaunchDescription(
+        [
+            declare_namespace_arg,
+            declare_mecanum_arg,
+            declare_lidar_model_arg,
+            declare_camera_model_arg,
+            declare_include_camera_mount_arg,
+            declare_use_sim_arg,
+            declare_simulation_engine_arg,
+            SetParameter(name="use_sim_time", value=use_sim),
+            control_node,
+            robot_state_pub_node,
+            joint_state_broadcaster_spawner,
+            robot_controller_spawner,
+            imu_broadcaster_spawner,
+        ]
+    )

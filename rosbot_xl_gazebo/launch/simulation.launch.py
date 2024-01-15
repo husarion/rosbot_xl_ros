@@ -53,11 +53,13 @@ def launch_setup(context, *args, **kwargs):
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                get_package_share_directory("ros_gz_sim"),
-                "launch",
-                "gz_sim.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    get_package_share_directory("ros_gz_sim"),
+                    "launch",
+                    "gz_sim.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "gz_args": gz_args,
@@ -81,39 +83,43 @@ def launch_setup(context, *args, **kwargs):
     spawn_group = []
     for robot_name in robots_list:
         init_pose = robots_list[robot_name]
-        group = GroupAction([
-            LogInfo(
-                msg=[
-                    "Launching namespace=",
-                    robot_name,
-                    " init_pose=",
-                    str(init_pose),
-                ]
-            ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    PathJoinSubstitution([
-                        get_package_share_directory("rosbot_xl_gazebo"),
-                        "launch",
-                        "spawn.launch.py",
-                    ])
+        group = GroupAction(
+            [
+                LogInfo(
+                    msg=[
+                        "Launching namespace=",
+                        robot_name,
+                        " init_pose=",
+                        str(init_pose),
+                    ]
                 ),
-                launch_arguments={
-                    "mecanum": mecanum,
-                    "use_sim": "True",
-                    "lidar_model": lidar_model,
-                    "camera_model": camera_model,
-                    "simulation_engine": "ignition-gazebo",
-                    "namespace": TextSubstitution(text=robot_name),
-                    "x": TextSubstitution(text=str(init_pose["x"])),
-                    "y": TextSubstitution(text=str(init_pose["y"])),
-                    "z": TextSubstitution(text=str(init_pose["z"])),
-                    "roll": TextSubstitution(text=str(init_pose["roll"])),
-                    "pitch": TextSubstitution(text=str(init_pose["pitch"])),
-                    "yaw": TextSubstitution(text=str(init_pose["yaw"])),
-                }.items(),
-            ),
-        ])
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution(
+                            [
+                                get_package_share_directory("rosbot_xl_gazebo"),
+                                "launch",
+                                "spawn.launch.py",
+                            ]
+                        )
+                    ),
+                    launch_arguments={
+                        "mecanum": mecanum,
+                        "use_sim": "True",
+                        "lidar_model": lidar_model,
+                        "camera_model": camera_model,
+                        "simulation_engine": "ignition-gazebo",
+                        "namespace": TextSubstitution(text=robot_name),
+                        "x": TextSubstitution(text=str(init_pose["x"])),
+                        "y": TextSubstitution(text=str(init_pose["y"])),
+                        "z": TextSubstitution(text=str(init_pose["z"])),
+                        "roll": TextSubstitution(text=str(init_pose["roll"])),
+                        "pitch": TextSubstitution(text=str(init_pose["pitch"])),
+                        "yaw": TextSubstitution(text=str(init_pose["yaw"])),
+                    }.items(),
+                ),
+            ]
+        )
         spawn_group.append(group)
 
     return [gz_sim, *spawn_group]
@@ -184,16 +190,18 @@ def generate_launch_description():
         description="Run Gazebo Ignition in the headless mode",
     )
 
-    return LaunchDescription([
-        declare_namespace_arg,
-        declare_mecanum_arg,
-        declare_lidar_model_arg,
-        declare_camera_model_arg,
-        declare_include_camera_mount_arg,
-        declare_world_arg,
-        declare_headless_arg,
-        # Sets use_sim_time for all nodes started below
-        # (doesn't work for nodes started from ignition gazebo)
-        SetParameter(name="use_sim_time", value=True),
-        OpaqueFunction(function=launch_setup),
-    ])
+    return LaunchDescription(
+        [
+            declare_namespace_arg,
+            declare_mecanum_arg,
+            declare_lidar_model_arg,
+            declare_camera_model_arg,
+            declare_include_camera_mount_arg,
+            declare_world_arg,
+            declare_headless_arg,
+            # Sets use_sim_time for all nodes started below
+            # (doesn't work for nodes started from ignition gazebo)
+            SetParameter(name="use_sim_time", value=True),
+            OpaqueFunction(function=launch_setup),
+        ]
+    )

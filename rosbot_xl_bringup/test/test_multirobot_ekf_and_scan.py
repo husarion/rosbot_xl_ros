@@ -36,11 +36,13 @@ def generate_test_description():
     for i in range(len(robot_names)):
         bringup_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                PathJoinSubstitution([
-                    rosbot_xl_bringup,
-                    "launch",
-                    "bringup.launch.py",
-                ])
+                PathJoinSubstitution(
+                    [
+                        rosbot_xl_bringup,
+                        "launch",
+                        "bringup.launch.py",
+                    ]
+                )
             ),
             launch_arguments={
                 "use_sim": "False",

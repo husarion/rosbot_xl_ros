@@ -99,11 +99,13 @@ def generate_launch_description():
 
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                rosbot_xl_controller,
-                "launch",
-                "controller.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_controller,
+                    "launch",
+                    "controller.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "mecanum": mecanum,
@@ -131,11 +133,13 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    laser_filter_config = PathJoinSubstitution([
-        rosbot_xl_bringup,
-        "config",
-        "laser_filter.yaml",
-    ])
+    laser_filter_config = PathJoinSubstitution(
+        [
+            rosbot_xl_bringup,
+            "config",
+            "laser_filter.yaml",
+        ]
+    )
 
     laser_filter_node = Node(
         package="laser_filters",
@@ -150,16 +154,18 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    return LaunchDescription([
-        declare_namespace_arg,
-        declare_mecanum_arg,
-        declare_lidar_model_arg,
-        declare_camera_model_arg,
-        declare_include_camera_mount_arg,
-        declare_use_sim_arg,
-        declare_simulation_engine_arg,
-        SetParameter(name="use_sim_time", value=use_sim),
-        controller_launch,
-        robot_localization_node,
-        laser_filter_node,
-    ])
+    return LaunchDescription(
+        [
+            declare_namespace_arg,
+            declare_mecanum_arg,
+            declare_lidar_model_arg,
+            declare_camera_model_arg,
+            declare_include_camera_mount_arg,
+            declare_use_sim_arg,
+            declare_simulation_engine_arg,
+            SetParameter(name="use_sim_time", value=use_sim),
+            controller_launch,
+            robot_localization_node,
+            laser_filter_node,
+        ]
+    )

@@ -40,7 +40,6 @@ def generate_test_description():
         launch_arguments={
             "use_sim": "False",
             "mecanum": "False",
-            "use_gpu": "False",
         }.items(),
     )
 

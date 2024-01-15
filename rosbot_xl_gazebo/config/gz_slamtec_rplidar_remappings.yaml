@@ -1,0 +1,3 @@
+- topic_name: <robot_namespace>/scan
+  ros_type_name: sensor_msgs/msg/LaserScan
+  gz_type_name: ignition.msgs.LaserScan

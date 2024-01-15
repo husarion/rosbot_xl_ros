@@ -127,8 +127,7 @@
     <xacro:if value="${use_sim}">
       <xacro:if value="${simulation_engine == 'ignition-gazebo'}">
         <gazebo>
-          <plugin filename="ign_ros2_control-system"
-            name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
 
             <xacro:if value="${mecanum}">
               <parameters>$(find rosbot_xl_controller)/config/mecanum_drive_controller.yaml</parameters>

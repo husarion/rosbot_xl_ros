@@ -44,7 +44,6 @@ def generate_test_description():
             launch_arguments={
                 "use_sim": "False",
                 "mecanum": "True",
-                "use_gpu": "False",
                 "namespace": robot_names[i],
             }.items(),
         )

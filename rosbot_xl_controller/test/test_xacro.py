@@ -59,7 +59,6 @@ def test_rosbot_description_parsing():
         (
             mecanum,
             use_sim,
-            use_gpu,
             simulation_engine,
             lidar_model,
             camera_model,
@@ -67,7 +66,6 @@ def test_rosbot_description_parsing():
         mappings = {
             "mecanum": mecanum,
             "use_sim": use_sim,
-            "use_gpu": use_gpu,
             "simulation_engine": simulation_engine,
             "lidar_model": lidar_model,
             "camera_model": camera_model,
@@ -79,6 +77,6 @@ def test_rosbot_description_parsing():
         except xacro.XacroException as e:
             assert False, (
                 f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
-                f"use_sim: {use_sim}, use_gpu: {use_gpu}, simulation_engine: {simulation_engine}, "
+                f"use_sim: {use_sim}, simulation_engine: {simulation_engine}, "
                 f"lidar_model: {lidar_model}, camera_model: {camera_model}, "
             )

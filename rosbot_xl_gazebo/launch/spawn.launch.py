@@ -77,6 +77,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
             default=["gz_", camera_model, "_remappings.yaml"],
         ),
     ])
+
     namespaced_gz_camera_remappings_file = ReplaceString(
         source_file=gz_camera_remappings_file,
         replacements={"<robot_namespace>": namespace_ext},
@@ -96,7 +97,33 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         condition=LaunchConfigurationNotEquals(camera_model, "None"),
     )
 
-    return [ign_lidar_bridge, ign_camera_bridge]
+    depth_camera_parent_tf = "camera_depth_optical_frame"
+
+    # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
+    # See https://github.com/gazebosim/gz-sensors/issues/239
+    point_cloud_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="point_cloud_tf",
+        output="log",
+        arguments=[
+            "0",
+            "0",
+            "0",
+            "1.57",
+            "-1.57",
+            "0",
+            depth_camera_parent_tf,
+            "rosbot_xl/base_link/camera_depth",
+        ],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
+        ],
+        namespace=namespace,
+    )
+
+    return [ign_lidar_bridge, ign_camera_bridge, point_cloud_tf]
 
 
 def generate_launch_description():

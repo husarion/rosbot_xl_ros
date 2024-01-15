@@ -35,6 +35,13 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     lidar_model = context.perform_substitution(LaunchConfiguration("lidar_model"))
     camera_model = context.perform_substitution(LaunchConfiguration("camera_model"))
     namespace = context.perform_substitution(LaunchConfiguration("namespace"))
+    depth_camera_parent_tf = "camera_depth_optical_frame"
+    depth_camera_child_tf = "rosbot_xl/base_link/camera_" + camera_model + "_depth"
+    pointcloud_rpy = [
+        "1.57",
+        "-1.57",
+        "0",
+    ]
 
     namespace_ext = "" if namespace == "" else "/" + namespace
 
@@ -69,6 +76,14 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         condition=LaunchConfigurationNotEquals(lidar_model, "None"),
     )
 
+    zed_model = None
+    if camera_model.startswith("stereolabs_zed"):
+        zed_model = camera_model[len("stereolabs_") :]
+        camera_model = "stereolabs_zed"
+        depth_camera_child_tf = "rosbot_xl/base_link/camera_" + camera_model + "_depth"
+        depth_camera_parent_tf = "camera_center_optical_frame"
+        pointcloud_rpy = ["0", "0", "0"]
+
     gz_camera_remappings_file = PathJoinSubstitution([
         get_package_share_directory("rosbot_xl_gazebo"),
         "config",
@@ -82,6 +97,12 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         source_file=gz_camera_remappings_file,
         replacements={"<robot_namespace>": namespace_ext},
     )
+
+    if zed_model is not None:
+        namespaced_gz_camera_remappings_file = ReplaceString(
+            source_file=namespaced_gz_camera_remappings_file,
+            replacements={"<zed>": zed_model},
+        )
 
     ign_camera_bridge = Node(
         package="ros_gz_bridge",
@@ -97,9 +118,6 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
         condition=LaunchConfigurationNotEquals(camera_model, "None"),
     )
 
-    depth_camera_parent_tf = "camera_depth_optical_frame"
-    depth_camera_child_tf = ("rosbot_xl/base_link/camera_" + camera_model + "_depth",)
-
     # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
     # See https://github.com/gazebosim/gz-sensors/issues/239
     point_cloud_tf = Node(
@@ -111,9 +129,9 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
             "0",
             "0",
             "0",
-            "1.57",
-            "-1.57",
-            "0",
+        ]
+        + pointcloud_rpy
+        + [
             depth_camera_parent_tf,
             depth_camera_child_tf,
         ],

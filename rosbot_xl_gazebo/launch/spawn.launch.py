@@ -80,7 +80,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
     zed_model = None
     if camera_model.startswith("stereolabs_zed"):
-        zed_model = camera_model[len("stereolabs_") :]
+        zed_model = camera_model.replace("stereolabs_", "")
         camera_model = "stereolabs_zed"
         depth_camera_child_tf = "rosbot_xl/base_link/camera_" + camera_model + "_depth"
         depth_camera_parent_tf = "camera_center_optical_frame"

@@ -21,7 +21,6 @@ from ament_index_python.packages import get_package_share_directory
 def test_rosbot_description_parsing():
     mecanum_values = ["true", "false"]
     use_sim_values = ["true", "false"]
-    use_gpu_values = ["true", "false"]
     simulation_engine_values = ["ignition-gazebo", "webots"]  # 'gazebo-classic'
     lidar_models = [
         "None",
@@ -48,7 +47,6 @@ def test_rosbot_description_parsing():
         itertools.product(
             mecanum_values,
             use_sim_values,
-            use_gpu_values,
             simulation_engine_values,
             lidar_models,
             camera_models,

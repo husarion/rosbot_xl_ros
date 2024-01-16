@@ -62,7 +62,7 @@ jobs:
               shell: bash
               run: |
                   cp -r src/geometry2/tf2_ros_py src/
-                  rm -rf geometry2/
+                  rm -rf src/geometry2/
 
             - name: Remove ign_ros2_control demo
               shell: bash

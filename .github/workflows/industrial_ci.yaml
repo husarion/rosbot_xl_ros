@@ -36,26 +36,33 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 16
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Copy to src
+              run: |
+                  mkdir -p src
+                  find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
+
             - name: Clone installation requirements
               shell: bash
               run: |
-                  python3 -m pip install -U vcstool &&
-                  vcs import . < ./rosbot_xl/rosbot_xl_hardware.repos &&
-                  vcs import . < ./rosbot_xl/rosbot_xl_simulation.repos
+                  python3 -m pip install -U vcstool
+                  vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
+                  vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
 
             - name: Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
               shell: bash
               run: |
-                  cp -r ros2_controllers/diff_drive_controller . &&
-                  cp -r ros2_controllers/imu_sensor_broadcaster . &&
-                  rm -rf ros2_controllers
+                  cp -r src/ros2_controllers/diff_drive_controller src/
+                  cp -r src/ros2_controllers/imu_sensor_broadcaster src/
+                  rm -rf src/ros2_controllers
 
             - name: Copy only tf2_ros_py from geometry2, waits for https://github.com/ros2/geometry2/pull/641
               shell: bash
               run: |
-                  cp -r geometry2/tf2_ros_py . &&
-                  rm -rf geometry2
+                  cp -r src/geometry2/tf2_ros_py src/
+                  rm -rf geometry2/
 
             - name: Remove ign_ros2_control demo
               shell: bash

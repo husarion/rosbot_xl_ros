@@ -60,8 +60,8 @@ jobs:
             - name: Remove ign_ros2_control demo
               shell: bash
               run: |
-                  rm -rf src/gazebosim/gz_ros2_control/ign_ros2_control_demos
-                  src/gazebosim/gz_ros2_control/gz_ros2_control_tests
+                  rm -rf src/gazebosim/gz_ros2_control/ign_ros2_control_demos &&
+                  rm -rf src/gazebosim/gz_ros2_control/gz_ros2_control_tests
 
             - uses: ros-industrial/industrial_ci@master
               env:

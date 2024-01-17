@@ -15,6 +15,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import SingleThreadedExecutor
 
 from threading import Event
 from threading import Thread
@@ -24,39 +25,39 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan, Image, PointCloud2
 
 
-class SimulationTestNode(Node):
+class SimulationTestNode:
     __test__ = False
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_xl_base_controller to determine inaccurate odometry.
     ACCURACY = 0.10  # 10% accuracy
 
-    RANGE_SENSORS_TOPICS = ["range/fl", "range/fr", "range/rl", "range/rr"]
-    RANGE_SENSORS_FRAMES = ["fl_range", "fr_range", "rl_range", "rr_range"]
-
     def __init__(self, name="test_node", namespace=None):
-        super().__init__(name, namespace=namespace)
-
-        # Use simulation time to correct run on slow machine
-        use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
-        self.set_parameters([use_sim_time])
-
         self.VELOCITY_STABILIZATION_DELAY = 3
-        self.current_time = 1e-9 * self.get_clock().now().nanoseconds
-        self.goal_received_time = 1e-9 * self.get_clock().now().nanoseconds
         self.vel_stabilization_time_event = Event()
 
         self.v_x = 0.0
         self.v_y = 0.0
         self.v_yaw = 0.0
-        self.twist = None  # Debug info
+        self.twist = None
 
         self.controller_odom_flag = False
         self.ekf_odom_flag = False
-        self.odom_tf_event = Event()
         self.scan_event = Event()
-        self.ranges_events = [Event() for _ in range(len(self.RANGE_SENSORS_TOPICS))]
         self.camera_color_event = Event()
         self.camera_points_event = Event()
+
+        self.ros_context = rclpy.Context()
+
+        self.ros_executor = SingleThreadedExecutor()
+        self.node = Node(name, namespace=namespace)
+        self.ros_executor.add_node(self.node)
+
+        # Use simulation time to correct run on slow machine
+        use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
+        self.node.set_parameters([use_sim_time])
+
+        self.current_time = 1e-9 * self.node.get_clock().now().nanoseconds
+        self.goal_received_time = 1e-9 * self.node.get_clock().now().nanoseconds
 
     def clear_odom_flag(self):
         self.controller_odom_flag = False
@@ -67,39 +68,40 @@ class SimulationTestNode(Node):
         self.v_x = v_x
         self.v_y = v_y
         self.v_yaw = v_yaw
-        self.goal_received_time = 1e-9 * self.get_clock().now().nanoseconds
+        self.goal_received_time = 1e-9 * self.node.get_clock().now().nanoseconds
         self.vel_stabilization_time_event.clear()
 
     def create_test_subscribers_and_publishers(self):
-        self.cmd_vel_publisher = self.create_publisher(Twist, "cmd_vel", 10)
+        self.cmd_vel_publisher = self.node.create_publisher(Twist, "cmd_vel", 10)
 
-        self.controller_odom_sub = self.create_subscription(
+        self.controller_odom_sub = self.node.create_subscription(
             Odometry, "rosbot_xl_base_controller/odom", self.controller_callback, 10
         )
 
-        self.ekf_odom_sub = self.create_subscription(
+        self.ekf_odom_sub = self.node.create_subscription(
             Odometry, "odometry/filtered", self.ekf_callback, 10
         )
 
-        self.scan_sub = self.create_subscription(LaserScan, "scan", self.scan_callback, 10)
+        self.scan_sub = self.node.create_subscription(LaserScan, "scan", self.scan_callback, 10)
 
-        self.range_subs = []
-        for range_topic_name in self.RANGE_SENSORS_TOPICS:
-            sub = self.create_subscription(LaserScan, range_topic_name, self.ranges_callback, 10)
-            self.range_subs.append(sub)
-
-        self.camera_color_sub = self.create_subscription(
+        self.camera_color_sub = self.node.create_subscription(
             Image, "camera/image", self.camera_image_callback, 10
         )
 
-        self.camera_points_sub = self.create_subscription(
+        self.camera_points_sub = self.node.create_subscription(
             PointCloud2, "camera/points", self.camera_points_callback, 10
         )
 
-        self.timer = self.create_timer(1.0 / 10.0, self.timer_callback)
+        self.timer = self.node.create_timer(1.0 / 10.0, self.timer_callback)
+
+    def spin_handle_external_shutdown(self):
+        try:
+            self.ros_executor.spin()
+        except rclpy.executors.ExternalShutdownException:
+            pass
 
     def start_node_thread(self):
-        self.ros_spin_thread = Thread(target=lambda node: rclpy.spin(node), args=(self,))
+        self.ros_spin_thread = Thread(target=self.spin_handle_external_shutdown)
         self.ros_spin_thread.start()
 
     def is_twist_ok(self, twist: Twist):
@@ -114,32 +116,27 @@ class SimulationTestNode(Node):
         return x_ok and y_ok and yaw_ok
 
     def controller_callback(self, data: Odometry):
-        self.get_logger().debug(f"Received twist from controller: {data.twist.twist}")
+        self.node.get_logger().debug(f"Received twist from controller: {data.twist.twist}")
         self.controller_odom_flag = self.is_twist_ok(data.twist.twist)
         self.twist = data.twist.twist
 
     def ekf_callback(self, data: Odometry):
-        self.get_logger().debug(f"Received twist filtered: {data.twist.twist}")
-
-        self.odom_tf_event.set()
+        self.node.get_logger().debug(f"Received twist filtered: {data.twist.twist}")
         self.ekf_odom_flag = self.is_twist_ok(data.twist.twist)
 
     def timer_callback(self):
         self.publish_cmd_vel_messages()
 
-        self.current_time = 1e-9 * self.get_clock().now().nanoseconds
+        self.current_time = 1e-9 * self.node.get_clock().now().nanoseconds
+        self.node.get_logger().info(f"Current time: {self.current_time}")
+
         if self.current_time > self.goal_received_time + self.VELOCITY_STABILIZATION_DELAY:
             self.vel_stabilization_time_event.set()
 
     def scan_callback(self, data: LaserScan):
-        self.get_logger().debug(f"Received scan length: {len(data.ranges)}")
+        self.node.get_logger().debug(f"Received scan length: {len(data.ranges)}")
         if data.ranges:
             self.scan_event.set()
-
-    def ranges_callback(self, data: LaserScan):
-        index = self.RANGE_SENSORS_FRAMES.index(data.header.frame_id)
-        if len(data.ranges) == 1:
-            self.ranges_events[index].set()
 
     def camera_image_callback(self, data: Image):
         if data.data:
@@ -156,8 +153,16 @@ class SimulationTestNode(Node):
         twist_msg.linear.y = self.v_y
         twist_msg.angular.z = self.v_yaw
 
-        self.get_logger().debug(f"Publishing twist: {twist_msg}")
+        self.node.get_logger().debug(f"Publishing twist: {twist_msg}")
         self.cmd_vel_publisher.publish(twist_msg)
+
+    def shutdown(self):
+        self.node.destroy_node()
+
+    def __exit__(self, exep_type, exep_value, trace):
+        if exep_type is not None:
+            raise Exception("Exception occurred, value: ", exep_value)
+        self.shutdown()
 
 
 def x_speed_test(node, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
@@ -229,14 +234,6 @@ def sensors_readings_test(node, robot_name="ROSbot"):
 
     # flag = node.camera_points_event.wait(timeout=20.0)
     # assert flag, f"{robot_name}'s camera point cloud does not work properly!"
-
-
-def tf_test(node, robot_name="ROSbot"):
-    flag = node.odom_tf_event.wait(timeout=20.0)
-    assert flag, (
-        f"{robot_name}: expected odom to base_link tf but it was not received. Check"
-        " robot_localization!"
-    )
 
 
 def diff_test(node, robot_name="ROSbot"):

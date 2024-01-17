@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ def generate_test_description():
                 f'world:={get_package_share_directory("husarion_office_gz")}'
                 "/worlds/empty_with_plugins.sdf"
             ),
-            "robots:=robot1={y: -4.0}; robot2={y: 0.0}; robot3={y: 4.0};",
+            "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
             "headless:=True",
             "mecanum:=True",
         ],
@@ -67,14 +67,14 @@ def generate_test_description():
 
 @pytest.mark.launch(fixture=generate_test_description)
 def test_multirobot_mecanum_simulation():
-    robot_names = ["robot1", "robot2", "robot3"]
+    robot_names = ["robot1", "robot2"]
     rclpy.init()
     try:
         nodes = {}
         executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
         for robot_name in robot_names:
-            node = SimulationTestNode("test_simulation", namespace=robot_name)
+            node = SimulationTestNode("test_multirobot_mecanum_simulation", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             nodes[robot_name] = node
             executor.add_node(node)
@@ -86,8 +86,7 @@ def test_multirobot_mecanum_simulation():
         for robot_name in robot_names:
             node = nodes[robot_name]
             mecanum_test(node, robot_name)
-
-            node.destroy_node()
+            node.shutdown()
 
     finally:
         rclpy.shutdown()

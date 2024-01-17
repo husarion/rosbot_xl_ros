@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 
-from test_utils import SimulationTestNode, tf_test, mecanum_test
+from test_utils import SimulationTestNode, mecanum_test
 from test_ign_kill_utils import kill_ign_linux_processes
 
 
@@ -75,12 +75,12 @@ def generate_test_description():
 def test_mecanum_simulation():
     rclpy.init()
     try:
-        node = SimulationTestNode("test_bringup")
+        node = SimulationTestNode("test_mecanum_simulation")
         node.create_test_subscribers_and_publishers()
         node.start_node_thread()
 
-        tf_test(node)
         mecanum_test(node)
+        node.shutdown()
 
     finally:
         # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching

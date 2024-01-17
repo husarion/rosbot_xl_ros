@@ -14,11 +14,10 @@
 # limitations under the License.
 
 import rclpy
+from rclpy.node import Node
 
 from threading import Event
 from threading import Thread
-
-from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry

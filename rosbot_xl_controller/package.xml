@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!-- Used https://github.com/colcon/colcon-bundle/blob/master/integration/test_workspace/src/test-nodes/package.xml -->
 <package format="3">
   <name>rosbot_xl_controller</name>
   <version>0.8.12</version>
@@ -16,39 +17,34 @@
   <url type="repository">https://github.com/husarion/rosbot_xl_ros</url>
   <url type="bugtracker">https://github.com/husarion/rosbot_xl_ros/issues</url>
 
-  <exec_depend>rosbot_xl_description</exec_depend>
-
+  <!-- Launch tools dependencies -->
+  <exec_depend>ros2launch</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
 
+  <!-- Husarion dependencies -->
+  <exec_depend>rosbot_xl_description</exec_depend>
+  <exec_depend>ros_components_description</exec_depend>
+  <exec_depend>rosbot_hardware_interfaces</exec_depend>
+
+  <!-- Launched packages dependencies -->
   <exec_depend>xacro</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
-
   <exec_depend>joint_state_broadcaster</exec_depend>
   <exec_depend>imu_sensor_broadcaster</exec_depend>
   <exec_depend>diff_drive_controller</exec_depend>
   <exec_depend>mecanum_drive_controller</exec_depend>
 
-  <exec_depend>rosbot_hardware_interfaces</exec_depend>
-
+  <!-- Launch and test dependencies -->
+  <test_depend>rclpy</test_depend>
   <test_depend>python3-pytest</test_depend>
-  <test_depend>launch</test_depend>
-  <test_depend>launch_ros</test_depend>
   <test_depend>launch_pytest</test_depend>
 
-  <test_depend>xacro</test_depend>
+  <!-- Packages used in tests  -->
   <test_depend>sensor_msgs</test_depend>
   <test_depend>nav_msgs</test_depend>
-
-  <test_depend>rosbot_xl_description</test_depend>
-  <test_depend>ros_components_description</test_depend>
-
-  <test_depend>controller_manager</test_depend>
-  <test_depend>joint_state_broadcaster</test_depend>
-  <test_depend>imu_sensor_broadcaster</test_depend>
-  <test_depend>diff_drive_controller</test_depend>
-  <test_depend>mecanum_drive_controller</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

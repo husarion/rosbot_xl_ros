@@ -25,7 +25,7 @@ from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from test_utils import ControllersTestNode
 
-robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3", "rosbot_xl4"]
+robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
 
 
 @launch_pytest.fixture

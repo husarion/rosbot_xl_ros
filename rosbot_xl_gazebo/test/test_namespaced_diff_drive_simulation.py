@@ -40,29 +40,35 @@ def generate_test_description():
     rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                rosbot_xl_gazebo,
-                "launch",
-                "simulation.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_gazebo,
+                    "launch",
+                    "simulation.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "headless": "True",
-            "world": PathJoinSubstitution([
-                get_package_share_directory("husarion_office_gz"),
-                "worlds",
-                "empty_with_plugins.sdf",
-            ]),
+            "world": PathJoinSubstitution(
+                [
+                    get_package_share_directory("husarion_office_gz"),
+                    "worlds",
+                    "empty_with_plugins.sdf",
+                ]
+            ),
             "namespace": "rosbot2r",
         }.items(),
     )
 
-    return LaunchDescription([
-        simulation_launch,
-        KeepAliveProc(),
-        # Tell launch to start the test
-        ReadyToTest(),
-    ])
+    return LaunchDescription(
+        [
+            simulation_launch,
+            KeepAliveProc(),
+            # Tell launch to start the test
+            ReadyToTest(),
+        ]
+    )
 
 
 @pytest.mark.launch(fixture=generate_test_description)

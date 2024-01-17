@@ -67,6 +67,7 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
     )
 
+    logger = LogInfo(msg=["Robots:", LaunchConfiguration("robots")])
     robots_list = ParseMultiRobotPose("robots").value()
     if len(robots_list) == 0:
         robots_list = {
@@ -122,7 +123,7 @@ def launch_setup(context, *args, **kwargs):
         )
         spawn_group.append(group)
 
-    return [gz_sim, *spawn_group]
+    return [logger, gz_sim, *spawn_group]
 
 
 def generate_launch_description():
@@ -190,6 +191,15 @@ def generate_launch_description():
         description="Run Gazebo Ignition in the headless mode",
     )
 
+    declare_robots_arg = DeclareLaunchArgument(
+        "robots",
+        default_value=[],
+        description=(
+            "The list of the robots spawned in the simulation e. g. robots:='robot1={x: 0.0, y:"
+            " -1.0}; robot2={x: 1.0, y: -1.0}; robot3={x: 2.0, y: -1.0}; robot4={x: 3.0, y: -1.0}'"
+        ),
+    )
+
     return LaunchDescription(
         [
             declare_namespace_arg,
@@ -199,6 +209,7 @@ def generate_launch_description():
             declare_include_camera_mount_arg,
             declare_world_arg,
             declare_headless_arg,
+            declare_robots_arg,
             # Sets use_sim_time for all nodes started below
             # (doesn't work for nodes started from ignition gazebo)
             SetParameter(name="use_sim_time", value=True),

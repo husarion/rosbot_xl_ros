@@ -33,19 +33,23 @@ class BringupTestNode(Node):
     __test__ = False
 
     def __init__(self, name="test_node", namespace=None):
-        super().__init__(name, namespace=namespace)
+        super().__init__(
+            name,
+            namespace=namespace,
+            cli_args=["--ros-args", "-r", "/tf:=tf", "-r", "/tf_static:=tf_static"],
+        )
         self.odom_tf_event = Event()
         self.scan_filter_event = Event()
 
     def create_test_subscribers_and_publishers(self):
         self.imu_publisher = self.create_publisher(Imu, "/_imu/data_raw", 10)
 
-        self.joint_states_publisher = self.create_publisher(JointState, "/_motors_response", 10)
+        self.joint_states_publisher = self.create_publisher(
+            JointState, "/_motors_response", 10
+        )
 
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(
-            self.tf_buffer, self, override_tf_topics_namespaces=True
-        )
+        self.tf_listener = TransformListener(self.tf_buffer, self)
 
         self.scan_publisher = self.create_publisher(LaserScan, "scan", 10)
         self.filtered_scan_subscriber = self.create_subscription(
@@ -62,7 +66,9 @@ class BringupTestNode(Node):
             self.get_logger().error(f"Could not transform odom to base_link: {ex}")
 
     def start_node_thread(self):
-        self.ros_spin_thread = Thread(target=lambda node: rclpy.spin(node), args=(self,))
+        self.ros_spin_thread = Thread(
+            target=lambda node: rclpy.spin(node), args=(self,)
+        )
         self.ros_spin_thread.start()
 
     def start_publishing_fake_hardware(self):
@@ -111,5 +117,7 @@ class BringupTestNode(Node):
         msg.range_max = 10.0
 
         # fill ranges from 0.0m to 1.0m
-        msg.ranges = [random.random() for _ in range(int(msg.angle_max / msg.angle_increment))]
+        msg.ranges = [
+            random.random() for _ in range(int(msg.angle_max / msg.angle_increment))
+        ]
         self.scan_publisher.publish(msg)

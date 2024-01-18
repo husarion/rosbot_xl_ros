@@ -15,8 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from launch.event_handlers import OnProcessExit
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.conditions import UnlessCondition
 from launch.substitutions import (
     Command,
@@ -213,6 +214,14 @@ def generate_launch_description():
         ],
     )
 
+    # Delay start of robot_controller after `joint_state_broadcaster`
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[robot_controller_spawner],
+        )
+    )
+
     imu_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -225,6 +234,14 @@ def generate_launch_description():
             "--namespace",
             namespace,
         ],
+    )
+
+    # Delay start of imu_broadcaster_spawner after `robot_controller_spawner`
+    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[imu_broadcaster_spawner],
+        )
     )
 
     return LaunchDescription(
@@ -240,7 +257,7 @@ def generate_launch_description():
             control_node,
             robot_state_pub_node,
             joint_state_broadcaster_spawner,
-            robot_controller_spawner,
-            imu_broadcaster_spawner,
+            delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+            delay_imu_broadcaster_spawner_after_robot_controller_spawner
         ]
     )

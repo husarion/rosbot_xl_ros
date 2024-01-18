@@ -27,7 +27,7 @@ from launch_testing.util import KeepAliveProc
 from rclpy.executors import MultiThreadedExecutor
 from threading import Thread
 
-from test_utils import SimulationTestNode, diff_test
+from test_utils import SimulationTest, diff_test
 
 from test_ign_kill_utils import kill_ign_linux_processes
 
@@ -70,22 +70,22 @@ def test_multirobot_diff_drive_simulation():
     robot_names = ["robot1", "robot2"]
     rclpy.init()
     try:
-        nodes = {}
+        simulation_tests = {}
         executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
         for robot_name in robot_names:
-            node = SimulationTestNode(
+            node = SimulationTest(
                 "test_multirobot_diff_drive_simulation", namespace=robot_name
             )
             node.create_test_subscribers_and_publishers()
-            nodes[robot_name] = node
-            executor.add_node(node)
+            simulation_tests[robot_name] = node
+            executor.add_node(node.node)
 
         ros_spin_thread = Thread(target=lambda executor: executor.spin(), args=(executor,))
         ros_spin_thread.start()
 
         for robot_name in robot_names:
-            node = nodes[robot_name]
+            node = simulation_tests[robot_name]
             diff_test(node, robot_name)
             node.shutdown()
 

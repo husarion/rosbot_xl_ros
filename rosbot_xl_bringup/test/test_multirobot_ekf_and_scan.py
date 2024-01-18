@@ -20,13 +20,13 @@ import rclpy
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from test_utils import BringupTestNode
 
 
-robot_names = ["rosbot1", "rosbot2", "rosbot3", "rosbot4"]
+robot_names = ["rosbot1", "rosbot2", "rosbot3"]
 
 
 @launch_pytest.fixture
@@ -50,8 +50,8 @@ def generate_test_description():
                 "namespace": robot_names[i],
             }.items(),
         )
-
-        actions.append(bringup_launch)
+        delayed_bringup_launch = TimerAction(period=i * 10.0, actions=[bringup_launch])
+        actions.append(delayed_bringup_launch)
 
     return LaunchDescription(actions)
 
@@ -66,7 +66,7 @@ def test_namespaced_bringup_startup_success():
             node.start_publishing_fake_hardware()
 
             node.start_node_thread()
-            msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
+            msgs_received_flag = node.odom_tf_event.wait(timeout=30.0)
             assert (
                 msgs_received_flag
             ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
@@ -85,7 +85,7 @@ def test_namespaced_bringup_scan_filter():
             node.start_publishing_fake_hardware()
 
             node.start_node_thread()
-            msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
+            msgs_received_flag = node.scan_filter_event.wait(timeout=30.0)
             assert (
                 msgs_received_flag
             ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"

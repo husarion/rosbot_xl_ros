@@ -25,7 +25,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan, Image, PointCloud2
 
 
-class SimulationTestNode:
+class SimulationTest:
     __test__ = False
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_xl_base_controller to determine inaccurate odometry.
@@ -128,7 +128,6 @@ class SimulationTestNode:
         self.publish_cmd_vel_messages()
 
         self.current_time = 1e-9 * self.node.get_clock().now().nanoseconds
-        self.node.get_logger().info(f"Current time: {self.current_time}")
 
         if self.current_time > self.goal_received_time + self.VELOCITY_STABILIZATION_DELAY:
             self.vel_stabilization_time_event.set()

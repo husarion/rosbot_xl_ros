@@ -20,7 +20,7 @@ import rclpy
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from test_utils import ControllersTestNode
@@ -50,7 +50,8 @@ def generate_test_description():
             }.items(),
         )
 
-        actions.append(controller_launch)
+        delayed_controller_launch = TimerAction(period=i * 10.0, actions=[controller_launch])
+        actions.append(delayed_controller_launch)
 
     return LaunchDescription(actions)
 

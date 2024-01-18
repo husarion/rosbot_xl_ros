@@ -35,8 +35,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     lidar_model = context.perform_substitution(LaunchConfiguration("lidar_model"))
     camera_model = context.perform_substitution(LaunchConfiguration("camera_model"))
     namespace = context.perform_substitution(LaunchConfiguration("namespace"))
-    depth_camera_parent_tf = "camera_depth_optical_frame"
-    depth_camera_child_tf = "rosbot_xl/base_link/camera_" + camera_model + "_depth"
+
     pointcloud_rpy = [
         "1.57",
         "-1.57",
@@ -44,6 +43,14 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     ]
 
     namespace_ext = "" if namespace == "" else "/" + namespace
+    robot_name = 'rosbot_xl'
+    if namespace != "":
+        robot_name = namespace
+
+    depth_camera_child_tf = (
+        robot_name + "/base_link" + namespace_ext + "/camera_" + camera_model + "_depth"
+    )
+    depth_camera_parent_tf = "camera_depth_optical_frame"
 
     if lidar_model.startswith("slamtec_rplidar"):
         lidar_model = "slamtec_rplidar"

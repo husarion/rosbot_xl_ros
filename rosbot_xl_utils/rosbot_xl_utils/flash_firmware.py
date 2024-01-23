@@ -76,7 +76,6 @@ def main(args=None):
     signal.signal(signal.SIGINT, signal_handler)
 
     parser = argparse.ArgumentParser(description="Flash Firmware ROS 2 Node")
-    parser.add_argument("--usb", action="store_true", help="Use the USB flashing script")
     parser.add_argument(
         "-p", "--port", default="/dev/ttyUSB0", help="Specify the USB port (default: /dev/ttyUSB0)"
     )
@@ -88,15 +87,10 @@ def main(args=None):
     firmware_file = args.file if args.file else find_firmware_file()
 
     try:
-        if args.usb:
-            script_name = "flash-firmware-usb.py"
-        else:
-            script_name = "flash-firmware.py"
+        script_name = "flash-firmware.py"
 
         script_path = os.path.join(os.path.dirname(__file__), script_name)
-        additional_args = (
-            ["-p", args.port, "--file", firmware_file] if args.usb else ["--file", firmware_file]
-        )
+        additional_args = ["-p", args.port, "--file", firmware_file]
 
         # Print the flashing details
         print(f"Flashing {firmware_file} over {args.port}")

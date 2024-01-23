@@ -79,9 +79,19 @@ colcon build
 > Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
 2. **Running**
+
+Flash firmware.
+```bash
+# Get admin permissions to flash firmware
+sudo su
+source install/setup.bash
+ros2 run rosbot_xl_utils flash_firmware
+exit
+```
+
 ```
 source install/setup.bash
-ros2 launch rosbot_xl_bringup bringup.launch.py
+ros2 launch rosbot_xl_bringup combined.launch.py
 ```
 
 ### Build and run Gazebo simulation

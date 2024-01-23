@@ -26,8 +26,6 @@ from pyftdi.ftdi import Ftdi
 
 class FirmwareFlasher:
     def __init__(self, binary_file, port):
-        # ftdi.show_devices()
-        # self.ftdi = Ftdi.create_from_url('ftdi://ftdi:ft-x:DK0AM0V0/1')
         self.device = "ftdi://ftdi:ft-x:/1"
         self.ftdi = Ftdi()
 

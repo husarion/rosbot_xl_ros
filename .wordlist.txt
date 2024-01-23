@@ -72,3 +72,15 @@ yaml
 odometry
 pyftdi
 usbutils
+CustomUdpTransport
+UDPv
+SHM
+UDPv
+laggy
+CBUS
+cbus
+ftdi
+RST
+url
+subprocess
+Ftdi

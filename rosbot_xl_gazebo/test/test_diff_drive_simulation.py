@@ -29,7 +29,7 @@ from launch_testing.util import KeepAliveProc
 
 from test_utils import SimulationTest, diff_test
 from test_ign_kill_utils import kill_ign_linux_processes
-
+from time import sleep
 
 @launch_pytest.fixture
 def generate_test_description():

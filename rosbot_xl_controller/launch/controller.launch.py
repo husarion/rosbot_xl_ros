@@ -43,10 +43,10 @@ def launch_setup(context, *args, **kwargs):
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
-        name=LaunchConfiguration(
-            "joint_state_broadcaster_spawner_name",
-            default=[namespace, "_joint_state_broadcaster_spawner"],
-        ),
+        # name=LaunchConfiguration(
+        #     "joint_state_broadcaster_spawner_name",
+        #     default=[namespace, "_joint_state_broadcaster_spawner"],
+        # ),
         executable="spawner",
         arguments=[
             "joint_state_broadcaster",

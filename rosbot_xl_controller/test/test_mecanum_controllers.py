@@ -52,7 +52,7 @@ def generate_test_description():
 def test_controllers_startup_fail():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup")
+        node = ControllersTestNode("test_controllers_startup_fail")
         node.create_test_subscribers_and_publishers()
 
         node.start_node_thread()
@@ -79,7 +79,7 @@ def test_controllers_startup_fail():
 def test_controllers_startup_success():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup")
+        node = ControllersTestNode("test_controllers_startup_success")
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 

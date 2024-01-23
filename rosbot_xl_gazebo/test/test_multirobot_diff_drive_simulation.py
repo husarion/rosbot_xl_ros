@@ -26,7 +26,6 @@ from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import MultiThreadedExecutor
 from threading import Thread
-
 from test_utils import SimulationTest, diff_test
 
 from test_ign_kill_utils import kill_ign_linux_processes

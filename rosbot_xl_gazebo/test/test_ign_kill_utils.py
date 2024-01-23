@@ -14,17 +14,18 @@
 # limitations under the License.
 
 import psutil
-
+from time import sleep
 # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
 # several tests in a row.
 # https://github.com/ros-controls/gz_ros2_control/blob/master/gz_ros2_control_tests/tests/position_test.py
 
 
 def kill_ign_linux_processes():
+    # Wait for closing all processes
+    sleep(10.0)
     for proc in psutil.process_iter():
         # check whether the process name matches
-        if proc.name() == "ruby":
-            proc.kill()
-
-
-kill_ign_linux_processes()
+        if proc.name() == "ruby" or proc.name() == "parameter_bridge":
+            while proc.is_running():
+                proc.kill()
+                sleep(1.0)

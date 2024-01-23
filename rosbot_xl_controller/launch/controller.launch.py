@@ -17,7 +17,11 @@
 
 from launch.event_handlers import OnProcessExit
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import (
+    DeclareLaunchArgument,
+    RegisterEventHandler,
+    OpaqueFunction,
+)
 from launch.conditions import UnlessCondition
 from launch.substitutions import (
     Command,
@@ -29,6 +33,89 @@ from launch.substitutions import (
 
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
+
+
+def launch_setup(context, *args, **kwargs):
+    namespace = LaunchConfiguration("namespace").perform(context)
+    controller_manager_name = "controller_manager"
+    if namespace != "":
+        controller_manager_name = namespace + "/" + controller_manager_name
+
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        name=LaunchConfiguration(
+            "joint_state_broadcaster_spawner_name",
+            default=[namespace, "_joint_state_broadcaster_spawner"],
+        ),
+        executable="spawner",
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            controller_manager_name,
+            "--controller-manager-timeout",
+            "120",
+            "--namespace",
+            namespace,
+        ],
+    )
+
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        name=LaunchConfiguration(
+            "robot_controller_spawner_name",
+            default=[namespace, "_robot_controller_spawner"],
+        ),
+        executable="spawner",
+        arguments=[
+            "rosbot_xl_base_controller",
+            "--controller-manager",
+            controller_manager_name,
+            "--controller-manager-timeout",
+            "120",
+            "--namespace",
+            namespace,
+        ],
+    )
+
+    # Delay start of robot_controller after `joint_state_broadcaster`
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = (
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=joint_state_broadcaster_spawner,
+                on_exit=[robot_controller_spawner],
+            )
+        )
+    )
+
+    imu_broadcaster_spawner = Node(
+        package="controller_manager",
+        name=LaunchConfiguration(
+            "imu_spawner_name", default=[namespace, "_imu_broadcaster_spawner"]
+        ),
+        executable="spawner",
+        arguments=[
+            "imu_broadcaster",
+            "--controller-manager",
+            controller_manager_name,
+            "--controller-manager-timeout",
+            "120",
+            "--namespace",
+            namespace,
+        ],
+    )
+
+    # Delay start of imu_broadcaster_spawner after `robot_controller_spawner`
+    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[imu_broadcaster_spawner],
+        )
+    )
+    return [
+        joint_state_broadcaster_spawner,
+        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        delay_imu_broadcaster_spawner_after_robot_controller_spawner,
+    ]
 
 
 def generate_launch_description():
@@ -111,15 +198,6 @@ def generate_launch_description():
         ]
     )
 
-    namespace_ext = PythonExpression(
-        ["''", " if '", namespace, "' == '' ", "else ", "'", namespace, "/'"]
-    )
-
-    controller_manager_name = LaunchConfiguration(
-        "controller_manager_name",
-        default=[namespace_ext, "controller_manager"],
-    )
-
     # Get URDF via xacro
     robot_description_content = Command(
         [
@@ -186,64 +264,6 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    robot_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "rosbot_xl_base_controller",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    # Delay start of robot_controller after `joint_state_broadcaster`
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[robot_controller_spawner],
-        )
-    )
-
-    imu_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "imu_broadcaster",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    # Delay start of imu_broadcaster_spawner after `robot_controller_spawner`
-    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=robot_controller_spawner,
-            on_exit=[imu_broadcaster_spawner],
-        )
-    )
-
     return LaunchDescription(
         [
             declare_namespace_arg,
@@ -256,8 +276,6 @@ def generate_launch_description():
             SetParameter(name="use_sim_time", value=use_sim),
             control_node,
             robot_state_pub_node,
-            joint_state_broadcaster_spawner,
-            delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-            delay_imu_broadcaster_spawner_after_robot_controller_spawner
+            OpaqueFunction(function=launch_setup),
         ]
     )

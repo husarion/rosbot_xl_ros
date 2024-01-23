@@ -53,7 +53,9 @@ def generate_test_description():
 def test_namespaced_controllers_startup_fail():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup", namespace="rosbot_xl")
+        node = ControllersTestNode(
+            "test_namespaced_controllers_startup_fail", namespace="rosbot_xl"
+        )
         node.create_test_subscribers_and_publishers()
 
         node.start_node_thread()
@@ -80,7 +82,9 @@ def test_namespaced_controllers_startup_fail():
 def test_namespaced_controllers_startup_success():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_bringup", namespace="rosbot_xl")
+        node = ControllersTestNode(
+            "test_namespaced_controllers_startup_success", namespace="rosbot_xl"
+        )
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 

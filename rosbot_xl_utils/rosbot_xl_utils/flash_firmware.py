@@ -54,7 +54,9 @@ def find_firmware_file():
 
     # Construct the path to the firmware directory
     firmware_dir = os.path.join(package_install_directory, "firmware")
-    firmware_files = glob.glob(os.path.join(firmware_dir, f"firmware-{firmware_version}.bin"))
+    firmware_files = glob.glob(
+        os.path.join(firmware_dir, f"firmware-{firmware_version}.bin")
+    )
 
     if not firmware_files:
         firmware_url = (
@@ -77,7 +79,10 @@ def main(args=None):
 
     parser = argparse.ArgumentParser(description="Flash Firmware ROS 2 Node")
     parser.add_argument(
-        "-p", "--port", default="/dev/ttyUSB0", help="Specify the USB port (default: /dev/ttyUSB0)"
+        "-p",
+        "--port",
+        default="/dev/ttyUSB0",
+        help="Specify the USB port (default: /dev/ttyUSB0)",
     )
     parser.add_argument("--file", help="Specify the firmware file")
 
@@ -97,7 +102,9 @@ def main(args=None):
 
         # # Starting the subprocess
         subproc = subprocess.Popen([sys.executable, script_path] + additional_args)
-        return_code = subproc.wait()  # Wait for the subprocess to finish and get the return code
+        return_code = (
+            subproc.wait()
+        )  # Wait for the subprocess to finish and get the return code
 
         if return_code != 0:
             print(f"Firmware flashing failed with return code {return_code}")

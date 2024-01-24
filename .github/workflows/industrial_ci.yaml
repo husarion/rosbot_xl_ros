@@ -33,7 +33,7 @@ jobs:
             fail-fast: false
             matrix:
                 ROS_DISTRO: [humble]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 16
         steps:
             - name: Checkout

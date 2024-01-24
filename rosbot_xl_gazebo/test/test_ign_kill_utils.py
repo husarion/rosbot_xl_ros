@@ -21,8 +21,6 @@ from time import sleep
 
 
 def kill_ign_linux_processes():
-    # Wait for closing all processes
-    sleep(10.0)
     for proc in psutil.process_iter():
         # check whether the process name matches
         if proc.name() == "ruby" or proc.name() == "parameter_bridge":

@@ -22,13 +22,13 @@ import random
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.substitutions import PathJoinSubstitution
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-
+from rclpy.executors import MultiThreadedExecutor
+from threading import Thread
 from test_utils import SimulationTest, diff_test
+
 from test_ign_kill_utils import kill_ign_linux_processes
 
 
@@ -39,27 +39,21 @@ def generate_test_description():
     proc_env["PYTHONUNBUFFERED"] = "1"
     proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
-    rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
-    simulation_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [
-                    rosbot_xl_gazebo,
-                    "launch",
-                    "simulation.launch.py",
-                ]
-            )
-        ),
-        launch_arguments={
-            "headless": "True",
-            "world": PathJoinSubstitution(
-                [
-                    get_package_share_directory("husarion_office_gz"),
-                    "worlds",
-                    "empty_with_plugins.sdf",
-                ]
+    # IncludeLaunchDescription does not work with robots argument
+    simulation_launch = ExecuteProcess(
+        cmd=[
+            "ros2",
+            "launch",
+            "rosbot_xl_gazebo",
+            "simulation.launch.py",
+            (
+                f'world:={get_package_share_directory("husarion_office_gz")}'
+                "/worlds/empty_with_plugins.sdf"
             ),
-        }.items(),
+            "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
+            "headless:=True",
+        ],
+        output="screen",
     )
 
     return LaunchDescription(
@@ -73,19 +67,32 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_diff_drive_simulation():
+def test_multirobot_diff_drive_simulation():
+    robot_names = ["robot1", "robot2"]
     rclpy.init()
     try:
-        node = SimulationTest("test_diff_drive_simulation")
-        node.create_test_subscribers_and_publishers()
-        node.start_node_thread()
+        simulation_tests = {}
+        executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
-        diff_test(node)
+        for robot_name in robot_names:
+            node = SimulationTest(
+                "test_multirobot_diff_drive_simulation", namespace=robot_name
+            )
+            node.create_test_subscribers_and_publishers()
+            simulation_tests[robot_name] = node
+            executor.add_node(node.node)
 
-        node.shutdown()
+        ros_spin_thread = Thread(target=lambda executor: executor.spin(), args=(executor,))
+        ros_spin_thread.start()
+
+        for robot_name in robot_names:
+            node = simulation_tests[robot_name]
+            diff_test(node, robot_name)
+            node.shutdown()
 
     finally:
+        rclpy.shutdown()
+
         # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
         # several tests in a row.
         kill_ign_linux_processes()
-        rclpy.shutdown()

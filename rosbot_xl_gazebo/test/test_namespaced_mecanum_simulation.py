@@ -28,7 +28,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 
-from test_utils import SimulationTest, diff_test
+from test_utils import SimulationTest, mecanum_test
 from test_ign_kill_utils import kill_ign_linux_processes
 
 
@@ -51,7 +51,7 @@ def generate_test_description():
             )
         ),
         launch_arguments={
-            "headless": "True",
+            "mecanum": "True",
             "world": PathJoinSubstitution(
                 [
                     get_package_share_directory("husarion_office_gz"),
@@ -59,6 +59,8 @@ def generate_test_description():
                     "empty_with_plugins.sdf",
                 ]
             ),
+            "headless": "True",
+            "namespace": "rosbot2r",
         }.items(),
     )
 
@@ -73,15 +75,16 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_diff_drive_simulation():
+def test_namespaced_mecanum_simulation():
     rclpy.init()
     try:
-        node = SimulationTest("test_diff_drive_simulation")
+        node = SimulationTest(
+            "test_namespaced_mecanum_simulation", namespace="rosbot2r"
+        )
         node.create_test_subscribers_and_publishers()
         node.start_node_thread()
 
-        diff_test(node)
-
+        mecanum_test(node)
         node.shutdown()
 
     finally:

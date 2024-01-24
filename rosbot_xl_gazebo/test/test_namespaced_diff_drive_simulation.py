@@ -59,6 +59,7 @@ def generate_test_description():
                     "empty_with_plugins.sdf",
                 ]
             ),
+            "namespace": "rosbot2r",
         }.items(),
     )
 
@@ -73,15 +74,14 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_diff_drive_simulation():
+def test_namespaced_diff_drive_simulation():
     rclpy.init()
     try:
-        node = SimulationTest("test_diff_drive_simulation")
+        node = SimulationTest("test_namespaced_diff_drive_simulation", namespace="rosbot2r")
         node.create_test_subscribers_and_publishers()
         node.start_node_thread()
 
         diff_test(node)
-
         node.shutdown()
 
     finally:

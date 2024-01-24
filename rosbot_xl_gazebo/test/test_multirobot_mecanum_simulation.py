@@ -27,8 +27,8 @@ from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import MultiThreadedExecutor
 from threading import Thread
-from test_utils import SimulationTest, diff_test
 
+from test_utils import SimulationTest, mecanum_test
 from test_ign_kill_utils import kill_ign_linux_processes
 
 
@@ -52,6 +52,7 @@ def generate_test_description():
                 "/worlds/empty_with_plugins.sdf"
             ),
             "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
+            "mecanum:=True",
             "headless:=True",
         ],
         output="screen",
@@ -68,7 +69,7 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_multirobot_diff_drive_simulation():
+def test_multirobot_mecanum_simulation():
     robot_names = ["robot1", "robot2"]
     rclpy.init()
     try:
@@ -76,9 +77,7 @@ def test_multirobot_diff_drive_simulation():
         executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
         for robot_name in robot_names:
-            node = SimulationTest(
-                "test_multirobot_diff_drive_simulation", namespace=robot_name
-            )
+            node = SimulationTest("test_multirobot_mecanum_simulation", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             simulation_tests[robot_name] = node
             executor.add_node(node.node)
@@ -86,9 +85,10 @@ def test_multirobot_diff_drive_simulation():
         ros_spin_thread = Thread(target=lambda executor: executor.spin(), args=(executor,))
         ros_spin_thread.start()
 
+        # Speed test
         for robot_name in robot_names:
             node = simulation_tests[robot_name]
-            diff_test(node, robot_name)
+            mecanum_test(node, robot_name)
             node.shutdown()
 
     finally:

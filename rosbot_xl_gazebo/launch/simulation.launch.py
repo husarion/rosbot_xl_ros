@@ -49,7 +49,9 @@ def launch_setup(context, *args, **kwargs):
     pitch = LaunchConfiguration("pitch", default="0.0").perform(context)
     yaw = LaunchConfiguration("yaw", default="0.0").perform(context)
 
-    gz_args = f"--headless-rendering -s -v 4 -r {world}" if eval(headless) else f"-r {world}"
+    gz_args = (
+        f"--headless-rendering -s -v 4 -r {world}" if eval(headless) else f"-r {world}"
+    )
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -84,6 +86,31 @@ def launch_setup(context, *args, **kwargs):
     spawn_group = []
     for robot_name in robots_list:
         init_pose = robots_list[robot_name]
+        spawn_robot = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution(
+                    [
+                        get_package_share_directory("rosbot_xl_gazebo"),
+                        "launch",
+                        "spawn.launch.py",
+                    ]
+                )
+            ),
+            launch_arguments={
+                "mecanum": mecanum,
+                "use_sim": "True",
+                "lidar_model": lidar_model,
+                "camera_model": camera_model,
+                "simulation_engine": "ignition-gazebo",
+                "namespace": TextSubstitution(text=robot_name),
+                "x": TextSubstitution(text=str(init_pose["x"])),
+                "y": TextSubstitution(text=str(init_pose["y"])),
+                "z": TextSubstitution(text=str(init_pose["z"])),
+                "roll": TextSubstitution(text=str(init_pose["roll"])),
+                "pitch": TextSubstitution(text=str(init_pose["pitch"])),
+                "yaw": TextSubstitution(text=str(init_pose["yaw"])),
+            }.items(),
+        )
         group = GroupAction(
             [
                 LogInfo(
@@ -94,31 +121,7 @@ def launch_setup(context, *args, **kwargs):
                         str(init_pose),
                     ]
                 ),
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(
-                        PathJoinSubstitution(
-                            [
-                                get_package_share_directory("rosbot_xl_gazebo"),
-                                "launch",
-                                "spawn.launch.py",
-                            ]
-                        )
-                    ),
-                    launch_arguments={
-                        "mecanum": mecanum,
-                        "use_sim": "True",
-                        "lidar_model": lidar_model,
-                        "camera_model": camera_model,
-                        "simulation_engine": "ignition-gazebo",
-                        "namespace": TextSubstitution(text=robot_name),
-                        "x": TextSubstitution(text=str(init_pose["x"])),
-                        "y": TextSubstitution(text=str(init_pose["y"])),
-                        "z": TextSubstitution(text=str(init_pose["z"])),
-                        "roll": TextSubstitution(text=str(init_pose["roll"])),
-                        "pitch": TextSubstitution(text=str(init_pose["pitch"])),
-                        "yaw": TextSubstitution(text=str(init_pose["yaw"])),
-                    }.items(),
-                ),
+                spawn_robot,
             ]
         )
         spawn_group.append(group)

@@ -36,7 +36,8 @@ from test_ign_kill_utils import kill_ign_linux_processes
 def generate_test_description():
     # This is necessary to get unbuffered output from the process under test
     proc_env = os.environ.copy()
-    proc_env["PYTHONUNBUFFERED"] = "1"
+    # proc_env["PYTHONUNBUFFERED"] = "1"
+    proc_env["ROS_LOCALHOST_ONLY"] = "1"
     proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
     rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")

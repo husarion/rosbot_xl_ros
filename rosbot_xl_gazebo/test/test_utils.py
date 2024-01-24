@@ -64,6 +64,7 @@ class SimulationTest:
         self.ekf_odom_flag = False
 
     def set_destination_speed(self, v_x, v_y, v_yaw):
+        self.node.get_logger().info(f"cmd_vel: x: {v_x}, y: {v_y}, yaw: {v_yaw}")
         self.clear_odom_flag()
         self.v_x = v_x
         self.v_y = v_y
@@ -116,13 +117,17 @@ class SimulationTest:
         return x_ok and y_ok and yaw_ok
 
     def controller_callback(self, data: Odometry):
-        self.node.get_logger().debug(f"Received twist from controller: {data.twist.twist}")
-        self.controller_odom_flag = self.is_twist_ok(data.twist.twist)
-        self.twist = data.twist.twist
+        # Do not override the twist after reaching the command twist
+        if not self.controller_odom_flag:
+            self.node.get_logger().info(f"Received twist from controller: {data.twist.twist}")
+            self.controller_odom_flag = self.is_twist_ok(data.twist.twist)
+            self.twist = data.twist.twist
 
     def ekf_callback(self, data: Odometry):
-        self.node.get_logger().debug(f"Received twist filtered: {data.twist.twist}")
-        self.ekf_odom_flag = self.is_twist_ok(data.twist.twist)
+        # Do not override the twist after reaching the command twist
+        if not self.ekf_odom_flag:
+            self.node.get_logger().debug(f"Received twist filtered: {data.twist.twist}")
+            self.ekf_odom_flag = self.is_twist_ok(data.twist.twist)
 
     def timer_callback(self):
         self.publish_cmd_vel_messages()
@@ -130,6 +135,8 @@ class SimulationTest:
         self.current_time = 1e-9 * self.node.get_clock().now().nanoseconds
 
         if self.current_time > self.goal_received_time + self.VELOCITY_STABILIZATION_DELAY:
+            self.node.get_logger().info("Setting velocity stabilization time")
+
             self.vel_stabilization_time_event.set()
 
     def scan_callback(self, data: LaserScan):
@@ -152,7 +159,7 @@ class SimulationTest:
         twist_msg.linear.y = self.v_y
         twist_msg.angular.z = self.v_yaw
 
-        self.node.get_logger().debug(f"Publishing twist: {twist_msg}")
+        self.node.get_logger().info(f"Publishing twist: {twist_msg}")
         self.cmd_vel_publisher.publish(twist_msg)
 
     def shutdown(self):
@@ -175,6 +182,7 @@ def x_speed_test(node, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     assert node.controller_odom_flag, (
         f"{robot_name}: does not move properly in x direction. Check"
         f" rosbot_xl_base_controller! Twist: {node.twist}"
+        f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.ekf_odom_flag, (
         f"{robot_name}: does not move properly in x direction. Check ekf_filter_node!"
@@ -193,6 +201,7 @@ def y_speed_test(node, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     assert node.controller_odom_flag, (
         f"{robot_name} does not move properly in y direction. Check"
         f" rosbot_xl_base_controller! Twist: {node.twist}"
+        f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.ekf_odom_flag, (
         f"{robot_name} does not move properly in y direction. Check ekf_filter_node!"
@@ -211,6 +220,7 @@ def yaw_speed_test(node, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     assert node.controller_odom_flag, (
         f"{robot_name} does not rotate properly. Check rosbot_xl_base_controller! Twist:"
         f" {node.twist}"
+        f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert (
         node.ekf_odom_flag

@@ -57,7 +57,7 @@ def generate_test_description():
         )
 
         # When there is no delay the controllers doesn't spawn correctly
-        delayed_controller_launch = TimerAction(period=i * 2, actions=[controller_launch])
+        delayed_controller_launch = TimerAction(period=i * 2.0, actions=[controller_launch])
         actions.append(delayed_controller_launch)
 
     return LaunchDescription(actions)

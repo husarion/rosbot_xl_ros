@@ -67,6 +67,9 @@ source /opt/ros/$ROS_DISTRO/setup.bash
 
 vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 
+# Remove tests from micro_ros_msgs
+sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
+
 rm -r src/rosbot_xl_gazebo
 
 rosdep init
@@ -104,6 +107,9 @@ source /opt/ros/$ROS_DISTRO/setup.bash
 
 vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+
+# Remove tests from micro_ros_msgs
+sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
 
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO

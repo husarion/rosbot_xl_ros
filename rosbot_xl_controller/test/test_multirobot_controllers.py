@@ -25,7 +25,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import ControllersTestNode
+from test_utils import ControllersTestNode, controller_test
 
 robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
 
@@ -71,21 +71,7 @@ def test_multirobot_controllers_startup_success():
             node = ControllersTestNode(f"test_{robot_name}_controllers", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             node.start_publishing_fake_hardware()
-
             node.start_node_thread()
-            msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
-            assert msgs_received_flag, (
-                f"Expected JointStates message but it was not received. Check {robot_name}/"
-                "joint_state_broadcaster!"
-            )
-            msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
-            assert msgs_received_flag, (
-                f"Expected Odom message but it was not received. Check {robot_name}/"
-                "rosbot_xl_base_controller!"
-            )
-            msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
-            assert (
-                msgs_received_flag
-            ), f"Expected Imu message but it was not received. Check {robot_name}/imu_broadcaster!"
+            controller_test(node, robot_name)
         finally:
             rclpy.shutdown()

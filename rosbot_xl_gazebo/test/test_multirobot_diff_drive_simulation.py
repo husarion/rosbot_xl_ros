@@ -74,9 +74,7 @@ def test_multirobot_diff_drive_simulation():
         executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
         for robot_name in robot_names:
-            node = SimulationTest(
-                "test_multirobot_diff_drive_simulation", namespace=robot_name
-            )
+            node = SimulationTest("test_multirobot_diff_drive_simulation", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             simulation_tests[robot_name] = node
             executor.add_node(node.node)

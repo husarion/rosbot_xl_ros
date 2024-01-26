@@ -43,7 +43,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     ]
 
     namespace_ext = "" if namespace == "" else "/" + namespace
-    robot_name = 'rosbot_xl'
+    robot_name = "rosbot_xl"
     if namespace != "":
         robot_name = namespace
 

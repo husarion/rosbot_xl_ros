@@ -77,9 +77,7 @@ def generate_test_description():
 def test_namespaced_mecanum_simulation():
     rclpy.init()
     try:
-        node = SimulationTest(
-            "test_namespaced_mecanum_simulation", namespace="rosbot2r"
-        )
+        node = SimulationTest("test_namespaced_mecanum_simulation", namespace="rosbot2r")
         node.create_test_subscribers_and_publishers()
         node.start_node_thread()
 

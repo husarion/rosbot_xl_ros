@@ -1,76 +1,60 @@
 ---
 name: Industrial CI
 on:
-    workflow_call:
-    workflow_dispatch:
-    push:
+  workflow_call:
+  workflow_dispatch:
+  push:
 
 
 jobs:
-    black:
-        name: Black
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: psf/black@stable
-              with:
-                  options: --line-length=99
+  black:
+    name: Black
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+        with:
+          options: --line-length=99
 
-    spellcheck:
+  spellcheck:
+    name: Spellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rojopolis/spellcheck-github-actions@0.33.1
         name: Spellcheck
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: rojopolis/spellcheck-github-actions@0.33.1
-              name: Spellcheck
 
-    ros_industrial_ci:
-        name: ROS Industrial CI
-        needs:
-            - black
-            - spellcheck
-        strategy:
-            fail-fast: false
-            matrix:
-                ROS_DISTRO: [humble]
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+  ros_industrial_ci:
+    name: ROS Industrial CI
+    needs:
+      - black
+      - spellcheck
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO: [humble]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Copy to src
-              run: |
-                  mkdir -p src
-                  find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
+      - name: Setup ROS2 Workspace and Clone Repositories
+        run: |
+          mkdir -p src
+          find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
+          python3 -m pip install -U vcstool
+          vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
+          vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+          cp -r src/ros2_controllers/diff_drive_controller src/
+          cp -r src/ros2_controllers/imu_sensor_broadcaster src/
+          rm -rf src/ros2_controllers
+          cp -r src/geometry2/tf2_ros_py src/
+          rm -rf src/geometry2/
+          rm -rf src/gazebosim/gz_ros2_control/ign_ros2_control_demos
+          rm -rf src/gazebosim/gz_ros2_control/gz_ros2_control_tests
 
-            - name: Clone installation requirements
-              shell: bash
-              run: |
-                  python3 -m pip install -U vcstool
-                  vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
-                  vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
-
-            - name: Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
-              shell: bash
-              run: |
-                  cp -r src/ros2_controllers/diff_drive_controller src/
-                  cp -r src/ros2_controllers/imu_sensor_broadcaster src/
-                  rm -rf src/ros2_controllers
-
-            - name: Copy only tf2_ros_py from geometry2, waits for https://github.com/ros2/geometry2/pull/641
-              shell: bash
-              run: |
-                  cp -r src/geometry2/tf2_ros_py src/
-                  rm -rf src/geometry2/
-
-            - name: Remove ign_ros2_control demo
-              shell: bash
-              run: |
-                  rm -rf src/gazebosim/gz_ros2_control/ign_ros2_control_demos &&
-                  rm -rf src/gazebosim/gz_ros2_control/gz_ros2_control_tests
-
-            - uses: ros-industrial/industrial_ci@master
-              env:
-                  ROS_DISTRO: ${{matrix.ROS_DISTRO}}
-                  HUSARION_ROS_BUILD: simulation
+      - uses: ros-industrial/industrial_ci@master
+        env:
+          ROS_DISTRO: ${{matrix.ROS_DISTRO}}
+          HUSARION_ROS_BUILD: simulation

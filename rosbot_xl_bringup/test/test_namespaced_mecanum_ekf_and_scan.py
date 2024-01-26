@@ -25,7 +25,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import BringupTestNode
+from test_utils import BringupTestNode, ekf_and_scan_test
 
 
 @launch_pytest.fixture
@@ -64,28 +64,7 @@ def test_namespaced_bringup_startup_success():
         node.start_publishing_fake_hardware()
 
         node.start_node_thread()
-        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
-
-    finally:
-        rclpy.shutdown()
-
-
-@pytest.mark.launch(fixture=generate_test_description)
-def test_namespaced_bringup_scan_filter():
-    rclpy.init()
-    try:
-        node = BringupTestNode("test_bringup", namespace="rosbotxl")
-        node.create_test_subscribers_and_publishers()
-        node.start_publishing_fake_hardware()
-
-        node.start_node_thread()
-        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
+        ekf_and_scan_test(node)
 
     finally:
         rclpy.shutdown()

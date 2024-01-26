@@ -25,7 +25,8 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import BringupTestNode
+from rclpy.executors import MultiThreadedExecutor
+from test_utils import BringupTestNode, ekf_and_scan_test
 
 
 robot_names = ["rosbot1", "rosbot2", "rosbot3"]
@@ -63,37 +64,25 @@ def generate_test_description():
 
 @pytest.mark.launch(fixture=generate_test_description)
 def test_namespaced_bringup_startup_success():
-    for robot_name in robot_names:
-        rclpy.init()
-        try:
+    rclpy.init()
+    try:
+        simulation_tests = {}
+        executor = MultiThreadedExecutor(num_threads=len(robot_names))
+
+        for robot_name in robot_names:
             node = BringupTestNode("test_bringup", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             node.start_publishing_fake_hardware()
+            simulation_tests[robot_name] = node
+            executor.add_node(node.node)
 
+        executor.spin()
+
+        for robot_name in robot_names:
+            node = simulation_tests[robot_name]
             node.start_node_thread()
-            msgs_received_flag = node.odom_tf_event.wait(timeout=30.0)
-            assert (
-                msgs_received_flag
-            ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
+            ekf_and_scan_test(node, robot_name)
+            node.shutdown()
 
-        finally:
-            rclpy.shutdown()
-
-
-@pytest.mark.launch(fixture=generate_test_description)
-def test_namespaced_bringup_scan_filter():
-    for robot_name in robot_names:
-        rclpy.init()
-        try:
-            node = BringupTestNode("test_bringup", namespace=robot_name)
-            node.create_test_subscribers_and_publishers()
-            node.start_publishing_fake_hardware()
-
-            node.start_node_thread()
-            msgs_received_flag = node.scan_filter_event.wait(timeout=30.0)
-            assert (
-                msgs_received_flag
-            ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
-
-        finally:
-            rclpy.shutdown()
+    finally:
+        rclpy.shutdown()

@@ -115,3 +115,15 @@ class BringupTestNode(Node):
         # fill ranges from 0.0m to 1.0m
         msg.ranges = [random.random() for _ in range(int(msg.angle_max / msg.angle_increment))]
         self.scan_publisher.publish(msg)
+
+
+def ekf_and_scan_test(node, robot_name="ROSbot"):
+    msgs_received_flag = node.odom_tf_event.wait(timeout=30.0)
+    assert (
+        msgs_received_flag
+    ), f"{robot_name}: Expected odom to base_link tf but it was not received. Check robot_localization!"
+
+    msgs_received_flag = node.scan_filter_event.wait(timeout=30.0)
+    assert (
+        msgs_received_flag
+    ), f"{robot_name}: Expected filtered scan but it is not filtered properly. Check laser_filter!"

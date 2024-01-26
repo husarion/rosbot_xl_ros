@@ -25,7 +25,6 @@ from launch import LaunchDescription
 from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from rclpy.executors import MultiThreadedExecutor
 from test_utils import SimulationTest, mecanum_test
 from test_ign_kill_utils import kill_ign_linux_processes
 
@@ -70,15 +69,12 @@ def test_multirobot_mecanum_simulation():
     rclpy.init()
     try:
         simulation_tests = {}
-        executor = MultiThreadedExecutor(num_threads=len(robot_names))
 
         for robot_name in robot_names:
             node = SimulationTest("test_multirobot_mecanum_simulation", namespace=robot_name)
             node.create_test_subscribers_and_publishers()
             simulation_tests[robot_name] = node
-            executor.add_node(node.node)
-
-        executor.spin()
+            node.start_node_thread()
 
         # Speed test
         for robot_name in robot_names:

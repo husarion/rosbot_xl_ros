@@ -57,7 +57,7 @@ class SimulationTest(Node):
         )
         self.scan_sub = self.create_subscription(LaserScan, "scan", self.scan_callback, 10)
 
-        # Timer - send cmd_vel and check if velocity time escalade
+        # Timer - send cmd_vel and check if the time needed for speed stabilization has elapsed
         self.timer = self.create_timer(0.1, self.timer_callback)
 
         # Values for cmd_vel

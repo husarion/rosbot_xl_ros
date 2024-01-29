@@ -25,7 +25,7 @@ import ament_index_python.packages
 
 # Global variable to hold the subprocess reference
 subproc = None
-firmware_version = "v1.3.0"
+firmware_version = "v1.4.0"
 
 
 def signal_handler(sig, frame):

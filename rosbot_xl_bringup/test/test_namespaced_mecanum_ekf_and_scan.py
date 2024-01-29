@@ -17,8 +17,6 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -26,13 +24,11 @@ from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from test_utils import BringupTestNode, ekf_and_scan_test
+from threading import Thread
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     bringup_launch = IncludeLaunchDescription(
@@ -48,7 +44,7 @@ def generate_test_description():
         launch_arguments={
             "use_sim": "False",
             "mecanum": "True",
-            "namespace": "rosbotxl",
+            "namespace": "rosbot_xl",
         }.items(),
     )
 
@@ -59,11 +55,10 @@ def generate_test_description():
 def test_namespaced_bringup_startup_success():
     rclpy.init()
     try:
-        node = BringupTestNode("test_bringup", namespace="rosbotxl")
-        node.create_test_subscribers_and_publishers()
+        node = BringupTestNode("test_bringup", namespace="rosbot_xl")
         node.start_publishing_fake_hardware()
 
-        node.start_node_thread()
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
         ekf_and_scan_test(node)
 
     finally:

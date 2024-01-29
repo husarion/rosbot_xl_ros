@@ -17,8 +17,7 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
+
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -26,15 +25,13 @@ from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from test_utils import ControllersTestNode, controller_test
+from threading import Thread
 
 robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
     rosbot_controller = get_package_share_directory("rosbot_xl_controller")
     actions = []
@@ -69,9 +66,8 @@ def test_multirobot_controllers_startup_success():
         rclpy.init()
         try:
             node = ControllersTestNode(f"test_{robot_name}_controllers", namespace=robot_name)
-            node.create_test_subscribers_and_publishers()
             node.start_publishing_fake_hardware()
-            node.start_node_thread()
+            Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
             controller_test(node, robot_name)
         finally:
             rclpy.shutdown()

@@ -17,16 +17,15 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import SingleThreadedExecutor
 from test_utils import BringupTestNode, ekf_and_scan_test
+from threading import Thread
 
 
 robot_names = ["rosbot1", "rosbot2", "rosbot3"]
@@ -34,9 +33,6 @@ robot_names = ["rosbot1", "rosbot2", "rosbot3"]
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     actions = []
@@ -66,23 +62,23 @@ def generate_test_description():
 def test_namespaced_bringup_startup_success():
     rclpy.init()
     try:
-        simulation_tests = {}
-        executor = MultiThreadedExecutor(num_threads=len(robot_names))
+        nodes = {}
+        executor = SingleThreadedExecutor()
 
-        for robot_name in robot_names:
-            node = BringupTestNode("test_bringup", namespace=robot_name)
-            node.create_test_subscribers_and_publishers()
+        for node_name in robot_names:
+            node = BringupTestNode("test_bringup", namespace=node_name)
             node.start_publishing_fake_hardware()
-            simulation_tests[robot_name] = node
-            executor.add_node(node.node)
+            nodes[node_name] = node
+            executor.add_node(node)
 
-        executor.spin()
+        Thread(target=lambda executor: executor.spin(), args=(executor,)).start()
 
-        for robot_name in robot_names:
-            node = simulation_tests[robot_name]
-            node.start_node_thread()
-            ekf_and_scan_test(node, robot_name)
-            node.shutdown()
+        for node_name in robot_names:
+            node = nodes[node_name]
+            ekf_and_scan_test(node, node_name)
+            executor.remove_node(node)
+            node.destroy_node()
 
     finally:
+        executor.shutdown()
         rclpy.shutdown()

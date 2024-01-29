@@ -17,8 +17,7 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
+
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -27,16 +26,13 @@ from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-
 from test_utils import SimulationTest, mecanum_test
 from test_ign_kill_utils import kill_ign_linux_processes
+from threading import Thread
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
 
     rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
     simulation_launch = IncludeLaunchDescription(
@@ -77,11 +73,9 @@ def test_mecanum_simulation():
     rclpy.init()
     try:
         node = SimulationTest("test_mecanum_simulation")
-        node.create_test_subscribers_and_publishers()
-        node.start_node_thread()
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
 
         mecanum_test(node)
-        node.shutdown()
 
     finally:
         # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching

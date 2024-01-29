@@ -1,5 +1,5 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 import rclpy
 import math
 import random
+import time
 
 from threading import Event
 from rclpy.node import Node
@@ -120,3 +121,4 @@ def ekf_and_scan_test(node: BringupTestNode, robot_name="ROSbot"):
     assert node.scan_filter_event.wait(
         20.0
     ), f"{robot_name}: Expected filtered scan but it is not filtered properly. Check laser_filter!"
+    time.sleep(5)

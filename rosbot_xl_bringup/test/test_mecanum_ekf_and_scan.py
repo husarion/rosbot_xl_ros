@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ def test_bringup_startup_success():
 
         Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
         ekf_and_scan_test(node)
+        node.destroy_node()
 
     finally:
         rclpy.shutdown()

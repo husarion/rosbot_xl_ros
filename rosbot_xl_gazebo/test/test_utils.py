@@ -1,5 +1,5 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -187,9 +187,7 @@ class SimulationTest(Node):
 
 
 def wait_for_initialization(node: SimulationTest, robot_name="ROSbot"):
-    assert node.robot_initialized_event.wait(
-        30
-    ), f"{robot_name} does not initialized correctly {node.robot_initialized_event}"
+    assert node.robot_initialized_event.wait(30), f"{robot_name} does not initialized correctly!"
 
 
 def x_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):

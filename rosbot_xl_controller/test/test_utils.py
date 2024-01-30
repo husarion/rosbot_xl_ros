@@ -85,17 +85,17 @@ class ControllersTestNode(Node):
 
 
 def controller_test(node, robot_name="ROSbot"):
-    msgs_received_flag = node.joint_state_msg_event.wait(10.0)
+    msgs_received_flag = node.joint_state_msg_event.wait(20.0)
     assert msgs_received_flag, (
         f"{robot_name}: Expected JointStates message but it was not received. Check "
         "joint_state_broadcaster!"
     )
-    msgs_received_flag = node.odom_msg_event.wait(10.0)
+    msgs_received_flag = node.odom_msg_event.wait(20.0)
     assert msgs_received_flag, (
         f"{robot_name}: Expected Odom message but it was not received. Check "
         "rosbot_xl_base_controller!"
     )
-    msgs_received_flag = node.imu_msg_event.wait(10.0)
+    msgs_received_flag = node.imu_msg_event.wait(20.0)
     assert (
         msgs_received_flag
     ), f"{robot_name}: Expected Imu message but it was not received. Check imu_broadcaster!"

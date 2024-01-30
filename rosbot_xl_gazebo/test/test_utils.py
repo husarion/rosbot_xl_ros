@@ -1,5 +1,5 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2024 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ from threading import Event
 
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import LaserScan, Image, Imu, JointState, PointCloud2
+from sensor_msgs.msg import Imu, JointState
 
 
 class SimulationTestNode(Node):
@@ -47,15 +47,6 @@ class SimulationTestNode(Node):
         )
         self.imu_sub = self.create_subscription(Imu, "imu_broadcaster/imu", self.imu_callback, 10)
 
-        # Sensor callback
-        self.camera_rgb_sub = self.create_subscription(
-            Image, "camera/image", self.camera_image_callback, 10
-        )
-        self.camera_pc_sub = self.create_subscription(
-            PointCloud2, "camera/points", self.camera_points_callback, 10
-        )
-        self.scan_sub = self.create_subscription(LaserScan, "scan", self.scan_callback, 10)
-
         # Timer - send cmd_vel and check if the time needed for speed stabilization has elapsed
         self.timer = self.create_timer(0.1, self.timer_callback)
 
@@ -77,11 +68,6 @@ class SimulationTestNode(Node):
         self.is_joint_msg = False
         self.robot_initialized_event = Event()
         self.vel_stabilization_time_event = Event()
-
-        # Sensor test events
-        self.camera_color_event = Event()
-        self.camera_points_event = Event()
-        self.scan_event = Event()
 
         # Parameters Use simulation time to correct run on slow machine
         use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
@@ -156,19 +142,6 @@ class SimulationTestNode(Node):
                     "Speed stabilization time has expired", throttle_duration_sec=1
                 )
                 self.vel_stabilization_time_event.set()
-
-    def scan_callback(self, data: LaserScan):
-        self.get_logger().debug(f"Received scan length: {len(data.ranges)}")
-        if data.ranges:
-            self.scan_event.set()
-
-    def camera_image_callback(self, data: Image):
-        if data.data:
-            self.camera_color_event.set()
-
-    def camera_points_callback(self, data: PointCloud2):
-        if data.data:
-            self.camera_points_event.set()
 
     def publish_cmd_vel_msg(self):
         twist_msg = Twist()

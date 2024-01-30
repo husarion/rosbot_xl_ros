@@ -186,9 +186,11 @@ class SimulationTestNode(Node):
 
 
 def wait_for_initialization(node: SimulationTestNode, robot_name="ROSbot"):
-    assert node.robot_initialized_event.wait(
-        30
-    ), f"{robot_name} does not initialized correctly!\n\tIs controller_msg: {node.is_controller_msg}\n\tIs ekf_msg: {node.is_ekf_msg}\n\tIs imu_msg: {node.is_imu_msg}\n\tIs joint_msg: {node.is_joint_msg}"
+    assert node.robot_initialized_event.wait(30), (
+        f"{robot_name} does not initialized correctly!\n\tIs controller_msg:"
+        f" {node.is_controller_msg}\n\tIs ekf_msg: {node.is_ekf_msg}\n\tIs imu_msg:"
+        f" {node.is_imu_msg}\n\tIs joint_msg: {node.is_joint_msg}"
+    )
 
 
 def x_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):

@@ -114,9 +114,10 @@ class BringupTestNode(Node):
 
 
 def ekf_and_scan_test(node: BringupTestNode, robot_name="ROSbot"):
-    assert node.odom_tf_event.wait(
-        20.0
-    ), f"{robot_name}: Expected odom to base_link tf but it was not received. Check robot_localization!"
+    assert node.odom_tf_event.wait(20.0), (
+        f"{robot_name}: Expected odom to base_link tf but it was not received. Check"
+        " robot_localization!"
+    )
 
     assert node.scan_filter_event.wait(
         20.0

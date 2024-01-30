@@ -33,7 +33,6 @@ robot_names = ["rosbot1", "rosbot2", "rosbot3"]
 
 @launch_pytest.fixture
 def generate_test_description():
-
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     actions = []
     for i in range(len(robot_names)):

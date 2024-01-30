@@ -33,10 +33,10 @@ repos:
         args: [--mapping, '2', --sequence, '4', --offset, '2', --width, '100']
 
   - repo: https://github.com/psf/black
-    rev: 24.1.1
+    rev: 23.11.0
     hooks:
       - id: black
-        args: [--line-length=99]
+        args: [--line-length=99, --experimental-string-processing]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 7.0.0

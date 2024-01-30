@@ -32,7 +32,6 @@ from threading import Thread
 
 @launch_pytest.fixture
 def generate_test_description():
-
     rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

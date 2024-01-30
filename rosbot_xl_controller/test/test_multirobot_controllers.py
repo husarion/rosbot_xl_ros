@@ -32,7 +32,6 @@ robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
 
 @launch_pytest.fixture
 def generate_test_description():
-
     rosbot_controller = get_package_share_directory("rosbot_xl_controller")
     actions = []
     for i in range(len(robot_names)):

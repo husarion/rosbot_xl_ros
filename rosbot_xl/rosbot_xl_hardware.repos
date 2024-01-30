@@ -6,7 +6,7 @@ repositories:
   ros_components_description:
     type: git
     url: https://github.com/husarion/ros_components_description.git
-    version: gazebo-ignition-rosbot-xl-namespaces
+    version: main
   rosbot_controllers:
     type: git
     url: https://github.com/husarion/rosbot_controllers
@@ -15,7 +15,3 @@ repositories:
     type: git
     url: https://github.com/delihus/ros2_controllers
     version: humble
-  geometry2:
-    type: git
-    url: https://github.com/delihus/geometry2
-    version: rolling

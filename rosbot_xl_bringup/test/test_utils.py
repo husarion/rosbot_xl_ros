@@ -16,7 +16,6 @@
 import rclpy
 import math
 import random
-import time
 
 from threading import Event
 from rclpy.node import Node
@@ -122,4 +121,3 @@ def ekf_and_scan_test(node: BringupTestNode, robot_name="ROSbot"):
     assert node.scan_filter_event.wait(
         20.0
     ), f"{robot_name}: Expected filtered scan but it is not filtered properly. Check laser_filter!"
-    time.sleep(5)

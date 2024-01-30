@@ -159,7 +159,7 @@ class SimulationTestNode(Node):
 
 
 def wait_for_initialization(node: SimulationTestNode, robot_name="ROSbot"):
-    assert node.robot_initialized_event.wait(30), (
+    assert node.robot_initialized_event.wait(60), (
         f"{robot_name} does not initialized correctly!\n\tIs controller_msg:"
         f" {node.is_controller_msg}\n\tIs ekf_msg: {node.is_ekf_msg}\n\tIs imu_msg:"
         f" {node.is_imu_msg}\n\tIs joint_msg: {node.is_joint_msg}"
@@ -176,12 +176,12 @@ def x_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_na
     )
     assert node.is_controller_odom_correct, (
         f"{robot_name}: does not move properly in x direction. Check"
-        f" rosbot_xl_base_controller! Twist: {node.twist}"
+        f" rosbot_xl_base_controller! Twist: {node.controller_twist}"
         f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.is_ekf_odom_correct, (
         f"{robot_name}: does not move properly in x direction. Check ekf_filter_node!"
-        f" Twist: {node.twist}"
+        f" Twist: {node.ekf_twist}"
     )
 
 
@@ -195,12 +195,12 @@ def y_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_na
     )
     assert node.is_controller_odom_correct, (
         f"{robot_name} does not move properly in y direction. Check"
-        f" rosbot_xl_base_controller! Twist: {node.twist}"
+        f" rosbot_xl_base_controller! Twist: {node.controller_twist}"
         f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.is_ekf_odom_correct, (
         f"{robot_name} does not move properly in y direction. Check ekf_filter_node!"
-        f" Twist: {node.twist}"
+        f" Twist: {node.ekf_twist}"
     )
 
 

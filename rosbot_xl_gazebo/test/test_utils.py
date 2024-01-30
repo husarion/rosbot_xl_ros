@@ -23,13 +23,12 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan, Image, Imu, JointState, PointCloud2
 
 
-class SimulationTest(Node):
+class SimulationTestNode(Node):
     __test__ = False
 
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_xl_base_controller to determine inaccurate odometry.
     ACCURACY = 0.10  # 10% accuracy
-    HARDWARE_PUBLISHERS_RATE = 10.0
     VELOCITY_STABILIZATION_DELAY = 2
 
     def __init__(self, name="test_node", namespace=None):
@@ -50,22 +49,22 @@ class SimulationTest(Node):
 
         # Sensor callback
         self.camera_rgb_sub = self.create_subscription(
-            Image, "camera/image", self.camera_rgb_callback, 10
+            Image, "camera/image", self.camera_image_callback, 10
         )
         self.camera_pc_sub = self.create_subscription(
-            PointCloud2, "camera/points", self.camera_pc_callback, 10
+            PointCloud2, "camera/points", self.camera_points_callback, 10
         )
         self.scan_sub = self.create_subscription(LaserScan, "scan", self.scan_callback, 10)
 
         # Timer - send cmd_vel and check if the time needed for speed stabilization has elapsed
         self.timer = self.create_timer(0.1, self.timer_callback)
 
-        # Values for cmd_vel
+        # Destination velocity for cmd_vel
         self.v_x = 0.0
         self.v_y = 0.0
         self.v_yaw = 0.0
 
-        # Debug value
+        # Debug values
         self.controller_twist = None
         self.ekf_twist = None
 
@@ -163,11 +162,11 @@ class SimulationTest(Node):
         if data.ranges:
             self.scan_event.set()
 
-    def camera_rgb_callback(self, data: Image):
+    def camera_image_callback(self, data: Image):
         if data.data:
             self.camera_color_event.set()
 
-    def camera_pc_callback(self, data: PointCloud2):
+    def camera_points_callback(self, data: PointCloud2):
         if data.data:
             self.camera_points_event.set()
 
@@ -186,11 +185,13 @@ class SimulationTest(Node):
         self.shutdown()
 
 
-def wait_for_initialization(node: SimulationTest, robot_name="ROSbot"):
-    assert node.robot_initialized_event.wait(30), f"{robot_name} does not initialized correctly!"
+def wait_for_initialization(node: SimulationTestNode, robot_name="ROSbot"):
+    assert node.robot_initialized_event.wait(
+        30
+    ), f"{robot_name} does not initialized correctly!\n\tIs controller_msg: {node.is_controller_msg}\n\tIs ekf_msg: {node.is_ekf_msg}\n\tIs imu_msg: {node.is_imu_msg}\n\tIs joint_msg: {node.is_joint_msg}"
 
 
-def x_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
+def x_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     node.set_destination_speed(v_x, v_y, v_yaw)
     # node.rate.sleep()
     assert node.vel_stabilization_time_event.wait(20.0), (
@@ -209,7 +210,7 @@ def x_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="
     )
 
 
-def y_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
+def y_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     node.set_destination_speed(v_x, v_y, v_yaw)
 
     assert node.vel_stabilization_time_event.wait(20.0), (
@@ -228,7 +229,7 @@ def y_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="
     )
 
 
-def yaw_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
+def yaw_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
     node.set_destination_speed(v_x, v_y, v_yaw)
 
     assert node.vel_stabilization_time_event.wait(20.0), (
@@ -246,7 +247,7 @@ def yaw_speed_test(node: SimulationTest, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name
     ), f"{robot_name} does not rotate properly. Check ekf_filter_node! Twist: {node.ekf_twist}"
 
 
-def diff_test(node: SimulationTest, robot_name="ROSbot"):
+def diff_test(node: SimulationTestNode, robot_name="ROSbot"):
     wait_for_initialization(node, robot_name)
     # 0.8 m/s and 3.14 rad/s are controller's limits defined in
     # rosbot_xl_controller/config/mecanum_drive_controller.yaml
@@ -254,7 +255,7 @@ def diff_test(node: SimulationTest, robot_name="ROSbot"):
     yaw_speed_test(node, v_yaw=3.14, robot_name=robot_name)
 
 
-def mecanum_test(node: SimulationTest, robot_name="ROSbot"):
+def mecanum_test(node: SimulationTestNode, robot_name="ROSbot"):
     wait_for_initialization(node, robot_name)
     # 0.8 m/s and 3.14 rad/s are controller's limits defined in
     # rosbot_xl_controller/config/mecanum_drive_controller.yaml

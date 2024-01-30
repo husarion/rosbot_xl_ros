@@ -24,7 +24,7 @@ from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import SingleThreadedExecutor
-from test_utils import SimulationTest, diff_test
+from test_utils import SimulationTestNode, diff_test
 from test_ign_kill_utils import kill_ign_linux_processes
 from threading import Thread
 
@@ -67,16 +67,18 @@ def test_multirobot_diff_drive_simulation():
         nodes = {}
         executor = SingleThreadedExecutor()
 
-        for node_name in robots:
-            node = SimulationTest("test_multirobot_diff_drive_simulation", namespace=node_name)
-            nodes[node_name] = node
+        for node_namespace in robots:
+            node = SimulationTestNode(
+                "test_multirobot_diff_drive_simulation", namespace=node_namespace
+            )
+            nodes[node_namespace] = node
             executor.add_node(node)
 
         Thread(target=lambda executor: executor.spin(), args=(executor,)).start()
 
-        for node_name in robots:
-            node = nodes[node_name]
-            diff_test(node, node_name)
+        for node_namespace in robots:
+            node = nodes[node_namespace]
+            diff_test(node, node_namespace)
             executor.remove_node(node)
             node.destroy_node()
 

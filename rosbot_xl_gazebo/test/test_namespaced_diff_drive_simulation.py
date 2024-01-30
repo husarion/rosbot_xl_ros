@@ -26,7 +26,7 @@ from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from test_utils import SimulationTest, diff_test
+from test_utils import SimulationTestNode, diff_test
 from test_ign_kill_utils import kill_ign_linux_processes
 from threading import Thread
 
@@ -46,7 +46,6 @@ def generate_test_description():
             )
         ),
         launch_arguments={
-            "mecanum": "True",
             "headless": "True",
             "world": PathJoinSubstitution(
                 [
@@ -73,7 +72,7 @@ def generate_test_description():
 def test_namespaced_diff_drive_simulation():
     rclpy.init()
     try:
-        node = SimulationTest("test_namespaced_diff_drive_simulation", namespace="rosbot_xl")
+        node = SimulationTestNode("test_namespaced_diff_drive_simulation", namespace="rosbot_xl")
         Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
 
         diff_test(node)

@@ -65,17 +65,17 @@ def test_namespaced_bringup_startup_success():
         nodes = {}
         executor = SingleThreadedExecutor()
 
-        for node_name in robot_names:
-            node = BringupTestNode("test_bringup", namespace=node_name)
+        for node_namespace in robot_names:
+            node = BringupTestNode("test_bringup", namespace=node_namespace)
             node.start_publishing_fake_hardware()
-            nodes[node_name] = node
+            nodes[node_namespace] = node
             executor.add_node(node)
 
         Thread(target=lambda executor: executor.spin(), args=(executor,)).start()
 
-        for node_name in robot_names:
-            node = nodes[node_name]
-            ekf_and_scan_test(node, node_name)
+        for node_namespace in robot_names:
+            node = nodes[node_namespace]
+            ekf_and_scan_test(node, node_namespace)
             executor.remove_node(node)
             node.destroy_node()
 

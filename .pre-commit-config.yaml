@@ -32,6 +32,7 @@ repos:
         files: ^(?!.*compose)(?!.*ekf\.yaml$).*$
         args: [--mapping, '2', --sequence, '4', --offset, '2', --width, '100']
 
+  # Please keep this version until --experimental-string-processing come back or will be available by default
   - repo: https://github.com/psf/black
     rev: 23.11.0
     hooks:

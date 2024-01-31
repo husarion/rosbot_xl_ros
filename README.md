@@ -81,6 +81,9 @@ rm -rf src/ros2_controllers
 cp -r src/geometry2/tf2_ros_py src/
 rm -rf src/geometry2/
 
+# stm32flash is not in the ros index and should be installed manually
+sudo apt install stm32flash
+
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y

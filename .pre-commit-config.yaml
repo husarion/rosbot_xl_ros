@@ -76,3 +76,6 @@ repos:
     rev: 1.0.0
     hooks:
       - id: xmllint
+        args:
+          - --schema
+          - http://download.ros.org/schema/package_format3.xsd

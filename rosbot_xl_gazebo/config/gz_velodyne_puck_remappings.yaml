@@ -1,0 +1,6 @@
+---
+# https://github.com/ros-drivers/velodyne/tree/humble-devel/velodyne_pointcloud#published-topics
+  - ros_topic_name: <robot_namespace>velodyne_points
+    gz_topic_name: <robot_namespace>velodyne_points/points
+    ros_type_name: sensor_msgs/msg/PointCloud2
+    gz_type_name: ignition.msgs.PointCloudPacked

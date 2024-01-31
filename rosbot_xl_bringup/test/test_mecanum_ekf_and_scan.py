@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import BringupTestNode
+from test_utils import BringupTestNode, ekf_and_scan_test
+from threading import Thread
 
 
 @launch_pytest.fixture
@@ -31,16 +32,17 @@ def generate_test_description():
     rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                rosbot_xl_bringup,
-                "launch",
-                "bringup.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_bringup,
+                    "launch",
+                    "bringup.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "use_sim": "False",
             "mecanum": "True",
-            "use_gpu": "False",
         }.items(),
     )
 
@@ -52,32 +54,11 @@ def test_bringup_startup_success():
     rclpy.init()
     try:
         node = BringupTestNode("test_bringup")
-        node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 
-        node.start_node_thread()
-        msgs_received_flag = node.odom_tf_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected odom to base_link tf but it was not received. Check robot_localization!"
-
-    finally:
-        rclpy.shutdown()
-
-
-@pytest.mark.launch(fixture=generate_test_description)
-def test_bringup_scan_filter():
-    rclpy.init()
-    try:
-        node = BringupTestNode("test_bringup")
-        node.create_test_subscribers_and_publishers()
-        node.start_publishing_fake_hardware()
-
-        node.start_node_thread()
-        msgs_received_flag = node.scan_filter_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected filtered scan but it is not filtered properly. Check laser_filter!"
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
+        ekf_and_scan_test(node)
+        node.destroy_node()
 
     finally:
         rclpy.shutdown()

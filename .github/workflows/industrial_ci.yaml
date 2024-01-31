@@ -1,46 +1,56 @@
 ---
 name: Industrial CI
 on:
-    workflow_call:
-    workflow_dispatch:
-    push:
+  workflow_call:
+  workflow_dispatch:
+  push:
 
 
 jobs:
-    black:
-        name: Black
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: psf/black@stable
-              with:
-                  options: --line-length=99
+  black:
+    name: Black
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+        with:
+          options: --line-length=99
 
-    spellcheck:
+  spellcheck:
+    name: Spellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rojopolis/spellcheck-github-actions@0.33.1
         name: Spellcheck
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: rojopolis/spellcheck-github-actions@0.33.1
-              name: Spellcheck
 
-    ros_industrial_ci:
-        name: ROS Industrial CI
-        needs:
-            - black
-            - spellcheck
-        strategy:
-            fail-fast: false
-            matrix:
-                ROS_DISTRO: [humble]
-        runs-on: ubuntu-latest
-        timeout-minutes: 16
-        steps:
-            - uses: actions/checkout@v3
-            - name: Clone installation requirements
-              shell: bash
-              run: python3 -m pip install -U vcstool && vcs import . < ./rosbot_xl/rosbot_xl_hardware.repos && vcs import . < ./rosbot_xl/rosbot_xl_simulation.repos
-            - uses: ros-industrial/industrial_ci@master
-              env:
-                  ROS_DISTRO: ${{matrix.ROS_DISTRO}}
-                  HUSARION_ROS_BUILD: simulation
+  ros_industrial_ci:
+    name: ROS Industrial CI
+    needs:
+      - black
+      - spellcheck
+    strategy:
+      fail-fast: false
+      matrix:
+        ROS_DISTRO: [humble]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup ROS2 Workspace and Clone Repositories
+        run: |
+          mkdir -p src
+          find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
+          python3 -m pip install -U vcstool
+          vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
+          vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+          cp -r src/ros2_controllers/diff_drive_controller src/
+          cp -r src/ros2_controllers/imu_sensor_broadcaster src/
+          rm -rf src/ros2_controllers
+
+      - uses: ros-industrial/industrial_ci@master
+        env:
+          ROS_DISTRO: ${{matrix.ROS_DISTRO}}
+          HUSARION_ROS_BUILD: simulation

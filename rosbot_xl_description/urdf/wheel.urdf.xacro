@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="wheel" params="wheel_radius prefix mecanum use_sim">
+  <xacro:macro name="wheel" params="wheel_radius side mecanum use_sim">
 
     <xacro:property name="wheel_separation_x" value="0.170" />
 
@@ -28,28 +28,28 @@
       <xacro:property name="wheel_separation_y" value="0.248" />
     </xacro:unless>
 
-    <xacro:if value="${prefix == 'fl'}">
+    <xacro:if value="${side == 'fl'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="package://rosbot_xl_description/meshes/${wheel_file}_b.dae" />
       <xacro:property name="visual_rotation" value="${pi}" />
       <xacro:property name="fdir" value="1 -1 0" />
     </xacro:if>
-    <xacro:if value="${prefix == 'fr'}">
+    <xacro:if value="${side == 'fr'}">
       <xacro:property name="x" value="${wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
       <xacro:property name="mesh" value="package://rosbot_xl_description/meshes/${wheel_file}_a.dae" />
       <xacro:property name="visual_rotation" value="${pi}" />
       <xacro:property name="fdir" value="1 1 0" />
     </xacro:if>
-    <xacro:if value="${prefix == 'rl'}">
+    <xacro:if value="${side == 'rl'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${wheel_separation_y/2}" />
       <xacro:property name="mesh" value="package://rosbot_xl_description/meshes/${wheel_file}_a.dae" />
       <xacro:property name="visual_rotation" value="${0.0}" />
       <xacro:property name="fdir" value="1 1 0" />
     </xacro:if>
-    <xacro:if value="${prefix == 'rr'}">
+    <xacro:if value="${side == 'rr'}">
       <xacro:property name="x" value="${-wheel_separation_x/2}" />
       <xacro:property name="y" value="${-wheel_separation_y/2}" />
       <xacro:property name="mesh" value="package://rosbot_xl_description/meshes/${wheel_file}_b.dae" />
@@ -57,16 +57,16 @@
       <xacro:property name="fdir" value="1 -1 0" />
     </xacro:if>
 
-    <joint name="${prefix}_wheel_joint" type="continuous">
+    <joint name="${side}_wheel_joint" type="continuous">
       <parent link="body_link" />
-      <child link="${prefix}_wheel_link" />
+      <child link="${side}_wheel_link" />
       <origin xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 1.0 0.0" />
       <limit effort="1.5" velocity="30.0" />
       <dynamics damping="0.001" friction="0.001" />
     </joint>
 
-    <link name="${prefix}_wheel_link">
+    <link name="${side}_wheel_link">
       <visual>
         <geometry>
           <mesh filename="${mesh}" scale="1 1 1" />
@@ -90,7 +90,7 @@
     </link>
 
     <xacro:if value="${use_sim}">
-      <gazebo reference="${prefix}_wheel_link" xmlns:ignition="http://ignitionrobotics.org/schema">
+      <gazebo reference="${side}_wheel_link" xmlns:ignition="http://ignitionrobotics.org/schema">
         <collision>
           <surface>
             <friction>

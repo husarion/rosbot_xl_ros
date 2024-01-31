@@ -1,4 +1,4 @@
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +14,7 @@
 
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.substitutions import (
-    PathJoinSubstitution,
-    LaunchConfiguration,
-)
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node, SetParameter
@@ -26,6 +23,13 @@ from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration("namespace")
+    declare_namespace_arg = DeclareLaunchArgument(
+        "namespace",
+        default_value="",
+        description="Namespace for all topics and tfs",
+    )
+
     mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
@@ -90,13 +94,18 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
+    rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
+    rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
+
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_controller"),
-                "launch",
-                "controller.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_controller,
+                    "launch",
+                    "controller.launch.py",
+                ]
+            )
         ),
         launch_arguments={
             "mecanum": mecanum,
@@ -105,44 +114,58 @@ def generate_launch_description():
             "include_camera_mount": include_camera_mount,
             "use_sim": use_sim,
             "simulation_engine": simulation_engine,
+            "namespace": namespace,
         }.items(),
     )
+
+    ekf_config = PathJoinSubstitution([rosbot_xl_bringup, "config", "ekf.yaml"])
 
     robot_localization_node = Node(
         package="robot_localization",
         executable="ekf_node",
         name="ekf_filter_node",
         output="screen",
-        parameters=[
-            PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_bringup"), "config", "ekf.yaml"
-            ])
+        parameters=[ekf_config],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
         ],
+        namespace=namespace,
+    )
+
+    laser_filter_config = PathJoinSubstitution(
+        [
+            rosbot_xl_bringup,
+            "config",
+            "laser_filter.yaml",
+        ]
     )
 
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
         parameters=[
-            PathJoinSubstitution([
-                get_package_share_directory("rosbot_xl_bringup"),
-                "config",
-                "laser_filter.yaml",
-            ])
+            laser_filter_config,
         ],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
+        ],
+        namespace=namespace,
     )
 
-    actions = [
-        declare_mecanum_arg,
-        declare_lidar_model_arg,
-        declare_camera_model_arg,
-        declare_include_camera_mount_arg,
-        declare_use_sim_arg,
-        declare_simulation_engine_arg,
-        SetParameter(name="use_sim_time", value=use_sim),
-        controller_launch,
-        robot_localization_node,
-        laser_filter_node,
-    ]
-
-    return LaunchDescription(actions)
+    return LaunchDescription(
+        [
+            declare_namespace_arg,
+            declare_mecanum_arg,
+            declare_lidar_model_arg,
+            declare_camera_model_arg,
+            declare_include_camera_mount_arg,
+            declare_use_sim_arg,
+            declare_simulation_engine_arg,
+            SetParameter(name="use_sim_time", value=use_sim),
+            controller_launch,
+            robot_localization_node,
+            laser_filter_node,
+        ]
+    )

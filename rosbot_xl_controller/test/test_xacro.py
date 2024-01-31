@@ -1,4 +1,4 @@
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,9 +21,8 @@ from ament_index_python.packages import get_package_share_directory
 def test_rosbot_description_parsing():
     mecanum_values = ["true", "false"]
     use_sim_values = ["true", "false"]
-    use_gpu_values = ["true", "false"]
     simulation_engine_values = ["ignition-gazebo", "webots"]  # 'gazebo-classic'
-    lidar_model = [
+    lidar_models = [
         "None",
         "slamtec_rplidar_a2",
         "slamtec_rplidar_a3",
@@ -32,7 +31,7 @@ def test_rosbot_description_parsing():
         "slamtec_rplidar_s3",
         "velodyne_puck",
     ]
-    camera_model = [
+    camera_models = [
         "None",
         "intel_realsense_d435",
         "orbbec_astra",
@@ -48,10 +47,9 @@ def test_rosbot_description_parsing():
         itertools.product(
             mecanum_values,
             use_sim_values,
-            use_gpu_values,
             simulation_engine_values,
-            lidar_model,
-            camera_model,
+            lidar_models,
+            camera_models,
         )
     )
 
@@ -59,7 +57,6 @@ def test_rosbot_description_parsing():
         (
             mecanum,
             use_sim,
-            use_gpu,
             simulation_engine,
             lidar_model,
             camera_model,
@@ -67,7 +64,6 @@ def test_rosbot_description_parsing():
         mappings = {
             "mecanum": mecanum,
             "use_sim": use_sim,
-            "use_gpu": use_gpu,
             "simulation_engine": simulation_engine,
             "lidar_model": lidar_model,
             "camera_model": camera_model,
@@ -79,6 +75,6 @@ def test_rosbot_description_parsing():
         except xacro.XacroException as e:
             assert False, (
                 f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
-                f"use_sim: {use_sim}, use_gpu: {use_gpu}, simulation_engine: {simulation_engine}, "
-                f"lidar_model: {lidar_model}, camera_model: {camera_model}"
+                f"use_sim: {use_sim}, simulation_engine: {simulation_engine}, "
+                f"lidar_model: {lidar_model}, camera_model: {camera_model}, "
             )

@@ -44,6 +44,7 @@ def generate_test_description():
         launch_arguments={
             "use_sim": "False",
             "mecanum": "True",
+            "namespace": "rosbot_xl",
         }.items(),
     )
 
@@ -51,36 +52,10 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_controllers_startup_fail():
+def test_namespaced_controllers_startup():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_startup_fail")
-
-        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
-        msgs_received_flag = node.joint_state_msg_event.wait(10.0)
-        assert not msgs_received_flag, (
-            "Received JointStates message that should not have appeared. Check whether other"
-            " robots are connected to your network.!"
-        )
-        msgs_received_flag = node.odom_msg_event.wait(10.0)
-        assert not msgs_received_flag, (
-            "Received Odom message that should not have appeared. Check whether other robots are"
-            " connected to your network.!"
-        )
-        msgs_received_flag = node.imu_msg_event.wait(10.0)
-        assert not msgs_received_flag, (
-            "Received Imu message that should not have appeared. Check whether other robots are"
-            " connected to your network.!"
-        )
-    finally:
-        rclpy.shutdown()
-
-
-@pytest.mark.launch(fixture=generate_test_description)
-def test_controllers_startup():
-    rclpy.init()
-    try:
-        node = ControllersTestNode("test_controllers_startup")
+        node = ControllersTestNode("test_namespaced_controllers_startup", namespace="rosbot_xl")
         node.start_publishing_fake_hardware()
         Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
         controller_test(node)

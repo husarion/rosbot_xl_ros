@@ -1,22 +1,5 @@
-simulation_ignition_ros_control:
-  ros__parameters:
-    use_sim_time: true
-
-# Separate controller manager used for simulation - only difference is
-# the use_sim_time parameter (it is the easiest way to do it with ign ros2 control)
-simulation_controller_manager:
-  ros__parameters:
-    use_sim_time: true
-    update_rate: 25 # Hz
-
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
-    rosbot_xl_base_controller:
-      type: mecanum_drive_controller/MecanumDriveController
-    imu_broadcaster:
-      type: imu_sensor_broadcaster/IMUSensorBroadcaster
-
-controller_manager:
+---
+/**/controller_manager:
   ros__parameters:
     use_sim_time: false
     update_rate: 25 # Hz
@@ -28,16 +11,20 @@ controller_manager:
     imu_broadcaster:
       type: imu_sensor_broadcaster/IMUSensorBroadcaster
 
-imu_broadcaster:
+/**/imu_broadcaster:
   ros__parameters:
-    sensor_name: "imu"
-    frame_id: "imu_link"
+    tf_frame_prefix_enable: false
+    use_namespace_as_sensor_name_prefix: true
+
+    sensor_name: imu
+    frame_id: imu_link
     static_covariance_orientation: [1.9e-3, 0.0, 0.0, 0.0, 1.9e-3, 0.0, 0.0, 0.0, 1.9e-3] # Values taken from datasheet
     static_covariance_angular_velocity: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0e-3] # Values based on diff_drive
     static_covariance_linear_acceleration: [6.4e-2, 0.0, 0.0, 2.2e-2, 0.0, 0.0, 0.0, 0.0, 0.0] # Values based on diff_drive
 
-rosbot_xl_base_controller:
+/**/rosbot_xl_base_controller:
   ros__parameters:
+    tf_frame_prefix_enable: false
     front_left_wheel_name: fl_wheel_joint
     front_right_wheel_name: fr_wheel_joint
     rear_left_wheel_name: rl_wheel_joint
@@ -76,13 +63,14 @@ rosbot_xl_base_controller:
 
     # Velocity and acceleration limits
     # Whenever a min_* is unspecified, default to -max_*
+    # Limits from manual https://husarion.com/manuals/rosbot-xl/#hardware-guide
     linear:
       x:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        # top speed is around 1.2m/s
-        max_velocity: 0.9 # m/s
+        # top speed is around 0.8m/s
+        max_velocity: 0.8 # m/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 1.0 # m/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.
@@ -91,8 +79,8 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        # top speed is around 1.2m/s
-        max_velocity: 0.9 # m/s
+        # top speed is around 0.8m/s
+        max_velocity: 0.8 # m/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 1.0 # m/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.
@@ -103,7 +91,7 @@ rosbot_xl_base_controller:
         has_velocity_limits: true
         has_acceleration_limits: true
         has_jerk_limits: false
-        max_velocity: 3.0 # rad/s
+        max_velocity: 3.14 # rad/s
         # min_velocity -  When unspecified, -max_velocity is used
         max_acceleration: 4.0 # rad/s^2
         # min_acceleration - When unspecified, -max_acceleration is used.

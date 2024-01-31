@@ -3,10 +3,6 @@ repositories:
     type: git
     url: https://github.com/husarion/rosbot_hardware_interfaces.git
     version: main
-  rosbot_controllers:
-    type: git
-    url: https://github.com/husarion/rosbot_controllers
-    version: main
   ros_components_description:
     type: git
     url: https://github.com/husarion/ros_components_description.git
@@ -18,4 +14,11 @@ repositories:
   micro-ROS-Agent:
     type: git
     url: https://github.com/micro-ROS/micro-ROS-Agent.git
+  rosbot_controllers:
+    type: git
+    url: https://github.com/husarion/rosbot_controllers
+    version: main
+  ros2_controllers:
+    type: git
+    url: https://github.com/delihus/ros2_controllers
     version: humble

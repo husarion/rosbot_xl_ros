@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!-- Used https://github.com/colcon/colcon-bundle/blob/master/integration/test_workspace/src/test-nodes/package.xml -->
 <package format="3">
   <name>rosbot_xl_description</name>
-  <version>0.8.12</version>
+  <version>0.9.0</version>
 
   <description>The rosbot_xl_description package</description>
   <license>Apache License 2.0</license>
@@ -18,9 +19,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <build_depend>xacro</build_depend>
-  <exec_depend>xacro</exec_depend>
-
+  <!-- Husarion dependencies -->
   <exec_depend>ros_components_description</exec_depend>
 
   <export>

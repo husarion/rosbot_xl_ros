@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,49 +18,46 @@ import launch_pytest
 import pytest
 import rclpy
 
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-from test_utils import SimulationTestNode
-from test_ign_kill_utils import kill_ign_linux_processes
+from test_utils import ControllersTestNode, controller_test
+from threading import Thread
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
-    simulation_launch = IncludeLaunchDescription(
+    rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
+    bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                rosbot_xl_gazebo,
-                "launch",
-                "simulation.launch.py",
-            ])
+            PathJoinSubstitution(
+                [
+                    rosbot_xl_controller,
+                    "launch",
+                    "controller.launch.py",
+                ]
+            )
         ),
         launch_arguments={
-            "headless": "True",
-            "lidar_model": "slamtec_rplidar_a2",
+            "use_sim": "False",
+            "mecanum": "False",
+            "namespace": "rosbot_xl",
         }.items(),
     )
 
-    return LaunchDescription([simulation_launch])
+    return LaunchDescription([bringup_launch])
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_slamtec_rplidar_a2():
+def test_namespaced_controllers_startup():
     rclpy.init()
     try:
-        node = SimulationTestNode("test_bringup")
-        node.create_test_subscribers_and_publishers()
-        node.start_node_thread()
-
-        msgs_received_flag = node.scan_event.wait(timeout=60.0)
-        assert msgs_received_flag, "ROSbot's lidar does not work properly!"
-
+        node = ControllersTestNode("test_namespaced_controllers_startup", namespace="rosbot_xl")
+        node.start_publishing_fake_hardware()
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
+        controller_test(node)
     finally:
-        # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
-        # several tests in a row.
-        kill_ign_linux_processes()
         rclpy.shutdown()

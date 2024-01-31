@@ -1,0 +1,27 @@
+---
+# https://github.com/IntelRealSense/realsense-ros#published-topics
+  - topic_name: <robot_namespace>/camera/color/camera_info
+    ros_type_name: sensor_msgs/msg/CameraInfo
+    gz_type_name: ignition.msgs.CameraInfo
+    lazy: true
+
+  - topic_name: <robot_namespace>/camera/color/image_raw
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: ignition.msgs.Image
+    lazy: true
+
+  - topic_name: <robot_namespace>/camera/depth/camera_info
+    ros_type_name: sensor_msgs/msg/CameraInfo
+    gz_type_name: ignition.msgs.CameraInfo
+    lazy: true
+
+  - topic_name: <robot_namespace>/camera/depth/image_rect_raw
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: ignition.msgs.Image
+    lazy: true
+
+  - ros_topic_name: <robot_namespace>/camera/depth/color/points
+    gz_topic_name: <robot_namespace>/camera/depth/image_rect_raw/points
+    ros_type_name: sensor_msgs/msg/PointCloud2
+    gz_type_name: ignition.msgs.PointCloudPacked
+    lazy: true

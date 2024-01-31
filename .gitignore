@@ -20,6 +20,10 @@ gazebosim/gz_ros2_control
 micro-ROS-Agent/
 micro_ros_msgs/
 industrial_ci/
+ros2_controllers/
+diff_drive_controller/
+imu_sensor_broadcaster/
+tf2_ros_py/
 
 # pyspelling
 *.dic

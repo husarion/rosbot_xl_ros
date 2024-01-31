@@ -10,7 +10,7 @@ Metapackage that contains dependencies to other repositories. It is also used to
 
 ### `rosbot_xl_bringup`
 
-Package that contains launch, which starts all base functionalities. Also configs for `robot_localization` and `laser_filters` are defined there.
+Package that contains launch, which starts all base functionalities with the microros agent. Also configs for `robot_localization` and `laser_filters` are defined there.
 
 ### `rosbot_xl_description`
 
@@ -31,6 +31,10 @@ Launch files for Ignition Gazebo working with ROS2 control.
 ### `rosbot_xl_controller`
 
 ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros.
+
+### `rosbot_xl_utils`
+
+This package contains the stable firmware version with the flash script.
 
 ## ROS API
 

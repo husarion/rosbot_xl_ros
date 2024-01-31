@@ -59,9 +59,7 @@ class FirmwareFlasher:
 
     def flash_firmware(self):
         self.enter_bootloader_mode()
-        sh.usbreset(
-            "0403:6015"
-        )
+        sh.usbreset("0403:6015")
         # workaround: using pyftdi causes laggy serial port.
         # This line is like unplug/plug for USB port
         sh.stm32flash(self.port, "-v", w=self.binary_file, b="115200", _out=sys.stdout)

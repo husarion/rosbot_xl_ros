@@ -49,7 +49,7 @@ def generate_microros_agent_node(context, *args, **kwargs):
                     msg=[
                         "ROS_LOCALHOST_ONLY set to 1. Using FASTRTPS_DEFAULT_PROFILES_FILE=",
                         localhost_only_fastrtps_profiles_file,
-                        "."
+                        ".",
                     ]
                 ),
                 SetEnvironmentVariable(name="RMW_IMPLEMENTATION", value="rmw_fastrtps_cpp"),

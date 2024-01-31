@@ -25,7 +25,6 @@
 
   <exec_depend>rosbot_xl_controller</exec_depend>
 
-
   <exec_depend>laser_filters</exec_depend>
   <exec_depend>robot_localization</exec_depend>
 

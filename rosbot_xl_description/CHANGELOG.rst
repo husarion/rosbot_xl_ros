@@ -2,6 +2,12 @@
 Changelog for package rosbot_xl_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#56 <https://github.com/husarion/rosbot_xl_ros/issues/56>`_ from husarion/add-sensors-and-fix
+  Add sensors and launch fix
+* Contributors: Jan brzyk
+
 0.8.12 (2023-12-05)
 -------------------
 

@@ -59,7 +59,7 @@ class SimulationTestNode(Node):
         self.controller_twist = None
         self.ekf_twist = None
 
-        # Robot test flags and event
+        # Robot test flags and events
         self.is_controller_msg = False
         self.is_controller_odom_correct = False
         self.is_ekf_msg = False
@@ -69,7 +69,7 @@ class SimulationTestNode(Node):
         self.robot_initialized_event = Event()
         self.vel_stabilization_time_event = Event()
 
-        # Parameters Use simulation time to correct run on slow machine
+        # Using /clock topic as time source
         use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
         self.set_parameters([use_sim_time])
 

@@ -245,7 +245,7 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    ign_bridge = Node(
+    ign_clock_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="ros_gz_bridge",
@@ -289,8 +289,7 @@ def generate_launch_description():
             # Sets use_sim_time for all nodes started below
             # (doesn't work for nodes started from ignition gazebo)
             SetParameter(name="use_sim_time", value=True),
-            ign_bridge,
-            # ign_camera_bridge,
+            ign_clock_bridge,
             gz_spawn_entity,
             bringup_launch,
             OpaqueFunction(function=launch_gz_bridge),

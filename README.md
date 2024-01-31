@@ -74,10 +74,6 @@ cp -r src/ros2_controllers/diff_drive_controller src/
 cp -r src/ros2_controllers/imu_sensor_broadcaster src/
 rm -rf src/ros2_controllers
 
-# Copy only tf2_ros_py from geometry2, waits for https://github.com/ros2/geometry2/pull/641
-cp -r src/geometry2/tf2_ros_py src/
-rm -rf src/geometry2/
-
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
@@ -108,14 +104,6 @@ vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
 cp -r src/ros2_controllers/diff_drive_controller src/
 cp -r src/ros2_controllers/imu_sensor_broadcaster src/
 rm -rf src/ros2_controllers
-
-# Copy only tf2_ros_py from geometry2, waits for https://github.com/ros2/geometry2/pull/641
-cp -r src/geometry2/tf2_ros_py src/
-rm -rf src/geometry2/
-
-# Remove ign_ros2_control demo
-rm -rf src/gazebosim/gz_ros2_control/ign_ros2_control_demos &&
-rm -rf src/gazebosim/gz_ros2_control/gz_ros2_control_tests
 
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO

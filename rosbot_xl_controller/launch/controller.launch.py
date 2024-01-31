@@ -73,7 +73,6 @@ def launch_setup(context, *args, **kwargs):
         ],
     )
 
-    # Delay start of robot_controller after `joint_state_broadcaster`
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
@@ -98,7 +97,6 @@ def launch_setup(context, *args, **kwargs):
         ],
     )
 
-    # Delay start of imu_broadcaster_spawner after `robot_controller_spawner`
     delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=robot_controller_spawner,
@@ -192,7 +190,6 @@ def generate_launch_description():
         ]
     )
 
-    # Get URDF via xacro
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),

@@ -69,7 +69,7 @@ class SimulationTestNode(Node):
         self.robot_initialized_event = Event()
         self.vel_stabilization_time_event = Event()
 
-        # Using /clock topic as time source
+        # Using /clock topic as time source (checking the simulation time)
         use_sim_time = rclpy.parameter.Parameter("use_sim_time", rclpy.Parameter.Type.BOOL, True)
         self.set_parameters([use_sim_time])
 

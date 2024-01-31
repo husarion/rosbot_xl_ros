@@ -1,4 +1,4 @@
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     ]
 
     namespace_ext = "" if namespace == "" else "/" + namespace
-    robot_name = 'rosbot_xl'
+    robot_name = "rosbot_xl"
     if namespace != "":
         robot_name = namespace
 

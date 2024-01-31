@@ -1,4 +1,4 @@
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 # Copyright 2023 Open Source Robotics Foundation, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 
 import psutil
 from time import sleep
+
 # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
 # several tests in a row.
 # https://github.com/ros-controls/gz_ros2_control/blob/master/gz_ros2_control_tests/tests/position_test.py

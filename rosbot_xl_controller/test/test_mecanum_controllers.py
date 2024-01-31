@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,23 +17,19 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
+
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from test_utils import ControllersTestNode
+from test_utils import ControllersTestNode, controller_test
+from threading import Thread
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
-
     rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -59,20 +55,19 @@ def test_controllers_startup_fail():
     rclpy.init()
     try:
         node = ControllersTestNode("test_controllers_startup_fail")
-        node.create_test_subscribers_and_publishers()
 
-        node.start_node_thread()
-        msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
+        msgs_received_flag = node.joint_state_msg_event.wait(10.0)
         assert not msgs_received_flag, (
             "Received JointStates message that should not have appeared. Check whether other"
             " robots are connected to your network.!"
         )
-        msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
+        msgs_received_flag = node.odom_msg_event.wait(10.0)
         assert not msgs_received_flag, (
             "Received Odom message that should not have appeared. Check whether other robots are"
             " connected to your network.!"
         )
-        msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
+        msgs_received_flag = node.imu_msg_event.wait(10.0)
         assert not msgs_received_flag, (
             "Received Imu message that should not have appeared. Check whether other robots are"
             " connected to your network.!"
@@ -82,25 +77,12 @@ def test_controllers_startup_fail():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_controllers_startup_success():
+def test_controllers_startup():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_controllers_startup_success")
-        node.create_test_subscribers_and_publishers()
+        node = ControllersTestNode("test_controllers_startup")
         node.start_publishing_fake_hardware()
-
-        node.start_node_thread()
-        msgs_received_flag = node.joint_state_msg_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected JointStates message but it was not received. Check joint_state_broadcaster!"
-        msgs_received_flag = node.odom_msg_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected Odom message but it was not received. Check rosbot_xl_base_controller!"
-        msgs_received_flag = node.imu_msg_event.wait(timeout=10.0)
-        assert (
-            msgs_received_flag
-        ), "Expected Imu message but it was not received. Check imu_broadcaster!"
+        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
+        controller_test(node)
     finally:
         rclpy.shutdown()

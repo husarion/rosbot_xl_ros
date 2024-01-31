@@ -1,6 +1,6 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
 # Copyright 2023 Intel Corporation. All Rights Reserved.
-# Copyright 2024 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,27 +17,20 @@
 import launch_pytest
 import pytest
 import rclpy
-import os
-import random
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from rclpy.executors import MultiThreadedExecutor
-from threading import Thread
-from test_utils import SimulationTest, diff_test
-
+from rclpy.executors import SingleThreadedExecutor
+from test_utils import SimulationTestNode, diff_test
 from test_ign_kill_utils import kill_ign_linux_processes
+from threading import Thread
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    proc_env = os.environ.copy()
-    proc_env["ROS_LOCALHOST_ONLY"] = "1"
-    proc_env["ROS_DOMAIN_ID"] = random.randint(0, 255)
-
     # IncludeLaunchDescription does not work with robots argument
     simulation_launch = ExecuteProcess(
         cmd=[
@@ -67,31 +60,30 @@ def generate_test_description():
 
 @pytest.mark.launch(fixture=generate_test_description)
 def test_multirobot_diff_drive_simulation():
-    robot_names = ["robot1", "robot2"]
+    robots = ["robot1", "robot2"]
     rclpy.init()
     try:
-        simulation_tests = {}
-        executor = MultiThreadedExecutor(num_threads=len(robot_names))
+        nodes = {}
+        executor = SingleThreadedExecutor()
 
-        for robot_name in robot_names:
-            node = SimulationTest(
-                "test_multirobot_diff_drive_simulation", namespace=robot_name
+        for node_namespace in robots:
+            node = SimulationTestNode(
+                "test_multirobot_diff_drive_simulation", namespace=node_namespace
             )
-            node.create_test_subscribers_and_publishers()
-            simulation_tests[robot_name] = node
-            executor.add_node(node.node)
+            nodes[node_namespace] = node
+            executor.add_node(node)
 
-        ros_spin_thread = Thread(target=lambda executor: executor.spin(), args=(executor,))
-        ros_spin_thread.start()
+        Thread(target=lambda executor: executor.spin(), args=(executor,)).start()
 
-        for robot_name in robot_names:
-            node = simulation_tests[robot_name]
-            diff_test(node, robot_name)
-            node.shutdown()
+        for node_namespace in robots:
+            node = nodes[node_namespace]
+            diff_test(node, node_namespace)
+            executor.remove_node(node)
+            node.destroy_node()
 
     finally:
-        rclpy.shutdown()
-
         # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
         # several tests in a row.
+        executor.shutdown()
         kill_ign_linux_processes()
+        rclpy.shutdown()

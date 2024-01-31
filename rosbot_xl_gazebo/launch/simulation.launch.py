@@ -1,4 +1,4 @@
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,9 +49,7 @@ def launch_setup(context, *args, **kwargs):
     pitch = LaunchConfiguration("pitch", default="0.0").perform(context)
     yaw = LaunchConfiguration("yaw", default="0.0").perform(context)
 
-    gz_args = (
-        f"--headless-rendering -s -v 4 -r {world}" if eval(headless) else f"-r {world}"
-    )
+    gz_args = f"--headless-rendering -s -v 4 -r {world}" if eval(headless) else f"-r {world}"
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

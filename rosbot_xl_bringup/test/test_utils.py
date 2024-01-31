@@ -1,5 +1,5 @@
 # Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2023 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ import math
 import random
 
 from threading import Event
-from threading import Thread
-
 from rclpy.node import Node
-
 from sensor_msgs.msg import JointState, Imu, LaserScan
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
@@ -41,18 +38,14 @@ class BringupTestNode(Node):
         self.odom_tf_event = Event()
         self.scan_filter_event = Event()
 
-    def create_test_subscribers_and_publishers(self):
-        self.imu_publisher = self.create_publisher(Imu, "/_imu/data_raw", 10)
-
-        self.joint_states_publisher = self.create_publisher(
-            JointState, "/_motors_response", 10
-        )
+        self.imu_pub = self.create_publisher(Imu, "/_imu/data_raw", 10)
+        self.joint_pub = self.create_publisher(JointState, "/_motors_response", 10)
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.scan_publisher = self.create_publisher(LaserScan, "scan", 10)
-        self.filtered_scan_subscriber = self.create_subscription(
+        self.scan_pub = self.create_publisher(LaserScan, "scan", 10)
+        self.scan_filtered_sub = self.create_subscription(
             LaserScan, "scan_filtered", self.filtered_scan_callback, 10
         )
 
@@ -63,13 +56,11 @@ class BringupTestNode(Node):
             self.tf_buffer.lookup_transform("odom", "base_link", rclpy.time.Time())
             self.odom_tf_event.set()
         except TransformException as ex:
-            self.get_logger().error(f"Could not transform odom to base_link: {ex}")
-
-    def start_node_thread(self):
-        self.ros_spin_thread = Thread(
-            target=lambda node: rclpy.spin(node), args=(self,)
-        )
-        self.ros_spin_thread.start()
+            self.get_logger().error(
+                f"Could not transform odom to base_link: {ex}",
+                skip_first=True,
+                throttle_duration_sec=3.0,
+            )
 
     def start_publishing_fake_hardware(self):
         self.timer = self.create_timer(
@@ -102,8 +93,8 @@ class BringupTestNode(Node):
         joint_state_msg.position = [0.0, 0.0, 0.0, 0.0]
         joint_state_msg.velocity = [0.0, 0.0, 0.0, 0.0]
 
-        self.imu_publisher.publish(imu_msg)
-        self.joint_states_publisher.publish(joint_state_msg)
+        self.imu_pub.publish(imu_msg)
+        self.joint_pub.publish(joint_state_msg)
 
     def publish_scan(self):
         msg = LaserScan()
@@ -117,7 +108,16 @@ class BringupTestNode(Node):
         msg.range_max = 10.0
 
         # fill ranges from 0.0m to 1.0m
-        msg.ranges = [
-            random.random() for _ in range(int(msg.angle_max / msg.angle_increment))
-        ]
-        self.scan_publisher.publish(msg)
+        msg.ranges = [random.random() for _ in range(int(msg.angle_max / msg.angle_increment))]
+        self.scan_pub.publish(msg)
+
+
+def ekf_and_scan_test(node: BringupTestNode, robot_name="ROSbot"):
+    assert node.odom_tf_event.wait(20.0), (
+        f"{robot_name}: Expected odom to base_link tf but it was not received. Check"
+        " robot_localization!"
+    )
+
+    assert node.scan_filter_event.wait(
+        20.0
+    ), f"{robot_name}: Expected filtered scan but it is not filtered properly. Check laser_filter!"

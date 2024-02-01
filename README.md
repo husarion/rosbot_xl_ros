@@ -10,7 +10,7 @@ Metapackage that contains dependencies to other repositories. It is also used to
 
 ### `rosbot_xl_bringup`
 
-Package that contains launch, which starts all base functionalities. Also configs for `robot_localization` and `laser_filters` are defined there.
+Package that contains launch, which starts all base functionalities with the microros agent. Also configs for `robot_localization` and `laser_filters` are defined there.
 
 ### `rosbot_xl_description`
 
@@ -31,6 +31,10 @@ Launch files for Ignition Gazebo working with ROS2 control.
 ### `rosbot_xl_controller`
 
 ROS2 hardware controller for ROSbot XL. Inputs and outputs data from ROS2 control and forwards it via ROS topic to be read by microros.
+
+### `rosbot_xl_utils`
+
+This package contains the stable firmware version with the flash script.
 
 ## ROS API
 
@@ -67,12 +71,18 @@ source /opt/ros/$ROS_DISTRO/setup.bash
 
 vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 
+# Remove tests from micro_ros_msgs
+sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
+
 rm -r src/rosbot_xl_gazebo
 
 # Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
 cp -r src/ros2_controllers/diff_drive_controller src/
 cp -r src/ros2_controllers/imu_sensor_broadcaster src/
 rm -rf src/ros2_controllers
+
+# stm32flash is not in the ros index and should be installed manually
+sudo apt install stm32flash
 
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
@@ -84,9 +94,19 @@ colcon build
 > Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
 
 2. **Running**
+
+Flash firmware.
+```bash
+# Get admin permissions to flash firmware
+sudo su
+source install/setup.bash
+ros2 run rosbot_xl_utils flash_firmware
+exit
+```
+
 ```
 source install/setup.bash
-ros2 launch rosbot_xl_bringup bringup.launch.py
+ros2 launch rosbot_xl_bringup combined.launch.py
 ```
 
 ### Build and run Gazebo simulation
@@ -99,6 +119,9 @@ source /opt/ros/$ROS_DISTRO/setup.bash
 
 vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+
+# Remove tests from micro_ros_msgs
+sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
 
 # Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
 cp -r src/ros2_controllers/diff_drive_controller src/

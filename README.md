@@ -51,7 +51,7 @@ For detailed instructions refer to the [rosbot_xl_firmware repository](https://g
 1. **Install `colcon`, `vsc` and `rosdep`**
 ```
 sudo apt-get update
-sudo apt-get install -y python3-colcon-common-extensions python3-vcstool python3-rosdep
+sudo apt-get install -y ros-dev-tools stm32flash
 ```
 
 2. **Create workspace folder and clone `rosbot_xl_ros` repository:**

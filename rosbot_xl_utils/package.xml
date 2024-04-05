@@ -15,17 +15,17 @@
 
   <author email="jakub.delicat@husarion.com">Jakub Delicat</author>
 
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">python3-sh</exec_depend>
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">python-periphery-pip</exec_depend>
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">python3-pyftdi-pip</exec_depend>
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">usbutils</exec_depend>
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">python3-serial</exec_depend>
-  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">python3-requests</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python3-sh</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python-periphery-pip</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python3-pyftdi-pip</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">usbutils</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python3-serial</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python3-requests</exec_depend>
 
-  <test_depend condition="$HUSARION_ROS_BUILD == hardware">ament_copyright</test_depend>
-  <test_depend condition="$HUSARION_ROS_BUILD == hardware">ament_flake8</test_depend>
-  <test_depend condition="$HUSARION_ROS_BUILD == hardware">ament_pep257</test_depend>
-  <test_depend condition="$HUSARION_ROS_BUILD == hardware">python3-pytest</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">ament_copyright</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">ament_flake8</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">ament_pep257</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD_TYPE == hardware">python3-pytest</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

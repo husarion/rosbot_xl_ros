@@ -63,4 +63,4 @@ jobs:
       - uses: ros-industrial/industrial_ci@master
         env:
           ROS_DISTRO: ${{matrix.ROS_DISTRO}}
-          HUSARION_ROS_BUILD: simulation
+          HUSARION_ROS_BUILD_TYPE: simulation

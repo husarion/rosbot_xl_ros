@@ -83,7 +83,7 @@ For detailed instructions refer to the [rosbot_xl_firmware repository](https://g
 ```bash
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import src < src/rosbot_xl/rosbot_xl_$HUSARION_ROS_BUILD.repos
+vcs import src < src/rosbot_xl/rosbot_xl_$HUSARION_ROS_BUILD_TYPE.repos
 
 # Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
 cp -r src/ros2_controllers/diff_drive_controller src/

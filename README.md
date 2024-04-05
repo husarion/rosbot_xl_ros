@@ -97,72 +97,30 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build --symlink-install --packages-up-to rosbot_xl --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
 
-> [!NOTE]
-> Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
-
-### Running
+### Launch robot
 
 **Hardware**:
 
-1. Flash firmware.
+```bash
+source install/setup.bash
+ros2 launch rosbot_xl_bringup combined.launch.py
+```
 
-    ```bash
-    # Get admin permissions to flash firmware
-    sudo su
-    source install/setup.bash
-    ros2 run rosbot_xl_utils flash_firmware
-    exit
-    ```
-
-2. Launch robot
-
-    ```bash
-    source install/setup.bash
-    ros2 launch rosbot_xl_bringup combined.launch.py
-    ```
+> [!IMPORTANT]
+> Before running the robot software, make sure you are using the correct firmware version. You can upload the appropriate firmware version using the command below.
+>
+> ```bash
+> sudo su # Get admin permissions to flash firmware
+> source install/setup.bash
+> ros2 run rosbot_xl_utils flash_firmware
+> exit
+> ```
 
 **Simulation**:
 
 ```bash
 source install/setup.bash
 ros2 launch rosbot_xl_gazebo simulation.launch.py
-```
-
-## Developer info
-
-### pre-commit
-
-[pre-commit configuration](.pre-commit-config.yaml) prepares plenty of tests helping for developing and contributing. Usage:
-
-```bash
-# install pre-commit
-pip install pre-commit
-
-# initialize pre-commit workspace
-pre-commit install
-
-# manually run pre-commit hooks
-pre-commit run -a
-
-# update revision
-pre-commit autoupdate
-```
-
-After initialization [pre-commit configuration](.pre-commit-config.yaml) will applied on every commit.
-
-### Industrial CI
-
-```bash
-colcon test
-```
-
-> [!NOTE]
-> Command `colcon test` does not build the code. Remember to build your code after changes.
-
-If tests finish with errors print logs:
-
-```bash
-colcon test-result --verbose
 ```
 
 ## Demos

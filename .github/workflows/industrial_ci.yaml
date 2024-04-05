@@ -58,4 +58,4 @@ jobs:
         env:
           ROS_DISTRO: ${{matrix.ROS_DISTRO}}
           global:
-            - HUSARION_ROS_BUILD_TYPE=simulation
+            - BEFORE_INIT='export HUSARION_ROS_BUILD_TYPE=simulation'

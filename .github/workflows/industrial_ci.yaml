@@ -48,13 +48,13 @@ jobs:
           cp -r src/ros2_controllers/imu_sensor_broadcaster src/
           rm -rf src/ros2_controllers
 
-      - name: Setup ROS2 Workspace and Clone Repositories
-        run: |
-          python3 -m pip install -U rosdep
-          rosdep init
-          rosdep update --rosdistro $ROS_DISTRO
-          export HUSARION_ROS_BUILD_TYPE=simulation
-          rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
+      # - name: Setup ROS2 Workspace and Clone Repositories
+      #   run: |
+      #     python3 -m pip install -U rosdep
+      #     rosdep init
+      #     rosdep update --rosdistro $ROS_DISTRO
+      #     export HUSARION_ROS_BUILD_TYPE=simulation
+      #     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 
       - name: Leave only ROSbot tests
         shell: bash

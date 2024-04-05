@@ -50,7 +50,7 @@ jobs:
 
       - name: Setup ROS2 Workspace and Clone Repositories
         run: |
-          sudo apt-get install python3-rosdep
+          python3 -m pip install -U rosdep
           rosdep init
           rosdep update --rosdistro $ROS_DISTRO
           export HUSARION_ROS_BUILD_TYPE=simulation

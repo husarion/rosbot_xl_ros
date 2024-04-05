@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
   push:
 
-
 jobs:
   black:
     name: Black
@@ -40,24 +39,24 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup ROS2 Workspace and Clone Repositories
+        env:
+          HUSARION_ROS_BUILD_TYPE: simulation
         run: |
           mkdir -p src
           find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
           python3 -m pip install -U vcstool
-          vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
-          vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
+          vcs import src < src/rosbot_xl/rosbot_xl_$HUSARION_ROS_BUILD_TYPE.repos
           cp -r src/ros2_controllers/diff_drive_controller src/
           cp -r src/ros2_controllers/imu_sensor_broadcaster src/
           rm -rf src/ros2_controllers
-          # Package micro_ros_msgs does not have industrial ci and tests does not pass.
-          # For more information see https://github.com/micro-ROS/micro_ros_msgs/issues/7
-          sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
 
       - name: Leave only ROSbot tests
         shell: bash
-        run: | 
+        run: |
           sed '/if(BUILD_TESTING)/,/endif()/d' src/diff_drive_controller/CMakeLists.txt -i
           sed '/if(BUILD_TESTING)/,/endif()/d' src/imu_sensor_broadcaster/CMakeLists.txt -i
+          # Package micro_ros_msgs does not have industrial ci and tests does not pass.
+          # For more information see https://github.com/micro-ROS/micro_ros_msgs/issues/7
           sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
 
       - uses: ros-industrial/industrial_ci@master

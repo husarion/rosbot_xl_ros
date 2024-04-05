@@ -26,7 +26,7 @@
 
   <exec_depend>rosbot_xl_description</exec_depend>
   <exec_depend>ros_components_description</exec_depend>
-  <exec_depend>rosbot_hardware_interfaces</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == hardware">rosbot_hardware_interfaces</exec_depend>
   <exec_depend>mecanum_drive_controller</exec_depend>
 
   <exec_depend>xacro</exec_depend>

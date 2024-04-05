@@ -22,10 +22,10 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rosbot_xl_bringup</depend>
-  <depend>rosbot_xl_description</depend>
   <depend>rosbot_xl_controller</depend>
-
+  <depend>rosbot_xl_description</depend>
   <depend condition="$HUSARION_ROS_BUILD == simulation">rosbot_xl_gazebo</depend>
+  <depend condition="$HUSARION_ROS_BUILD == hardware">rosbot_xl_utils</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

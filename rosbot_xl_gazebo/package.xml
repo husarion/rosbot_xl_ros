@@ -19,32 +19,29 @@
   <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
   <author email="jakub.delicat@husarion.com">Jakub Delicat</author>
 
-  <exec_depend>ros2launch</exec_depend>
-  <exec_depend>launch</exec_depend>
-  <exec_depend>launch_ros</exec_depend>
-  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">ros2launch</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">launch</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">launch_ros</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">ament_index_python</exec_depend>
 
-  <exec_depend>rosbot_xl_bringup</exec_depend>
-  <exec_depend>husarion_office_gz</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">rosbot_xl_bringup</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">husarion_office_gz</exec_depend>
 
-  <exec_depend>ros_gz_sim</exec_depend>
-  <!-- Ignition dependency is specified in the ros_gz_sim package,
-    version can chosen using GZ_VERSION (or IGNITION_VERSION) env variable,
-    for details refer to the ros_gz_sim package -->
-  <exec_depend>ros_gz_bridge</exec_depend>
-  <exec_depend>ign_ros2_control</exec_depend>
-  <exec_depend>nav2_common</exec_depend>
-  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">ros_gz_sim</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">ros_gz_bridge</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">ign_ros2_control</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">nav2_common</exec_depend>
+  <exec_depend condition="$HUSARION_ROS_BUILD == simulation">tf2_ros</exec_depend>
 
-  <test_depend>rclpy</test_depend>
-  <test_depend>python3-pytest</test_depend>
-  <test_depend>launch_pytest</test_depend>
-  <test_depend>launch_testing</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">rclpy</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">python3-pytest</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">launch_pytest</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">launch_testing</test_depend>
 
-  <test_depend>python3-psutil</test_depend>
-  <test_depend>nav_msgs</test_depend>
-  <test_depend>geometry_msgs</test_depend>
-  <test_depend>sensor_msgs</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">python3-psutil</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">nav_msgs</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">geometry_msgs</test_depend>
+  <test_depend condition="$HUSARION_ROS_BUILD == simulation">sensor_msgs</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

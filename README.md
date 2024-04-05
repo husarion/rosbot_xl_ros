@@ -93,7 +93,7 @@ rm -rf src/ros2_controllers
 rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
-colcon build --symlink-install --packages-up-to rosbot-xl --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+colcon build --symlink-install --packages-up-to rosbot_xl --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
 ```
 
 > [!NOTE]

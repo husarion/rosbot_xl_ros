@@ -65,8 +65,9 @@ Launch files for Ignition Gazebo working with ROS2 control.
 | **headless**             | Run Gazebo Ignition in the headless mode                          | **False**                                                          |
 | **robots**               | List of robots that will be spawn in the simulation            | **[]**\*\*                                                    |
 
-> \* - you can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
-> \*\* - Example of use: `robots:='robot1={x: 0.0, y: -1.0}; robot2={x: 1.0, y: -1.0};'`
+> \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
+> 
+> \*\*Example of use: `robots:='robot1={x: 0.0, y: -1.0}; robot2={x: 1.0, y: -1.0};'`
 
 ### `rosbot_xl_utils`
 

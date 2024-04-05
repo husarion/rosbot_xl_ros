@@ -34,6 +34,9 @@ jobs:
         ROS_DISTRO: [humble]
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      global:
+        - BEFORE_INIT='export HUSARION_ROS_BUILD_TYPE=simulation'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -57,5 +60,3 @@ jobs:
       - uses: ros-industrial/industrial_ci@master
         env:
           ROS_DISTRO: ${{matrix.ROS_DISTRO}}
-          global:
-            - BEFORE_INIT='export HUSARION_ROS_BUILD_TYPE=simulation'

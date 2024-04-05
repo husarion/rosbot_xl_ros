@@ -39,16 +39,22 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup ROS2 Workspace and Clone Repositories
-        env:
-          HUSARION_ROS_BUILD_TYPE: simulation
         run: |
           mkdir -p src
           find . -maxdepth 1 -not -name src -not -name . -exec mv {} src/ \;
           python3 -m pip install -U vcstool
-          vcs import src < src/rosbot_xl/rosbot_xl_$HUSARION_ROS_BUILD_TYPE.repos
+          vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
           cp -r src/ros2_controllers/diff_drive_controller src/
           cp -r src/ros2_controllers/imu_sensor_broadcaster src/
           rm -rf src/ros2_controllers
+
+      - name: Setup ROS2 Workspace and Clone Repositories
+        run: |
+          sudo apt-get install python3-rosdep
+          rosdep init
+          rosdep update --rosdistro $ROS_DISTRO
+          export HUSARION_ROS_BUILD_TYPE=simulation
+          rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 
       - name: Leave only ROSbot tests
         shell: bash

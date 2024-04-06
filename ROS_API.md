@@ -19,13 +19,13 @@ Package that contains launch, which starts all base functionalities with the mic
 
 **Launch Params:**
 
-| PARAMETER                | DESCRIPTION                                                       | VALUE (_type_)          |
-| ------------------------ | ----------------------------------------------------------------- | ----------------------- |
-| **camera_model**         | Add camera model to the robot URDF                                | **"None"**\* (_string_) |
-| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **"None"**\* (_string_) |
-| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False** (_bool_)      |
-| **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False** (_bool_)      |
-| **namespace**            | Namespace for all topics and tfs                                  | **""** (_string_)       |
+| PARAMETER                | DESCRIPTION                                                       | VALUE        |
+| ------------------------ | ----------------------------------------------------------------- | ------------ |
+| **camera_model**         | Add camera model to the robot URDF                                | **None**\* |
+| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **None**\* |
+| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False**    |
+| **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**    |
+| **namespace**            | Namespace for all topics and tfs                                  | **""**       |
 
 > \* - you can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
 
@@ -54,19 +54,19 @@ Launch files for Ignition Gazebo working with ROS2 control.
 
 **Launch Params:**
 
-| PARAMETER                | DESCRIPTION                                                       | VALUE (_type_)                                            |
-| ------------------------ | ----------------------------------------------------------------- | --------------------------------------------------------- |
-| **camera_model**         | Add camera model to the robot URDF                                | **"None"**\* (_string_)                                   |
-| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **"None"**\* (_string_)                                   |
-| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False** (_bool_)                                        |
-| **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False** (_bool_)                                        |
-| **namespace**            | Namespace for all topics and tfs                                  | **""** (_string_)                                         |
-| **world**                | Path to SDF world file                                            | `husarion_office_gz/worlds/husarion_world.sdf` (_string_) |
-| **headless**             | Run Gazebo Ignition in the headless mode                          | **False**                                                          |
-| **robots**               | List of robots that will be spawn in the simulation            | **[]**\*\*                                                    |
+| PARAMETER                | DESCRIPTION                                                       | VALUE                                                   |
+| ------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------- |
+| **camera_model**         | Add camera model to the robot URDF                                | **None**\*                                            |
+| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **None**\*                                            |
+| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False**                                               |
+| **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**                                               |
+| **namespace**            | Namespace for all topics and tfs                                  | **""**                                                  |
+| **world**                | Path to SDF world file                                            | **`husarion_office_gz/`<br /> `worlds/husarion_world.sdf`** |
+| **headless**             | Run Gazebo Ignition in the headless mode                          | **False**                                               |
+| **robots**               | List of robots that will be spawn in the simulation               | **[]**\*\*                                              |
 
 > \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
-> 
+>
 > \*\*Example of use: `robots:='robot1={x: 0.0, y: -1.0}; robot2={x: 1.0, y: -1.0};'`
 
 ### `rosbot_xl_utils`

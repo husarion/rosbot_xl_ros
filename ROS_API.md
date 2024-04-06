@@ -75,10 +75,6 @@ This package contains the stable firmware version with the flash script.
 
 ## ROS API
 
-[Google]: https://www.google.com
-
-Visit [Google][], or learn more about [Google][] products.
-
 ### Available Nodes
 
 [controller_manager/controller_manager]: https://github.com/ros-controls/ros2_control/blob/master/controller_manager

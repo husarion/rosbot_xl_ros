@@ -91,27 +91,27 @@ This package contains the stable firmware version with the flash script.
 
 ### Available Topics
 
-- `/battery_state` (_sensor_msgs/msg/BatteryState_)
-- `~/cmd_vel` (_geometry_msgs/Twist_)
-- `/diagnostics` (_diagnostic_msgs/msg/DiagnosticArray_)
-- `~/dynamic_joint_states` (_control_msgs/msg/DynamicJointState_)
-- `~/imu_broadcaster/imu` (_sensor_msgs/Imu_)
-- `~/imu_broadcaster/transition_event` (_lifecycle_msgs/msg/TransitionEvent_)
-- `~/joint_state_broadcaster/transition_event` (_lifecycle_msgs/msg/TransitionEvent_)
-- `~/joint_states` (_sensor_msgs/msg/JointState_)
-- `~/laser_scan_box_filter/transition_event` (_lifecycle_msgs/msg/TransitionEvent_)
-- `~/odometry/filtered` (_nav_msgs/Odometry_)
-- `~/robot_description` (_std_msgs/msg/String_)
-- `~/rosbot_xl_base_controller/odom` (_nav_msgs/Odometry_)
-- `~/rosbot_xl_base_controller/transition_event` (_lifecycle_msgs/msg/TransitionEvent_)
-- `~/scan` (_sensor_msgs/LaserScan_)
-- `~/scan_filtered` (_sensor_msgs/LaserScan_)
-- `~/set_pose` (_geometry_msgs/msg/PoseWithCovarianceStamped_)
-- `~/tf` (_tf2_msgs/TFMessage_)
-- `~/tf_static` (_tf2_msgs/TFMessage_)
+- `/battery_state` [_[sensor_msgs/BatteryState](https://docs.ros2.org/foxy/api/sensor_msgs/msg/BatteryState.html)_]: provides information about the state of the battery.
+- `~/cmd_vel` [_[geometry_msgs/Twist](https://docs.ros2.org/foxy/api/geometry_msgs/msg/Twist.html)_]: sends velocity commands for controlling robot motion.
+- `/diagnostics` [_[diagnostic_msgs/DiagnosticArray](https://docs.ros2.org/foxy/api/diagnostic_msgs/msg/DiagnosticArray.html)_]: contains diagnostic information about the robot's systems.
+- `~/dynamic_joint_states` [_[control_msgs/DynamicJointState](https://github.com/ros-controls/control_msgs/blob/master/control_msgs/msg/DynamicJointState.msg)_]: publishes information about the dynamic state of joints.
+- `~/imu_broadcaster/imu` [_[sensor_msgs/Imu](https://docs.ros2.org/foxy/api/sensor_msgs/msg/Imu.html)_]: broadcasts IMU (Inertial Measurement Unit) data.
+- `~/imu_broadcaster/transition_event` [_[lifecycle_msgs/TransitionEvent](https://docs.ros2.org/foxy/api/lifecycle_msgs/msg/TransitionEvent.html)_]: signals transition events in the lifecycle of the IMU broadcaster node.
+- `~/joint_state_broadcaster/transition_event` [_[lifecycle_msgs/TransitionEvent](https://docs.ros2.org/foxy/api/lifecycle_msgs/msg/TransitionEvent.html)_]: indicates transition events in the lifecycle of the joint state broadcaster node.
+- `~/joint_states` [_[sensor_msgs/JointState](https://docs.ros2.org/foxy/api/sensor_msgs/msg/JointState.html)_]: publishes information about the state of robot joints.
+- `~/laser_scan_box_filter/transition_event` [_[lifecycle_msgs/TransitionEvent](https://docs.ros2.org/foxy/api/lifecycle_msgs/msg/TransitionEvent.html)_]: signals transition events in the lifecycle of the laser scan box filter node.
+- `~/odometry/filtered` [_[nav_msgs/Odometry](https://docs.ros2.org/foxy/api/nav_msgs/msg/Odometry.html)_]: publishes filtered odometry data.
+- `~/robot_description` [_[std_msgs/String](https://docs.ros2.org/foxy/api/std_msgs/msg/String.html)_]: publishes the robot's description.
+- `~/rosbot_xl_base_controller/odom` [_[nav_msgs/Odometry](https://docs.ros2.org/foxy/api/nav_msgs/msg/Odometry.html)_]: provides odometry data from the base controller of the ROSbot XL.
+- `~/rosbot_xl_base_controller/transition_event` [_[lifecycle_msgs/TransitionEvent](https://docs.ros2.org/foxy/api/lifecycle_msgs/msg/TransitionEvent.html)_]: indicates transition events in the lifecycle of the ROSbot XL base controller node.
+- `~/scan` [_[sensor_msgs/LaserScan](https://docs.ros2.org/foxy/api/sensor_msgs/msg/LaserScan.html)_]: publishes raw laser scan data.
+- `~/scan_filtered` [_[sensor_msgs/LaserScan](https://docs.ros2.org/foxy/api/sensor_msgs/msg/LaserScan.html)_]: publishes filtered laser scan data.
+- `~/set_pose` [_[geometry_msgs/PoseWithCovarianceStamped](https://docs.ros2.org/foxy/api/geometry_msgs/msg/PoseWithCovarianceStamped.html)_]: sets the robot's pose with covariance.
+- `~/tf` [_[tf2_msgs/TFMessage](https://docs.ros2.org/foxy/api/tf2_msgs/msg/TFMessage.html)_]: publishes transformations between coordinate frames over time.
+- `~/tf_static` [_[tf2_msgs/TFMessage](https://docs.ros2.org/foxy/api/tf2_msgs/msg/TFMessage.html)_]: publishes static transformations between coordinate frames.
 
 **Hidden topic:**
 
-- `/_imu/data_raw` (_sensor_msgs/Imu_)
-- `/_motors_cmd` (_std_msgs/Float32MultiArray_)
-- `/_motors_responses` (_sensor_msgs/JointState_)
+- `/_imu/data_raw` [_[sensor_msgs/Imu](https://docs.ros2.org/foxy/api/sensor_msgs/msg/Imu.html)_]: raw data image from imu sensor
+- `/_motors_cmd` [_[std_msgs/Float32MultiArray](https://docs.ros2.org/foxy/api/std_msgs/msg/Float32MultiArray.html)_]: desired speed on each wheel
+- `/_motors_responses` [_[sensor_msgs/JointState](https://docs.ros2.org/foxy/api/sensor_msgs/msg/JointState.html)_]: raw data readings from each wheel

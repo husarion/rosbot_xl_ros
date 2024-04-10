@@ -54,8 +54,15 @@ jobs:
           sed '/if(BUILD_TESTING)/,/endif()/d' src/diff_drive_controller/CMakeLists.txt -i
           sed '/if(BUILD_TESTING)/,/endif()/d' src/imu_sensor_broadcaster/CMakeLists.txt -i
 
+      - name: ardent does not support conditions in package.xml
+        run: |
+          echo "BEFORE_BUILD_TARGET_WORKSPACE=sed -i /condition/d /root/target_ws/src/industrial_ci/industrial_ci/package.xml" >> "$GITHUB_ENV"
+        if: matrix.distro == 'ardent'
+
+      - name: ardent does not support conditions in package.xml
+        run: |
+          export HUSARION_ROS_BUILD_TYPE=simulation >> "$GITHUB_ENV"
+
       - uses: ros-industrial/industrial_ci@master
         env:
           ROS_DISTRO: ${{matrix.ROS_DISTRO}}
-          global: |
-            - HUSARION_ROS_BUILD_TYPE=simulation

@@ -119,7 +119,7 @@ def launch_setup(context, *args, **kwargs):
             actions=[
                 spawn_log,
                 spawn_robot,
-            ]
+            ],
         )
         spawn_group.append(group)
 

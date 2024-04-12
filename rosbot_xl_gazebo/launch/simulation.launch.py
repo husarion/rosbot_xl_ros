@@ -114,8 +114,10 @@ def launch_setup(context, *args, **kwargs):
                 "yaw": TextSubstitution(text=str(init_pose["yaw"])),
             }.items(),
         )
+        
+        # Timer action it may help with spawning multiple rosbot with appropriate namespace
         group = TimerAction(
-            period=5.0 * idx,
+            period=3.0 * idx,
             actions=[
                 spawn_log,
                 spawn_robot,

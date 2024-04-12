@@ -6,12 +6,6 @@ ROS2 packages for ROSbot XL
 
 You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.md).
 
-## Usage on hardware
-
-To run the software on real ROSbot XL, also communication with Digital Board will be necessary.
-First update your firmware to make sure that you use the latest version, then run the `micro-ROS` agent.
-For detailed instructions refer to the [rosbot_xl_firmware repository](https://github.com/husarion/rosbot_xl_firmware).
-
 ## Prepare environment
 
 1. **Install `ros-dev-tools` and `stm32flash`** (`stm32flash` is not in the ros index and should be installed manually).
@@ -56,27 +50,22 @@ For detailed instructions refer to the [rosbot_xl_firmware repository](https://g
     colcon build
     ```
 
-    > [!NOTE]
-    > Before starting the software on the robot please make sure that you're using the latest firmware and run the `micro-ROS` agent as described in the [Usage on hardware](#usage-on-hardware) step.
-
 2. **Running**
-
-    Flash firmware.
-
-    ```bash
-    # Get admin permissions to flash firmware
-    sudo su
-    source install/setup.bash
-    ros2 run rosbot_xl_utils flash_firmware
-    exit
-    ```
-
-    Launch ROSbot.
 
     ```bash
     source install/setup.bash
     ros2 launch rosbot_xl_bringup combined.launch.py
     ```
+
+> [!IMPORTANT]
+> Whenever the software version is changed, it is recommended to update the firmware version to ensure that the package version is compatible with the firmware version.
+>
+> ```bash
+> sudo su # Get admin permissions to flash firmware
+> source install/setup.bash
+> ros2 run rosbot_xl_utils flash_firmware
+> exit
+> ```
 
 ### Build and run Gazebo simulation
 

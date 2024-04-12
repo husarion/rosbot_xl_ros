@@ -27,7 +27,7 @@ Package that contains launch, which starts all base functionalities with the mic
 | **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**  |
 | **namespace**            | Namespace for all topics and tfs                                  | **""**     |
 
-> \* - you can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
+> \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
 
 ### `rosbot_xl_controller`
 

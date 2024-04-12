@@ -18,7 +18,7 @@ from launch.actions import (
     DeclareLaunchArgument,
     OpaqueFunction,
     LogInfo,
-    TimerAction,
+    GroupAction,
 )
 from launch.substitutions import (
     EnvironmentVariable,
@@ -82,7 +82,7 @@ def launch_setup(context, *args, **kwargs):
         }
 
     spawn_group = []
-    for idx, robot_name in enumerate(robots_list):
+    for robot_name in robots_list:
         init_pose = robots_list[robot_name]
 
         spawn_log = LogInfo(
@@ -114,10 +114,8 @@ def launch_setup(context, *args, **kwargs):
                 "yaw": TextSubstitution(text=str(init_pose["yaw"])),
             }.items(),
         )
-        
-        # Timer action it may help with spawning multiple rosbot with appropriate namespace
-        group = TimerAction(
-            period=3.0 * idx,
+
+        group = GroupAction(
             actions=[
                 spawn_log,
                 spawn_robot,

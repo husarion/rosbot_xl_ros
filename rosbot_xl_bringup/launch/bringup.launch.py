@@ -34,7 +34,7 @@ def generate_launch_description():
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
-        description="Whether to use  mecanum drive controller, otherwise use diff drive",
+        description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
     camera_model = LaunchConfiguration("camera_model")

@@ -18,7 +18,7 @@ from launch.actions import (
     DeclareLaunchArgument,
     OpaqueFunction,
     LogInfo,
-    GroupAction,
+    TimerAction,
 )
 from launch.substitutions import (
     EnvironmentVariable,
@@ -82,8 +82,13 @@ def launch_setup(context, *args, **kwargs):
         }
 
     spawn_group = []
-    for robot_name in robots_list:
+    for idx, robot_name in enumerate(robots_list):
         init_pose = robots_list[robot_name]
+
+        spawn_log = LogInfo(
+            msg=[f"Launching namespace={robot_name} with init_pose= {str(init_pose)}"]
+        )
+
         spawn_robot = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 PathJoinSubstitution(
@@ -109,18 +114,12 @@ def launch_setup(context, *args, **kwargs):
                 "yaw": TextSubstitution(text=str(init_pose["yaw"])),
             }.items(),
         )
-        group = GroupAction(
-            [
-                LogInfo(
-                    msg=[
-                        "Launching namespace=",
-                        robot_name,
-                        " init_pose=",
-                        str(init_pose),
-                    ]
-                ),
+        group = TimerAction(
+            period=5.0 * idx,
+            actions=[
+                spawn_log,
                 spawn_robot,
-            ]
+            ],
         )
         spawn_group.append(group)
 
@@ -137,7 +136,7 @@ def generate_launch_description():
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
-        description="Whether to use  mecanum drive controller, otherwise use diff drive",
+        description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
     declare_camera_model_arg = DeclareLaunchArgument(

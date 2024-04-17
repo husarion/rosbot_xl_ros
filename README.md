@@ -106,6 +106,6 @@ For further usage examples check out our other repositories:
 
 * [`rosbot-xl-docker`](https://github.com/husarion/rosbot-xl-docker) - Dockerfiles for building hardware and simulation images
 * [`rosbot-xl-gamepad`](https://github.com/husarion/rosbot-xl-gamepad) - simple teleoperation using a gamepad
-* [`rosbot-xl-mapping`](https://github.com/husarion/rosbot-xl-mapping) - creating a map of the environment using slam_toolbox
-* [`rosbot-xl-navigation`](https://github.com/husarion/rosbot-xl-navigation) - autonomous navigation demo based on Nav2 and AMCL
+* [`rosbot-xl-autonomy`](https://github.com/husarion/rosbot-xl-autonomy) - autonomous navigation & mapping based on Nav2
+* [`rosbot-xl-telepresence`](https://github.com/husarion/rosbot-xl-telepresence) - control and receive signals in real time from any device across the Internet using Husarnet VPN
 * [`rosbot-xl-manipulation`](https://github.com/husarion/rosbot-xl-manipulation) - integration of ROSbot XL with OpenManipulatorX

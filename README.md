@@ -23,9 +23,9 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
     git clone https://github.com/husarion/rosbot_xl_ros src/
     ```
 
-### Build and run on hardware
+## Build and run on hardware
 
-1. **Building**
+1. **Build the package**
 
     ```bash
     export HUSARION_ROS_BUILD=hardware
@@ -67,9 +67,9 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
 > exit
 > ```
 
-### Build and run Gazebo simulation
+## Build and run Gazebo simulation
 
-1. **Building**
+1. **Build the package**
 
     ```bash
     export HUSARION_ROS_BUILD=simulation

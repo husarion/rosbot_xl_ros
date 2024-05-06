@@ -15,7 +15,7 @@ __pycache__/
 rosbot_hardware_interfaces/
 ros_components_description/
 rosbot_controllers/
-husarion/husarion_gz_worlds
+husarion_gz_worlds
 micro-ROS-Agent/
 micro_ros_msgs/
 industrial_ci/

@@ -14,26 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from threading import Thread
+
 import launch_pytest
 import pytest
 import rclpy
-
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
-from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from test_utils import SimulationTestNode, diff_test
 from test_ign_kill_utils import kill_ign_linux_processes
-from threading import Thread
+from test_utils import SimulationTestNode, diff_test
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    rosbot_xl_gazebo = get_package_share_directory("rosbot_xl_gazebo")
+    rosbot_xl_gazebo = FindPackageShare("rosbot_xl_gazebo")
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -48,7 +47,7 @@ def generate_test_description():
             "headless": "True",
             "world": PathJoinSubstitution(
                 [
-                    get_package_share_directory("husarion_office_gz"),
+                    FindPackageShare("husarion_gz_worlds"),
                     "worlds",
                     "empty_with_plugins.sdf",
                 ]

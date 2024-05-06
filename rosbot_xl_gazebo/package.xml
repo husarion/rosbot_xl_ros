@@ -22,12 +22,10 @@
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
-  <exec_depend>ament_index_python</exec_depend>
 
   <exec_depend>rosbot_xl_bringup</exec_depend>
-  <exec_depend>husarion_office_gz</exec_depend>
+  <exec_depend>husarion_gz_worlds</exec_depend>
 
-  <exec_depend>ros_gz_sim</exec_depend>
   <!-- Ignition dependency is specified in the ros_gz_sim package,
     version can chosen using GZ_VERSION (or IGNITION_VERSION) env variable,
     for details refer to the ros_gz_sim package -->

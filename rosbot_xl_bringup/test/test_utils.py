@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import rclpy
 import math
 import random
-
 from threading import Event
+
+import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import JointState, Imu, LaserScan
+from sensor_msgs.msg import Imu, JointState, LaserScan
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener

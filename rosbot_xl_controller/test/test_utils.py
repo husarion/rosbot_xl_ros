@@ -15,9 +15,10 @@
 
 
 from threading import Event
-from rclpy.node import Node
-from sensor_msgs.msg import JointState, Imu
+
 from nav_msgs.msg import Odometry
+from rclpy.node import Node
+from sensor_msgs.msg import Imu, JointState
 
 
 class ControllersTestNode(Node):

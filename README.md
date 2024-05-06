@@ -109,4 +109,3 @@ For further usage examples check out our other repositories:
 * [`rosbot-xl-autonomy`](https://github.com/husarion/rosbot-xl-autonomy) - autonomous navigation & mapping based on Nav2
 * [`rosbot-xl-telepresence`](https://github.com/husarion/rosbot-xl-telepresence) - control and receive signals in real time from any device across the Internet using Husarnet VPN
 * [`rosbot-xl-manipulation`](https://github.com/husarion/rosbot-xl-manipulation) - integration of ROSbot XL with OpenManipulatorX
-

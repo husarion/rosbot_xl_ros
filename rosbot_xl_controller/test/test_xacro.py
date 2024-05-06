@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import xacro
 import itertools
-from ament_index_python.packages import get_package_share_directory
+import os
+
+import xacro
+from launch_ros.substitutions import FindPackageShare
 
 
 def test_rosbot_description_parsing():
@@ -68,7 +69,7 @@ def test_rosbot_description_parsing():
             "lidar_model": lidar_model,
             "camera_model": camera_model,
         }
-        rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
+        rosbot_xl_description = FindPackageShare("rosbot_xl_description")
         xacro_path = os.path.join(rosbot_xl_description, "urdf/rosbot_xl.urdf.xacro")
         try:
             xacro.process_file(xacro_path, mappings=mappings)

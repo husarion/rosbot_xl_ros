@@ -13,13 +13,11 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node, SetParameter
-
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -92,8 +90,8 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
-    rosbot_xl_controller = get_package_share_directory("rosbot_xl_controller")
-    rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
+    rosbot_xl_controller = FindPackageShare("rosbot_xl_controller")
+    rosbot_xl_bringup = FindPackageShare("rosbot_xl_bringup")
 
     controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

@@ -14,25 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from threading import Thread
+
 import launch_pytest
 import pytest
 import rclpy
-
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
-from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from test_utils import ControllersTestNode, controller_test
-from threading import Thread
 
 robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    rosbot_controller = get_package_share_directory("rosbot_xl_controller")
+    rosbot_controller = FindPackageShare("rosbot_xl_controller")
     actions = []
     for i in range(len(robot_names)):
         controller_launch = IncludeLaunchDescription(

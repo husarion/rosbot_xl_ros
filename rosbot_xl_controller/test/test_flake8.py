@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ament_flake8.main import main_with_errors
-from os.path import join, dirname
+from os.path import dirname, join
+
 import pytest
+from ament_flake8.main import main_with_errors
 
 
 @pytest.mark.flake8

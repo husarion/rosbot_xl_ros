@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import psutil
 from time import sleep
+
+import psutil
 
 # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
 # several tests in a row.

@@ -25,7 +25,7 @@
   <exec_depend>ament_index_python</exec_depend>
 
   <exec_depend>rosbot_xl_bringup</exec_depend>
-  <exec_depend>husarion_office_gz</exec_depend>
+  <exec_depend>husarion_gz_worlds</exec_depend>
 
   <exec_depend>ros_gz_sim</exec_depend>
   <!-- Ignition dependency is specified in the ros_gz_sim package,

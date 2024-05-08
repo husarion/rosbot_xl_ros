@@ -15,22 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from launch.event_handlers import OnProcessExit
 from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    RegisterEventHandler,
-    OpaqueFunction,
-)
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, RegisterEventHandler
 from launch.conditions import UnlessCondition
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import (
     Command,
-    PythonExpression,
     FindExecutable,
-    PathJoinSubstitution,
     LaunchConfiguration,
+    PathJoinSubstitution,
+    PythonExpression,
 )
-
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
 

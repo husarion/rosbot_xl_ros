@@ -14,26 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from threading import Thread
+
 import launch_pytest
 import pytest
 import rclpy
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
-from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from rclpy.executors import SingleThreadedExecutor
 from test_utils import BringupTestNode, ekf_and_scan_test
-from threading import Thread
-
 
 robot_names = ["rosbot1", "rosbot2", "rosbot3"]
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    rosbot_xl_bringup = get_package_share_directory("rosbot_xl_bringup")
+    rosbot_xl_bringup = FindPackageShare("rosbot_xl_bringup")
     actions = []
     for i in range(len(robot_names)):
         bringup_launch = IncludeLaunchDescription(

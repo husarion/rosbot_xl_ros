@@ -12,23 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from launch import LaunchDescription, LaunchContext
+from launch import LaunchContext, LaunchDescription
 from launch.actions import (
-    IncludeLaunchDescription,
     DeclareLaunchArgument,
+    IncludeLaunchDescription,
     OpaqueFunction,
-)
-from launch.substitutions import (
-    PathJoinSubstitution,
-    LaunchConfiguration,
-    PythonExpression,
 )
 from launch.conditions import LaunchConfigurationNotEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from nav2_common.launch import ReplaceString
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    PythonExpression,
+)
 from launch_ros.actions import Node, SetParameter
-
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import ReplaceString
 
 
 def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
@@ -59,7 +58,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
     if lidar_model != "None":
         gz_lidar_remappings_file = PathJoinSubstitution(
             [
-                get_package_share_directory("rosbot_xl_gazebo"),
+                FindPackageShare("rosbot_xl_gazebo"),
                 "config",
                 LaunchConfiguration(
                     "gz_lidar_remappings_file",
@@ -100,7 +99,7 @@ def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
 
         gz_camera_remappings_file = PathJoinSubstitution(
             [
-                get_package_share_directory("rosbot_xl_gazebo"),
+                FindPackageShare("rosbot_xl_gazebo"),
                 "config",
                 LaunchConfiguration(
                     "gz_camera_remappings_file",
@@ -269,7 +268,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    get_package_share_directory("rosbot_xl_bringup"),
+                    FindPackageShare("rosbot_xl_bringup"),
                     "launch",
                     "bringup.launch.py",
                 ]

@@ -61,7 +61,7 @@ Launch files for Ignition Gazebo working with ROS2 control.
 | **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False**                                                   |
 | **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**                                                   |
 | **namespace**            | Namespace for all topics and tfs                                  | **""**                                                      |
-| **world**                | Path to SDF world file                                            | **`husarion_office_gz/`<br /> `worlds/husarion_world.sdf`** |
+| **world**                | Path to SDF world file                                            | **`husarion_gz_worlds/`<br /> `worlds/husarion_world.sdf`** |
 | **headless**             | Run Gazebo Ignition in the headless mode                          | **False**                                                   |
 | **robots**               | List of robots that will be spawn in the simulation               | **[]**\*\*                                                  |
 

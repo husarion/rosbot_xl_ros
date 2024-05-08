@@ -12,19 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from launch import LaunchDescription
-from launch_ros.substitutions import FindPackageShare
 from launch.actions import (
-    IncludeLaunchDescription,
     DeclareLaunchArgument,
+    IncludeLaunchDescription,
     LogInfo,
-    SetEnvironmentVariable,
     OpaqueFunction,
+    SetEnvironmentVariable,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    ThisLaunchFileDir,
+)
 from launch_ros.actions import Node
-import os
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_microros_agent_node(context, *args, **kwargs):
@@ -129,7 +134,9 @@ def generate_launch_description():
     package_dir = FindPackageShare("rosbot_xl_bringup").find("rosbot_xl_bringup")
 
     # Construct the path to the XML file within the package
-    fastrtps_profiles_file = os.path.join(package_dir, "config", "microros_localhost_only.xml")
+    fastrtps_profiles_file = PathJoinSubstitution(
+        [package_dir, "config", "microros_localhost_only.xml"]
+    )
 
     declare_localhost_only_fastrtps_profiles_file_arg = DeclareLaunchArgument(
         "localhost_only_fastrtps_profiles_file",

@@ -21,8 +21,8 @@ import signal
 import subprocess
 import sys
 
+import ament_index_python.packages
 import requests
-from launch_ros.substitutions import FindPackageShare
 
 # Global variable to hold the subprocess reference
 subproc = None
@@ -49,7 +49,9 @@ def download_firmware(firmware_url, firmware_path):
 
 def find_firmware_file():
     # Find the install directory of 'rosbot_utils' package
-    package_install_directory = FindPackageShare("rosbot_xl_utils")
+    package_install_directory = ament_index_python.packages.get_package_share_directory(
+        "rosbot_xl_utils"
+    )
 
     # Construct the path to the firmware directory
     firmware_dir = os.path.join(package_install_directory, "firmware")

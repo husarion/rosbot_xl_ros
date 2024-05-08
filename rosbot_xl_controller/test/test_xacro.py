@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import itertools
-import os
 
 import xacro
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -69,8 +69,9 @@ def test_rosbot_description_parsing():
             "lidar_model": lidar_model,
             "camera_model": camera_model,
         }
-        rosbot_xl_description = FindPackageShare("rosbot_xl_description")
-        xacro_path = os.path.join(rosbot_xl_description, "urdf/rosbot_xl.urdf.xacro")
+        xacro_path = PathJoinSubstitution(
+            [FindPackageShare("rosbot_xl_description"), "urdf", "rosbot_xl.urdf.xacro"]
+        )
         try:
             xacro.process_file(xacro_path, mappings=mappings)
         except xacro.XacroException as e:

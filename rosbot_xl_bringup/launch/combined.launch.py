@@ -23,7 +23,11 @@ from launch.actions import (
     SetEnvironmentVariable,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    ThisLaunchFileDir,
+)
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -130,7 +134,9 @@ def generate_launch_description():
     package_dir = FindPackageShare("rosbot_xl_bringup").find("rosbot_xl_bringup")
 
     # Construct the path to the XML file within the package
-    fastrtps_profiles_file = os.path.join(package_dir, "config", "microros_localhost_only.xml")
+    fastrtps_profiles_file = PathJoinSubstitution(
+        [package_dir, "config", "microros_localhost_only.xml"]
+    )
 
     declare_localhost_only_fastrtps_profiles_file_arg = DeclareLaunchArgument(
         "localhost_only_fastrtps_profiles_file",

@@ -38,9 +38,12 @@ def generate_test_description():
             "launch",
             "rosbot_xl_gazebo",
             "simulation.launch.py",
-            f'world:={get_package_share_directory("husarion_gz_worlds")}/worlds/empty_with_plugins.sdf',
+            (
+                f'world:={get_package_share_directory("husarion_office_gz")}'
+                "/worlds/empty_with_plugins.sdf"
+            ),
             "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
-            "headless:=False",
+            "headless:=True",
         ],
         output="screen",
     )

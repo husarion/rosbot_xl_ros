@@ -31,9 +31,6 @@
   <xacro:property name="lidar_parent_link" value="cover_link" />
   <xacro:property name="lidar_xyz" value="0.02 0.0 0.0" />
   <xacro:property name="lidar_rpy" value="0.0 0.0 0.0" />
-  <xacro:property name="lidar_use_gpu" value="true" />
-  <!-- use_gpu has to be set to true, CPU lidar doesn't work in ignition -
-    https://github.com/gazebosim/gz-sensors/issues/26 -->
 
   <xacro:if value="${lidar_model == 'slamtec_rplidar_s1'}">
     <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s1.urdf.xacro"
@@ -42,8 +39,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -54,8 +49,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -66,8 +59,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -78,8 +69,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -90,8 +79,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -102,8 +89,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      use_gpu="${lidar_use_gpu}"
-      simulation_engine="$(arg simulation_engine)"
       topic="velodyne_points"
       namespace="$(arg namespace)" />
   </xacro:if>
@@ -126,7 +111,6 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       use_nominal_extrinsics="$(arg use_sim)"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -138,7 +122,6 @@
       parent_link="${camera_parent_link}"
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 
@@ -170,7 +153,6 @@
       xyz="${camera_xyz}"
       rpy="${camera_rpy}"
       model="${camera_model_type}"
-      simulation_engine="$(arg simulation_engine)"
       namespace="$(arg namespace)" />
   </xacro:if>
 

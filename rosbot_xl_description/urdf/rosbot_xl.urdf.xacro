@@ -89,7 +89,6 @@
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
       rpy="${lidar_rpy}"
-      topic="velodyne_points"
       namespace="$(arg namespace)" />
   </xacro:if>
 

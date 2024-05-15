@@ -1,15 +1,17 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:macro name="rosbot_xl_robot"
-    params="use_sim mecanum simulation_engine namespace">
+    params="controller_config_file
+            mecanum
+            namespace
+            simulation_engine
+            use_sim">
 
     <xacro:if value="${namespace == 'None'}">
       <xacro:property name="ns" value="" />
-      <xacro:property name="gz_control_namespace" value="/" />
     </xacro:if>
     <xacro:unless value="${namespace == 'None'}">
-        <xacro:property name="ns" value="${namespace}/" />
-        <xacro:property name="gz_control_namespace" value="${namespace}" />
+      <xacro:property name="ns" value="${namespace}/" />
     </xacro:unless>
 
     <xacro:if value="${mecanum}">
@@ -21,6 +23,8 @@
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_xl_description)/urdf/body.urdf.xacro" ns="body" />
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/gazebo.urdf.xacro" ns="gazebo" />
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/webots.urdf.xacro" ns="webots" />
     <xacro:include filename="$(find rosbot_xl_description)/urdf/wheel.urdf.xacro" ns="wheel" />
 
     <!-- BODY DECLARATION -->
@@ -126,51 +130,11 @@
 
     <xacro:if value="${use_sim}">
       <xacro:if value="${simulation_engine == 'ignition-gazebo'}">
-        <gazebo>
-          <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-
-            <xacro:if value="${mecanum}">
-              <parameters>$(find rosbot_xl_controller)/config/mecanum_drive_controller.yaml</parameters>
-            </xacro:if>
-            <xacro:unless value="${mecanum}">
-              <parameters>$(find rosbot_xl_controller)/config/diff_drive_controller.yaml</parameters>
-            </xacro:unless>
-
-            <ros>
-              <namespace>${gz_control_namespace}</namespace>
-              <remapping>rosbot_xl_base_controller/cmd_vel_unstamped:=cmd_vel</remapping>
-              <remapping>/tf:=tf</remapping>
-            </ros>
-          </plugin>
-        </gazebo>
-        <gazebo reference="imu_link">
-          <sensor name="${ns}imu" type="imu">
-            <always_on>true</always_on>
-            <update_rate>25</update_rate>
-            <topic>${ns}imu/data_raw</topic>
-            <visualize>false</visualize>
-            <enable_metrics>false</enable_metrics>
-            <frame_id>imu_link</frame_id>
-            <ignition_frame_id>imu_link</ignition_frame_id>
-            <ros>
-              <namespace>${ns}</namespace>
-            </ros>
-          </sensor>
-        </gazebo>
+        <xacro:gazebo.controller config_file="${controller_config_file}" namespace="${namespace}" />
+        <xacro:gazebo.imu reference_frame="imu_link" namespace="${namespace}" />
       </xacro:if>
       <xacro:if value="${simulation_engine == 'webots'}">
-        <webots>
-          <plugin type="webots_ros2_control::Ros2Control" />
-          <plugin type="webots_ros2_driver::Ros2IMU">
-            <enabled>true</enabled>
-            <topicName>/imu_broadcaster/imu</topicName>
-            <alwaysOn>true</alwaysOn>
-            <frameName>imu_link</frameName>
-            <gyroName>imu gyro</gyroName>
-            <accelerometerName>imu accelerometer</accelerometerName>
-            <inertialUnitName>imu inertial_unit</inertialUnitName>
-          </plugin>
-        </webots>
+        <xacro:webots.controller />
       </xacro:if>
     </xacro:if>
   </xacro:macro>

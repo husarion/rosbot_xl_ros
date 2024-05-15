@@ -154,11 +154,15 @@ def generate_launch_description():
             "lidar_model": lidar_model,
             "camera_model": camera_model,
             "include_camera_mount": include_camera_mount,
-            "combined_launch_deprecated": LaunchConfiguration("combined_launch_deprecated", default=True),
+            "combined_launch_deprecated": LaunchConfiguration(
+                "combined_launch_deprecated", default=True
+            ),
         }.items(),
     )
 
-    print("\033[93m[WARN] [launch]: cobined.launch.py will be is deprecated and will be removed please use bringup.launch.py instead.\033[0m")
+    print(
+        "\033[93m[WARN] [launch]: combined.launch.py will be is deprecated and will be removed please use bringup.launch.py instead.\033[0m"
+    )
     return LaunchDescription(
         [
             declare_port_arg,

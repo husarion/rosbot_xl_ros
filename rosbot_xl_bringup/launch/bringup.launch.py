@@ -16,7 +16,12 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression, ThisLaunchFileDir
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    PythonExpression,
+    ThisLaunchFileDir,
+)
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
 
@@ -90,7 +95,7 @@ def generate_launch_description():
         default_value="ignition-gazebo",
         description="Which simulation engine will be used",
     )
-    
+
     combined_launch_deprecated = LaunchConfiguration("combined_launch_deprecated")
     declare_combined_launch_deprecated_arg = DeclareLaunchArgument(
         "combined_launch_deprecated",

@@ -14,8 +14,8 @@ Package that contains launch, which starts all base functionalities with the mic
 
 **Available Launch Files:**
 
-- `bringup.launch.py` - is responsible for activating all logic related to the robot's movement and processing of sensory data.
-- `combined.launch.py` - launches `bringup.launch.py` ​​and communication with the firmware allows you to control the robot.
+- `bringup.launch.py` - is responsible for communicating with firmware and activating all logic related to the robot's movement and processing of sensory data.
+- `microros.launch.py` - establishes connection with the firmware.
 
 **Launch Params:**
 

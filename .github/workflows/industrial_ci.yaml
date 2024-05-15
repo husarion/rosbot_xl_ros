@@ -7,27 +7,15 @@ on:
 
 
 jobs:
-  black:
-    name: Black
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: psf/black@stable
-        with:
-          options: --line-length=99
-
   pre-commit:
     name: pre-commit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - uses: pre-commit/action@v3.0.1
+    uses: ros-controls/ros2_control_ci/.github/workflows/reusable-pre-commit.yml@master
+    with:
+      ros_distro: humble
 
   ros_industrial_ci:
     name: ROS Industrial CI
     needs:
-      - black
       - pre-commit
     strategy:
       fail-fast: false

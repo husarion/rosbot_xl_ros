@@ -20,15 +20,9 @@
   <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
     ns="antenna" />
   <xacro:antenna.antenna
-    parent_link="body_link"
-    xyz="-0.155 0.055 0.065"
-    rpy="0.0 0.0 0.0"
-    tf_prefix="left" />
-  <xacro:antenna.antenna
-    parent_link="body_link"
-    xyz="-0.155 -0.055 0.065"
-    rpy="0.0 0.0 0.0"
-    tf_prefix="right" />
+  parent_link="body_link"
+  xyz="-0.155 -0.055 0.065"
+  rpy="0.0 0.0 0.0" />
 
   <!-- INCLUDE LIDAR -->
 

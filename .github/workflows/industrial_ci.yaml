@@ -16,19 +16,19 @@ jobs:
         with:
           options: --line-length=99
 
-  spellcheck:
-    name: Spellcheck
+  pre-commit:
+    name: pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: rojopolis/spellcheck-github-actions@0.33.1
-        name: Spellcheck
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.1
 
   ros_industrial_ci:
     name: ROS Industrial CI
     needs:
       - black
-      - spellcheck
+      - pre-commit
     strategy:
       fail-fast: false
       matrix:

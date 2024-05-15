@@ -101,3 +101,11 @@ spawner
 sp
 stddev
 datasheet
+bno
+bst
+btc
+dl
+ds
+kamami
+pdf
+wa

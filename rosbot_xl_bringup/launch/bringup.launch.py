@@ -14,8 +14,14 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    PythonExpression,
+    ThisLaunchFileDir,
+)
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
 
@@ -90,6 +96,12 @@ def generate_launch_description():
         description="Which simulation engine will be used",
     )
 
+    combined_launch_deprecated = LaunchConfiguration("combined_launch_deprecated")
+    declare_combined_launch_deprecated_arg = DeclareLaunchArgument(
+        "combined_launch_deprecated",
+        default_value="False",
+    )
+
     rosbot_xl_controller = FindPackageShare("rosbot_xl_controller")
     rosbot_xl_bringup = FindPackageShare("rosbot_xl_bringup")
 
@@ -150,6 +162,11 @@ def generate_launch_description():
         namespace=namespace,
     )
 
+    microros_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([ThisLaunchFileDir(), "/microros.launch.py"]),
+        condition=UnlessCondition(PythonExpression([use_sim, " or ", combined_launch_deprecated])),
+    )
+
     return LaunchDescription(
         [
             declare_namespace_arg,
@@ -159,7 +176,9 @@ def generate_launch_description():
             declare_include_camera_mount_arg,
             declare_use_sim_arg,
             declare_simulation_engine_arg,
+            declare_combined_launch_deprecated_arg,
             SetParameter(name="use_sim_time", value=use_sim),
+            microros_launch,
             controller_launch,
             robot_localization_node,
             laser_filter_node,

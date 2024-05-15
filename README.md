@@ -54,7 +54,7 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
 
     ```bash
     source install/setup.bash
-    ros2 launch rosbot_xl_bringup combined.launch.py
+    ros2 launch rosbot_xl_bringup bringup.launch.py
     ```
 
 > [!IMPORTANT]

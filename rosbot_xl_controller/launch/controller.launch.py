@@ -183,6 +183,14 @@ def generate_launch_description():
         ]
     )
 
+    controller_config_path = PathJoinSubstitution(
+        [
+            FindPackageShare("rosbot_xl_controller"),
+            "config",
+            controller_config_name,
+        ]
+    )
+
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
@@ -194,6 +202,8 @@ def generate_launch_description():
                     "rosbot_xl.urdf.xacro",
                 ]
             ),
+            " controller_config_file:=",
+            controller_config_path,
             " mecanum:=",
             mecanum,
             " lidar_model:=",
@@ -212,20 +222,12 @@ def generate_launch_description():
     )
     robot_description = {"robot_description": robot_description_content}
 
-    robot_controllers = PathJoinSubstitution(
-        [
-            FindPackageShare("rosbot_xl_controller"),
-            "config",
-            controller_config_name,
-        ]
-    )
-
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[
             robot_description,
-            robot_controllers,
+            controller_config_path,
         ],
         remappings=[
             ("imu_sensor_node/imu", "/_imu/data_raw"),

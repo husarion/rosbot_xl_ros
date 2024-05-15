@@ -54,15 +54,15 @@
         <ignition_frame_id>imu_link</ignition_frame_id>
         <imu>
           <angular_velocity>
-            <!-- rad/s -->
+            <!-- rad/s | no bias_mean in datasheet -->
             <x>
-              <xacro:gauss_noise stddev="5.24e-3" bias_mean="1.75e-2" precision="1.07e-3" />
+              <xacro:gauss_noise stddev="5.24e-3" bias_mean="2.0e-3" precision="1.07e-3" />
             </x>
             <y>
-              <xacro:gauss_noise stddev="5.24e-3" bias_mean="1.75e-2" precision="1.07e-3" />
+              <xacro:gauss_noise stddev="5.24e-3" bias_mean="2.0e-3" precision="1.07e-3" />
             </y>
             <z>
-              <xacro:gauss_noise stddev="5.24e-3" bias_mean="1.75e-2" precision="1.07e-3" />
+              <xacro:gauss_noise stddev="5.24e-3" bias_mean="2.0e-3" precision="1.07e-3" />
             </z>
           </angular_velocity>
           <linear_acceleration>

@@ -51,25 +51,26 @@ repos:
       - id: isort
         args: [--profile, black]
 
-  - repo: local
-    hooks:
-      - id: ament_lint_cmake
-        name: ament_lint_cmake
-        description: Check format of CMakeLists.txt files.
-        entry: ament_lint_cmake
-        language: system
-        files: CMakeLists\.txt$
+  # Need to figure out how o check local repos in action
+  # - repo: local
+  #   hooks:
+  #     - id: ament_lint_cmake
+  #       name: ament_lint_cmake
+  #       description: Check format of CMakeLists.txt files.
+  #       entry: ament_lint_cmake
+  #       language: system
+  #       files: CMakeLists\.txt$
 
-  - repo: local
-    hooks:
-      - id: ament_copyright
-        name: ament_copyright
-        description: Check if copyright notice is available in all files.
-        stages: [commit]
-        entry: ament_copyright
-        language: system
+  # - repo: local
+  #   hooks:
+  #     - id: ament_copyright
+  #       name: ament_copyright
+  #       description: Check if copyright notice is available in all files.
+  #       stages: [commit]
+  #       entry: ament_copyright
+  #       language: system
 
-      # Docs - RestructuredText hooks
+  # Docs - RestructuredText hooks
   - repo: https://github.com/PyCQA/doc8
     rev: v1.1.1
     hooks:

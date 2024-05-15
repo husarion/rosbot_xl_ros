@@ -7,11 +7,14 @@ on:
 
 
 jobs:
+
   pre-commit:
     name: pre-commit
-    uses: ros-controls/ros2_control_ci/.github/workflows/reusable-pre-commit.yml@master
-    with:
-      ros_distro: humble
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.1
 
   ros_industrial_ci:
     name: ROS Industrial CI

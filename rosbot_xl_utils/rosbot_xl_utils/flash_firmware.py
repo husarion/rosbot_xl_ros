@@ -80,8 +80,8 @@ def main(args=None):
     parser.add_argument(
         "-p",
         "--port",
-        default="/dev/ttyUSB0",
-        help="Specify the USB port (default: /dev/ttyUSB0)",
+        default="/dev/ttyUSBDB",
+        help="Specify the USB port (default: /dev/ttyUSBDB)",
     )
     parser.add_argument("--file", help="Specify the firmware file")
 

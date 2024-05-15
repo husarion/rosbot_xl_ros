@@ -22,7 +22,8 @@
   <xacro:antenna.antenna
   parent_link="body_link"
   xyz="-0.155 -0.055 0.065"
-  rpy="0.0 0.0 0.0" />
+  rpy="0.0 0.0 0.0"
+  antenna_angle="0.0" />
 
   <!-- INCLUDE LIDAR -->
 

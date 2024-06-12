@@ -6,7 +6,7 @@ repositories:
   ros_components_description:
     type: git
     url: https://github.com/husarion/ros_components_description.git
-    version: ros2
+    version: a6473588eee97feaee3481f9eba4f746b1f4476e # New features can break some functions
   micro_ros_msgs:
     type: git
     url: https://github.com/micro-ROS/micro_ros_msgs.git

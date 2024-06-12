@@ -34,9 +34,6 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
 
     vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
 
-    # Remove tests from micro_ros_msgs
-    sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
-
     rm -r src/rosbot_xl_gazebo
 
     # Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
@@ -47,7 +44,7 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
     rosdep init
     rosdep update --rosdistro $ROS_DISTRO
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
-    colcon build
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
     ```
 
 2. **Running**
@@ -79,9 +76,6 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
     vcs import src < src/rosbot_xl/rosbot_xl_hardware.repos
     vcs import src < src/rosbot_xl/rosbot_xl_simulation.repos
 
-    # Remove tests from micro_ros_msgs
-    sed '/if(BUILD_TESTING)/,/endif()/d' src/micro_ros_msgs/CMakeLists.txt -i
-
     # Copy only diff_drive_controller and imu_sensor_broadcaster, waits for features from ros2-control
     cp -r src/ros2_controllers/diff_drive_controller src/
     cp -r src/ros2_controllers/imu_sensor_broadcaster src/
@@ -90,7 +84,7 @@ You can find ROS API and detailed package description in [ROS_API.md](./ROS_API.
     rosdep init
     rosdep update --rosdistro $ROS_DISTRO
     rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
-    colcon build
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
     ```
 
 2. **Running**

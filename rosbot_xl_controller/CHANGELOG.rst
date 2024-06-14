@@ -2,6 +2,9 @@
 Changelog for package rosbot_xl_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.11.4 (2024-05-15)
 -------------------
 

@@ -18,7 +18,7 @@ repositories:
   husarion_controllers:
     type: git
     url: https://github.com/husarion/husarion_controllers
-    version: main
+    version: 217b09830f5f42930098b9992eda41710702b625
   ros2_controllers:
     type: git
     url: https://github.com/delihus/ros2_controllers

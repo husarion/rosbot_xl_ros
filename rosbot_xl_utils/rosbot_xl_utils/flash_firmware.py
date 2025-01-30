@@ -22,8 +22,8 @@ import sys
 
 from ament_index_python.packages import get_package_share_directory
 import requests
-from flash_firmware_uart import FirmwareFlasherUART
-from flash_firmware_usb import FirmwareFlasherUSB
+from rosbot_xl_utils.flash_firmware_uart import FirmwareFlasherUART
+from rosbot_xl_utils.flash_firmware_usb import FirmwareFlasherUSB
 
 # Global variable to hold the subprocess reference
 subproc = None
@@ -67,9 +67,9 @@ def main(args=None):
 
     parser = argparse.ArgumentParser(description="Flash ROSbot Firmware")
     parser.add_argument("--robot-model", required=True, choices=["rosbot", "rosbot_xl"],
-                        help="Specify the robot model (rosbot or rosbot_xl)")
-    parser.add_argument("--usb", action="store_true", help="Use the USB flashing script")
-    parser.add_argument("-p", "--port", help="Specify the USB port")
+                        help="Specify the robot model")
+    parser.add_argument("--usb", action="store_true", help="Flash via USB. Automaticly set for ROSbot XL; other ROSbots use UART by default.")
+    parser.add_argument("-p", "--port", help="Specify the communication port")
     parser.add_argument("--file", help="Specify the firmware file")
     args = parser.parse_args(args)
 
@@ -81,8 +81,8 @@ def main(args=None):
     port = args.port if args.port else port_dict[robot_model]
 
     rosbot_utils = get_package_share_directory("rosbot_xl_utils")
-    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot", "firmware-range-laserscan-fix.bin")
-    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl", "firmware-v1.4.0.bin")
+    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_range_laserscan_fix.bin")
+    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl_v1.4.0.bin")
     firmware_dict = {"rosbot": rosbot_firmware, "rosbot_xl": rosbot_xl_firmware}
     firmware = args.file if args.file else firmware_dict[robot_model]
 
@@ -91,9 +91,9 @@ def main(args=None):
             FirmwareFlasherUSB(firmware, port)
         else:
             FirmwareFlasherUART(firmware)
-        print("Firmware flashing completed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error during firmware flashing: {e}")
+        print("Firmware flashing completed successfully!")
+    except Exception as e:
+        print(f"ERROR: {e}")
 
 
 if __name__ == "__main__":

@@ -14,11 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# This file is deprecated but stays here for backward compatibility look here:
-# https://github.com/husarion/rosbot-docker/blob/ros2/Dockerfile.hardware#L82
-
-import argparse
 import sys
 import time
 
@@ -45,9 +40,17 @@ def get_raspberry_pi_model():
 class FirmwareFlasherUART:
     def __init__(self, binary_file):
         self.binary_file = binary_file
-        sys_arch = str(sh.uname("-m")).strip()
+        self.acquire_system_info()
+        
+        print(f"\nUART Flashing:\n  file: {binary_file}\n  port: {self.port}\n")
+        try:
+            self.flash_firmware()
+        except Exception as e:
+            error_msg = e.stderr.decode("utf-8").strip()
+            raise RuntimeError(f"{error_msg}") from e
 
-        self.max_approach_no = 3
+    def acquire_system_info(self):
+        sys_arch = str(sh.uname("-m")).strip()
 
         print(f"System architecture: {sys_arch}")
 
@@ -95,71 +98,36 @@ class FirmwareFlasherUART:
     def enter_bootloader_mode(self):
         self.boot0_pin.set_value(1)
         self.reset_pin.set_value(1)
-        time.sleep(0.2)
+        time.sleep(0.1)
         self.reset_pin.set_value(0)
-        time.sleep(0.2)
+        time.sleep(0.1)
 
     def exit_bootloader_mode(self):
         self.boot0_pin.set_value(0)
         self.reset_pin.set_value(1)
-        time.sleep(0.2)
+        time.sleep(0.3)
         self.reset_pin.set_value(0)
-        time.sleep(0.2)
+        time.sleep(0.1)
 
-    def try_flash_operation(self, operation_name):
+    def flashing_operation(self, operation_name):
         print(f"\n{operation_name} operation started")
-        self.enter_bootloader_mode()
-        for i in range(self.max_approach_no):
-            print(f"Attempt {i + 1}/{self.max_approach_no}")
-            try:
-                if operation_name == "Flashing":
-                    flash_args = ["-v", "-w", self.binary_file, "-b", "115200"]
-                    sh.stm32flash(self.port, *flash_args, _out=sys.stdout)
-                    print("Success! The robot firmware has been uploaded.")
-                elif operation_name == "Write-UnProtection":
-                    sh.stm32flash(self.port, "-u")
-                elif operation_name == "Read-UnProtection":
-                    sh.stm32flash(self.port, "-k")
-                else:
-                    raise ("Unknown operation.")
-                break
-            except Exception as e:
-                stderr = e.stderr.decode("utf-8")
-                if stderr:
-                    print(f"ERROR: {stderr.strip()}")
 
-        print("Success!")
-        self.exit_bootloader_mode()
+        if operation_name == "Read-UnProtection":
+            sh.stm32flash("-b", "115200", "-v", "-w", self.binary_file, self.port, _out=sys.stdout)
+        elif operation_name == "Write-UnProtection":
+            sh.stm32flash("-b", "115200", "-u", self.port)
+        elif operation_name == "Flashing":
+            sh.stm32flash("-b", "115200", "-k", self.port)
+        else:
+            raise ("Unknown operation.")
+        time.sleep(0.5)
+        print("Success")
 
     def flash_firmware(self):
-        # Disable the flash write-protection
-        self.try_flash_operation("Write-UnProtection")
+        self.enter_bootloader_mode()
 
-        # Disable the flash read-protection
-        self.try_flash_operation("Read-UnProtection")
+        self.flashing_operation("Read-UnProtection")
+        self.flashing_operation("Write-UnProtection")
+        self.flashing_operation("Flashing")
 
-        # Flashing the firmware
-        self.try_flash_operation("Flashing")
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Flashing the firmware on STM32 microcontroller in ROSbot"
-    )
-
-    parser.add_argument(
-        "-f",
-        "--file",
-        nargs="?",
-        default="/root/firmware.bin",
-        help="Path to a firmware file. Default = /root/firmware.bin",
-    )
-
-    binary_file = parser.parse_args().file
-
-    flasher = FirmwareFlasherUART(binary_file)
-    flasher.flash_firmware()
-
-
-if __name__ == "__main__":
-    main()
+        self.exit_bootloader_mode()

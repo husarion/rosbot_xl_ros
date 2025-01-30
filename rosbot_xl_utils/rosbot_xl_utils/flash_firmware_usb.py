@@ -25,14 +25,16 @@ from pyftdi.ftdi import Ftdi
 # CBUS1 - RST
 
 
-class FirmwareFlasher:
+class FirmwareFlasherUSB:
     def __init__(self, binary_file, port):
         self.device = "ftdi://ftdi:ft-x:/1"
         self.ftdi = Ftdi()
 
         self.binary_file = binary_file
-        self.max_approach_no = 5
+        self.max_approach_no = 3
         self.port = port
+
+        self.flash_firmware()
 
     def enter_bootloader_mode(self):
         self.ftdi.open_from_url(url=self.device)
@@ -58,14 +60,37 @@ class FirmwareFlasher:
         time.sleep(0.1)
         self.ftdi.close()
 
-    def flash_firmware(self):
+    def try_flash_operation(self, operation_name):
+        print(f"\n{operation_name} operation started")
         self.enter_bootloader_mode()
         sh.usbreset("0403:6015")
         time.sleep(2.0)
-        # workaround: using pyftdi causes laggy serial port.
-        # This line is like unplug/plug for USB port
-        sh.stm32flash(self.port, "-v", w=self.binary_file, b="115200", _out=sys.stdout)
+        for i in range(self.max_approach_no):
+            print(f"Attempt {i + 1}/{self.max_approach_no}")
+            if operation_name == "Flashing":
+                flash_args = ["-v", "-w", self.binary_file, "-b", "115200"]
+                sh.stm32flash(self.port, *flash_args, _out=sys.stdout)
+                print("Success! The robot firmware has been uploaded.")
+            elif operation_name == "Write-UnProtection":
+                sh.stm32flash(self.port, "-u")
+            elif operation_name == "Read-UnProtection":
+                sh.stm32flash(self.port, "-k")
+            else:
+                raise ("Unknown operation.")
+            break
+
         self.exit_bootloader_mode()
+
+    def flash_firmware(self):
+        # Disable the flash write-protection
+        self.try_flash_operation("Write-UnProtection")
+
+        # Disable the flash read-protection
+        self.try_flash_operation("Read-UnProtection")
+
+        # Flashing the firmware
+        self.try_flash_operation("Flashing")
+
         sh.usbreset("0403:6015")
 
 
@@ -85,17 +110,19 @@ def main():
         "-p",
         "--port",
         nargs="?",
-        default="/dev/ttyUSB0",
-        help="Path to serial connection. Default: /dev/ttyUSB0",
+        default="/dev/ttyUSBDB",
+        help="Path to serial connection. Default: /dev/ttyUSBDB",
     )
 
     binary_file = parser.parse_args().file
     port = parser.parse_args().port
 
-    flasher = FirmwareFlasher(binary_file, port)
-    flasher.flash_firmware()
-    print("Done.")
-
+    try:
+        FirmwareFlasherUSB(binary_file, port)
+    except Exception as e:
+        stderr = e.stderr.decode("utf-8")
+        if stderr:
+            print(f"ERROR: {stderr.strip()}")
 
 if __name__ == "__main__":
     main()

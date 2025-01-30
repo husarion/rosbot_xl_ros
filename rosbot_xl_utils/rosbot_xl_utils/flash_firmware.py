@@ -15,18 +15,18 @@
 # limitations under the License.
 
 import argparse
-import glob
 import os
 import signal
 import subprocess
 import sys
 
-import ament_index_python.packages
+from ament_index_python.packages import get_package_share_directory
 import requests
+from flash_firmware_uart import FirmwareFlasherUART
+from flash_firmware_usb import FirmwareFlasherUSB
 
 # Global variable to hold the subprocess reference
 subproc = None
-firmware_version = "v1.4.0"
 
 
 def signal_handler(sig, frame):
@@ -47,27 +47,16 @@ def download_firmware(firmware_url, firmware_path):
         raise Exception(f"Failed to download firmware: HTTP {response.status_code}")
 
 
-def find_firmware_file():
-    # Find the install directory of 'rosbot_utils' package
-    package_install_directory = ament_index_python.packages.get_package_share_directory(
-        "rosbot_xl_utils"
-    )
+def find_firmware_file(path, robot_model):
+    rosbot_link = "https://github.com/husarion/rosbot_ros2_firmware/releases/download/0.11.0/firmware.bin"
+    rosbot_xl_link = "https://github.com/husarion/rosbot_xl_firmware/releases/download/v1.4.0/firmware.bin"
+    robot_download_link = {"rosbot": rosbot_link, "rosbot_xl": rosbot_xl_link}
 
-    # Construct the path to the firmware directory
-    firmware_dir = os.path.join(package_install_directory, "firmware")
-    firmware_files = glob.glob(os.path.join(firmware_dir, f"firmware-{firmware_version}.bin"))
-
-    if not firmware_files:
-        firmware_url = (
-            "https://github.com/husarion/rosbot_xl_firmware/releases/"
-            f"download/{firmware_version}/firmware.bin"
-        )
-        firmware_path = os.path.join(firmware_dir, f"firmware-{firmware_version}.bin")
+    if not path:
         print("Downloading firmware...")
-        download_firmware(firmware_url, firmware_path)
-        return firmware_path
+        download_firmware(robot_download_link[robot_model], path)
 
-    return firmware_files[0]  # return the first found firmware file
+    return path
 
 
 def main(args=None):
@@ -76,37 +65,33 @@ def main(args=None):
     # Setting up the signal handler
     signal.signal(signal.SIGINT, signal_handler)
 
-    parser = argparse.ArgumentParser(description="Flash Firmware ROS 2 Node")
-    parser.add_argument(
-        "-p",
-        "--port",
-        default="/dev/ttyUSBDB",
-        help="Specify the USB port (default: /dev/ttyUSBDB)",
-    )
+    parser = argparse.ArgumentParser(description="Flash ROSbot Firmware")
+    parser.add_argument("--robot-model", required=True, choices=["rosbot", "rosbot_xl"],
+                        help="Specify the robot model (rosbot or rosbot_xl)")
+    parser.add_argument("--usb", action="store_true", help="Use the USB flashing script")
+    parser.add_argument("-p", "--port", help="Specify the USB port")
     parser.add_argument("--file", help="Specify the firmware file")
-
     args = parser.parse_args(args)
 
-    # Determine the firmware file to use
-    firmware_file = args.file if args.file else find_firmware_file()
+    robot_model = args.robot_model
+    if robot_model == "rosbot_xl":
+        args.usb = True
+
+    port_dict = {"rosbot": "/dev/ttyUSB0", "rosbot_xl": "/dev/ttyUSBDB"}
+    port = args.port if args.port else port_dict[robot_model]
+
+    rosbot_utils = get_package_share_directory("rosbot_xl_utils")
+    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot", "firmware-range-laserscan-fix.bin")
+    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl", "firmware-v1.4.0.bin")
+    firmware_dict = {"rosbot": rosbot_firmware, "rosbot_xl": rosbot_xl_firmware}
+    firmware = args.file if args.file else firmware_dict[robot_model]
 
     try:
-        script_name = "flash-firmware.py"
-
-        script_path = os.path.join(os.path.dirname(__file__), script_name)
-        additional_args = ["-p", args.port, "--file", firmware_file]
-
-        # Print the flashing details
-        print(f"Flashing {firmware_file} over {args.port}")
-
-        # # Starting the subprocess
-        subproc = subprocess.Popen([sys.executable, script_path] + additional_args)
-        return_code = subproc.wait()  # Wait for the subprocess to finish and get the return code
-
-        if return_code != 0:
-            print(f"Firmware flashing failed with return code {return_code}")
+        if args.usb:
+            FirmwareFlasherUSB(firmware, port)
         else:
-            print("Firmware flashing completed successfully.")
+            FirmwareFlasherUART(firmware)
+        print("Firmware flashing completed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Error during firmware flashing: {e}")
 

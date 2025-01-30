@@ -58,7 +58,7 @@ def launch_setup(context, *args, **kwargs):
         ),
         executable="spawner",
         arguments=[
-            "rosbot_xl_base_controller",
+            "rosbot_base_controller",
             "--controller-manager",
             controller_manager_name,
             "--controller-manager-timeout",
@@ -233,7 +233,7 @@ def generate_launch_description():
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
-            ("rosbot_xl_base_controller/cmd_vel_unstamped", "cmd_vel"),
+            ("rosbot_base_controller/cmd_vel_unstamped", "cmd_vel"),
             ("/tf", "tf"),
             ("/tf_static", "tf_static"),
         ],

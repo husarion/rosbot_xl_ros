@@ -37,7 +37,7 @@ class ControllersTestNode(Node):
         )
 
         self.odom_sub = self.create_subscription(
-            Odometry, "rosbot_xl_base_controller/odom", self.odometry_callback, 10
+            Odometry, "rosbot_base_controller/odom", self.odometry_callback, 10
         )
 
         self.imu_sub = self.create_subscription(Imu, "imu_broadcaster/imu", self.imu_callback, 10)
@@ -94,7 +94,7 @@ def controller_test(node, robot_name="ROSbot"):
     msgs_received_flag = node.odom_msg_event.wait(20.0)
     assert msgs_received_flag, (
         f"{robot_name}: Expected Odom message but it was not received. Check "
-        "rosbot_xl_base_controller!"
+        "rosbot_base_controller!"
     )
     msgs_received_flag = node.imu_msg_event.wait(20.0)
     assert (

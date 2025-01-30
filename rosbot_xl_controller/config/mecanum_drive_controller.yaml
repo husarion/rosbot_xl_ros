@@ -6,7 +6,7 @@
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
-    rosbot_xl_base_controller:
+    rosbot_base_controller:
       type: mecanum_drive_controller/MecanumDriveController
     imu_broadcaster:
       type: imu_sensor_broadcaster/IMUSensorBroadcaster
@@ -22,7 +22,7 @@
     static_covariance_angular_velocity: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0e-3] # Values based on diff_drive
     static_covariance_linear_acceleration: [6.4e-2, 0.0, 0.0, 2.2e-2, 0.0, 0.0, 0.0, 0.0, 0.0] # Values based on diff_drive
 
-/**/rosbot_xl_base_controller:
+/**/rosbot_base_controller:
   ros__parameters:
     tf_frame_prefix_enable: false
     front_left_wheel_name: fl_wheel_joint

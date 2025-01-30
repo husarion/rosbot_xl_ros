@@ -26,7 +26,7 @@ class SimulationTestNode(Node):
     __test__ = False
 
     # The inaccuracies in measurement uncertainties and wheel slippage
-    # cause the rosbot_xl_base_controller to determine inaccurate odometry.
+    # cause the rosbot_base_controller to determine inaccurate odometry.
     ACCURACY = 0.10  # 10% accuracy
     VELOCITY_STABILIZATION_DELAY = 2
 
@@ -39,7 +39,7 @@ class SimulationTestNode(Node):
             JointState, "joint_states", self.joint_states_callback, 10
         )
         self.controller_sub = self.create_subscription(
-            Odometry, "rosbot_xl_base_controller/odom", self.controller_callback, 10
+            Odometry, "rosbot_base_controller/odom", self.controller_callback, 10
         )
         self.ekf_sub = self.create_subscription(
             Odometry, "odometry/filtered", self.ekf_callback, 10
@@ -175,7 +175,7 @@ def x_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_na
     )
     assert node.is_controller_odom_correct, (
         f"{robot_name}: does not move properly in x direction. Check"
-        f" rosbot_xl_base_controller! Twist: {node.controller_twist}"
+        f" rosbot_base_controller! Twist: {node.controller_twist}"
         f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.is_ekf_odom_correct, (
@@ -194,7 +194,7 @@ def y_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_na
     )
     assert node.is_controller_odom_correct, (
         f"{robot_name} does not move properly in y direction. Check"
-        f" rosbot_xl_base_controller! Twist: {node.controller_twist}"
+        f" rosbot_base_controller! Twist: {node.controller_twist}"
         f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )
     assert node.is_ekf_odom_correct, (
@@ -212,7 +212,7 @@ def yaw_speed_test(node: SimulationTestNode, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_
         f" {(node.current_time - node.goal_received_time):.1f}."
     )
     assert node.is_controller_odom_correct, (
-        f"{robot_name} does not rotate properly. Check rosbot_xl_base_controller! Twist:"
+        f"{robot_name} does not rotate properly. Check rosbot_base_controller! Twist:"
         f" {node.controller_twist}"
         f"\nCommand: x: {v_x}, y:{v_y}, yaw:{v_yaw}"
     )

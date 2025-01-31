@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- body defining macro -->
   <xacro:macro name="body" params="wheel_radius mecanum namespace">
-    <xacro:include filename="$(find rosbot_description)/urdf/components/vl53lox.urdf.xacro" ns="range_sensor" />
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot/components/vl53lox.urdf.xacro" ns="range_sensor" />
 
     <link name="base_link" />
 
@@ -15,11 +15,11 @@
     <link name="body_link">
       <visual>
         <geometry>
-          <mesh filename="package://rosbot_description/meshes/rosbot/body.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://rosbot_xl_description/meshes/rosbot/body.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <origin xyz="0.0 0.0 -0.0173" rpy="${pi/2} 0.0 ${pi/2}" />
         <material name="Black">
-          <color rgba="0.1 0.1 0.1 0.1" />
+          <color rgba="0.1 0.1 0.1 1.0" />
         </material>
       </visual>
 
@@ -51,7 +51,7 @@
     <link name="cover_link">
       <visual>
         <geometry>
-          <mesh filename="package://rosbot_description/meshes/rosbot/cover.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://rosbot_xl_description/meshes/rosbot/cover.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <origin xyz="0.0 0.0 -0.002" rpy="${pi/2} 0.0 ${pi/2}" />
         <material name="Red">

@@ -41,7 +41,7 @@ def generate_launch_description():
     declare_rviz_config_arg = DeclareLaunchArgument(
         "rviz_config",
         default_value=PathJoinSubstitution(
-            [FindPackageShare("husarion_ugv_description"), "rviz", "husarion_ugv.rviz"]
+            [FindPackageShare("rosbot_xl_description"), "rviz", "rosbot.rviz"]
         ),
         description="RViz configuration file.",
     )
@@ -52,13 +52,6 @@ def generate_launch_description():
         default_value="False",
         description="Whether simulation is used.",
         choices=["True", "true", "False", "false"],
-    )
-
-    ns_ext = PythonExpression(["'", namespace, "' + '/' if '", namespace, "' else ''"])
-
-    rviz_config = ReplaceString(
-        source_file=rviz_config,
-        replacements={"<namespace>/": ns_ext, "<namespace>": namespace},
     )
 
     rviz_node = Node(

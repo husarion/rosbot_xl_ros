@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# Copyright 2020 ros2_control Development Team
 # Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,21 +30,28 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    namespace = LaunchConfiguration("namespace")
     mecanum = LaunchConfiguration("mecanum")
+    namespace = LaunchConfiguration("namespace")
+    robot_model = LaunchConfiguration("robot_model")
     use_joint_state_publisher = LaunchConfiguration("use_joint_state_publisher", default="True")
     use_sim = LaunchConfiguration("use_sim")
 
+    declare_mecanum_arg = DeclareLaunchArgument(
+        "mecanum",
+        default_value="False",
+        description="Whether to use mecanum drive controller, otherwise use diff drive",
+    )
+    
     declare_namespace_arg = DeclareLaunchArgument(
         "namespace",
         default_value="",
         description="Namespace for all topics and tfs",
     )
 
-    declare_mecanum_arg = DeclareLaunchArgument(
-        "mecanum",
-        default_value="False",
-        description="Whether to use mecanum drive controller, otherwise use diff drive",
+    declare_robot_model_arg = DeclareLaunchArgument(
+        "robot_model",
+        description="Specify robot model",
+        choices=["rosbot", "rosbot_xl"],
     )
 
     declare_use_sim_arg = DeclareLaunchArgument(
@@ -70,25 +76,22 @@ def generate_launch_description():
         ]
     )
 
+    urdf_file = PythonExpression(["'", robot_model, ".urdf.xacro'"])
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [
-                    FindPackageShare("rosbot_xl_description"),
-                    "urdf",
-                    "rosbot_xl.urdf.xacro",
-                ]
+                [FindPackageShare("rosbot_xl_description"), "urdf", urdf_file]
             ),
             " controller_config_file:=",
             controller_config_path,
             " mecanum:=",
             mecanum,
-            " use_sim:=",
-            use_sim,
             " namespace:=",
             namespace,
+            " use_sim:=",
+            use_sim,
         ]
     )
     robot_description = {"robot_description": robot_description_content}
@@ -112,8 +115,9 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            declare_namespace_arg,
             declare_mecanum_arg,
+            declare_namespace_arg,
+            declare_robot_model_arg,
             declare_use_sim_arg,
             SetParameter(name="use_sim_time", value=use_sim),
             robot_state_pub_node,

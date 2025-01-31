@@ -1,13 +1,13 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="rosbot" params="mecanum use_sim namespace">
+  <xacro:macro name="rosbot" params="mecanum namespace use_sim">
 
     <xacro:property name="ns" value="${namespace + '/' if namespace != 'None' else ''}" />
     <xacro:property name="wheel_radius" value="${0.0470 if mecanum else 0.0425}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
-    <xacro:include filename="$(find rosbot_description)/urdf/body.urdf.xacro" ns="body" />
-    <xacro:include filename="$(find rosbot_description)/urdf/wheel.urdf.xacro" ns="wheel" />
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot/body.urdf.xacro" ns="body" />
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot/wheel.urdf.xacro" ns="wheel" />
 
     <!-- BODY DECLARATION -->
     <xacro:body.body wheel_radius="${wheel_radius}" mecanum="${mecanum}" namespace="${namespace}" />

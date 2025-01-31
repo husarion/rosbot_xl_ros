@@ -27,9 +27,6 @@ from nav2_common.launch import ParseMultiRobotPose
 
 
 def generate_launch_description():
-    camera_model = LaunchConfiguration("camera_model")
-    lidar_model = LaunchConfiguration("lidar_model")
-    mecanum = LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
     x = LaunchConfiguration("x", default="-1.0")
     y = LaunchConfiguration("y", default="-2.0")

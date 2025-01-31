@@ -89,47 +89,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
-    camera_model = LaunchConfiguration("camera_model")
-    declare_camera_model_arg = DeclareLaunchArgument(
-        "camera_model",
-        default_value="None",
-        description="Add camera model to the robot URDF",
-        choices=[
-            "None",
-            "intel_realsense_d435",
-            "orbbec_astra",
-            "stereolabs_zed",
-            "stereolabs_zedm",
-            "stereolabs_zed2",
-            "stereolabs_zed2i",
-            "stereolabs_zedx",
-            "stereolabs_zedxm",
-        ],
-    )
-
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s1",
-        description="Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_s2",
-            "slamtec_rplidar_s3",
-            "velodyne_puck",
-        ],
-    )
-
-    include_camera_mount = LaunchConfiguration("include_camera_mount")
-    declare_include_camera_mount_arg = DeclareLaunchArgument(
-        "include_camera_mount",
-        default_value="False",
-        description="Whether to include camera mount to the robot URDF",
-    )
-
     # Locate the rosbot_bringup package
     package_dir = FindPackageShare("rosbot_xl_bringup").find("rosbot_xl_bringup")
 
@@ -151,9 +110,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([ThisLaunchFileDir(), "/bringup.launch.py"]),
         launch_arguments={
             "mecanum": mecanum,
-            "lidar_model": lidar_model,
-            "camera_model": camera_model,
-            "include_camera_mount": include_camera_mount,
             "combined_launch_deprecated": LaunchConfiguration(
                 "combined_launch_deprecated", default=True
             ),
@@ -168,9 +124,6 @@ def generate_launch_description():
             declare_port_arg,
             declare_localhost_only_fastrtps_profiles_file_arg,
             declare_mecanum_arg,
-            declare_camera_model_arg,
-            declare_lidar_model_arg,
-            declare_include_camera_mount_arg,
             OpaqueFunction(function=generate_microros_agent_node),
             bringup_launch,
         ]

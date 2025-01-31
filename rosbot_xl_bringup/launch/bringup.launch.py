@@ -41,47 +41,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
-    camera_model = LaunchConfiguration("camera_model")
-    declare_camera_model_arg = DeclareLaunchArgument(
-        "camera_model",
-        default_value="None",
-        description="Add camera model to the robot URDF",
-        choices=[
-            "None",
-            "intel_realsense_d435",
-            "orbbec_astra",
-            "stereolabs_zed",
-            "stereolabs_zedm",
-            "stereolabs_zed2",
-            "stereolabs_zed2i",
-            "stereolabs_zedx",
-            "stereolabs_zedxm",
-        ],
-    )
-
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s1",
-        description="Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_s2",
-            "slamtec_rplidar_s3",
-            "velodyne_puck",
-        ],
-    )
-
-    include_camera_mount = LaunchConfiguration("include_camera_mount")
-    declare_include_camera_mount_arg = DeclareLaunchArgument(
-        "include_camera_mount",
-        default_value="False",
-        description="Whether to include camera mount to the robot URDF",
-    )
-
     use_sim = LaunchConfiguration("use_sim")
     declare_use_sim_arg = DeclareLaunchArgument(
         "use_sim",
@@ -110,9 +69,6 @@ def generate_launch_description():
         ),
         launch_arguments={
             "mecanum": mecanum,
-            "lidar_model": lidar_model,
-            "camera_model": camera_model,
-            "include_camera_mount": include_camera_mount,
             "use_sim": use_sim,
             "namespace": namespace,
         }.items(),
@@ -133,13 +89,7 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    laser_filter_config = PathJoinSubstitution(
-        [
-            rosbot_xl_bringup,
-            "config",
-            "laser_filter.yaml",
-        ]
-    )
+    laser_filter_config = PathJoinSubstitution([rosbot_xl_bringup, "config", "laser_filter.yaml"])
 
     laser_filter_node = Node(
         package="laser_filters",
@@ -163,9 +113,6 @@ def generate_launch_description():
         [
             declare_namespace_arg,
             declare_mecanum_arg,
-            declare_lidar_model_arg,
-            declare_camera_model_arg,
-            declare_include_camera_mount_arg,
             declare_use_sim_arg,
             declare_combined_launch_deprecated_arg,
             SetParameter(name="use_sim_time", value=use_sim),

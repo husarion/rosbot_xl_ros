@@ -22,33 +22,11 @@ from ament_index_python.packages import get_package_share_directory
 def test_rosbot_description_parsing():
     mecanum_values = ["true", "false"]
     use_sim_values = ["true", "false"]
-    lidar_models = [
-        "None",
-        "slamtec_rplidar_a2",
-        "slamtec_rplidar_a3",
-        "slamtec_rplidar_s1",
-        "slamtec_rplidar_s2",
-        "slamtec_rplidar_s3",
-        "velodyne_puck",
-    ]
-    camera_models = [
-        "None",
-        "intel_realsense_d435",
-        "orbbec_astra",
-        "stereolabs_zed",
-        "stereolabs_zedm",
-        "stereolabs_zed2",
-        "stereolabs_zed2i",
-        "stereolabs_zedx",
-        "stereolabs_zedxm",
-    ]
-
+ 
     all_combinations = list(
         itertools.product(
             mecanum_values,
             use_sim_values,
-            lidar_models,
-            camera_models,
         )
     )
 
@@ -56,14 +34,10 @@ def test_rosbot_description_parsing():
         (
             mecanum,
             use_sim,
-            lidar_model,
-            camera_model,
         ) = combination
         mappings = {
             "mecanum": mecanum,
             "use_sim": use_sim,
-            "lidar_model": lidar_model,
-            "camera_model": camera_model,
         }
         rosbot_xl_description = get_package_share_directory("rosbot_xl_description")
         xacro_path = os.path.join(rosbot_xl_description, "urdf/rosbot_xl.urdf.xacro")
@@ -72,6 +46,5 @@ def test_rosbot_description_parsing():
         except xacro.XacroException as e:
             assert False, (
                 f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
-                f"use_sim: {use_sim}, "
-                f"lidar_model: {lidar_model}, camera_model: {camera_model}, "
+                f"use_sim: {use_sim}"
             )

@@ -136,13 +136,13 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    bringup_launch = IncludeLaunchDescription(
+    controller_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("rosbot_xl_bringup"),
+                    FindPackageShare("rosbot_xl_controller"),
                     "launch",
-                    "bringup.launch.py",
+                    "controller.launch.py",
                 ]
             )
         ),
@@ -150,6 +150,38 @@ def generate_launch_description():
             "use_sim": "True",
             "namespace": namespace,
         }.items(),
+    )
+
+    rosbot_xl_bringup = FindPackageShare("rosbot_xl_bringup")
+
+    ekf_config = PathJoinSubstitution([rosbot_xl_bringup, "config", "ekf.yaml"])
+
+    robot_localization_node = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[ekf_config],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
+        ],
+        namespace=namespace,
+    )
+
+    laser_filter_config = PathJoinSubstitution([rosbot_xl_bringup, "config", "laser_filter.yaml"])
+
+    laser_filter_node = Node(
+        package="laser_filters",
+        executable="scan_to_scan_filter_chain",
+        parameters=[
+            laser_filter_config,
+        ],
+        remappings=[
+            ("/tf", "tf"),
+            ("/tf_static", "tf_static"),
+        ],
+        namespace=namespace,
     )
 
     return LaunchDescription(
@@ -166,6 +198,8 @@ def generate_launch_description():
             welcome_msg,
             gz_bridge,
             gz_spawn_entity,
-            bringup_launch,
+            controller_launch,
+            robot_localization_node,
+            laser_filter_node,
         ]
     )

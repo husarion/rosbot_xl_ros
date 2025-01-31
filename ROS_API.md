@@ -21,9 +21,6 @@ Package that contains launch, which starts all base functionalities with the mic
 
 | PARAMETER                | DESCRIPTION                                                       | VALUE      |
 | ------------------------ | ----------------------------------------------------------------- | ---------- |
-| **camera_model**         | Add camera model to the robot URDF                                | **None**\* |
-| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **None**\* |
-| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False**  |
 | **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**  |
 | **namespace**            | Namespace for all topics and tfs                                  | **""**     |
 
@@ -56,9 +53,6 @@ Launch files for Ignition Gazebo working with ROS2 control.
 
 | PARAMETER                | DESCRIPTION                                                       | VALUE                                                       |
 | ------------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------- |
-| **camera_model**         | Add camera model to the robot URDF                                | **None**\*                                                  |
-| **lidar_model**          | Add LiDAR model to the robot URDF                                 | **None**\*                                                  |
-| **include_camera_mount** | Whether to include camera mount to the robot URDF                 | **False**                                                   |
 | **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**                                                   |
 | **namespace**            | Namespace for all topics and tfs                                  | **""**                                                      |
 | **world**                | Path to SDF world file                                            | **`husarion_gz_worlds/`<br /> `worlds/husarion_world.sdf`** |

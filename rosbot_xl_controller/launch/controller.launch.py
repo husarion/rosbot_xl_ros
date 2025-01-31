@@ -16,12 +16,11 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import UnlessCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import (
-    Command,
-    FindExecutable,
     LaunchConfiguration,
     PathJoinSubstitution,
     PythonExpression,
@@ -120,47 +119,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
-    camera_model = LaunchConfiguration("camera_model")
-    declare_camera_model_arg = DeclareLaunchArgument(
-        "camera_model",
-        default_value="None",
-        description="Add camera model to the robot URDF",
-        choices=[
-            "None",
-            "intel_realsense_d435",
-            "orbbec_astra",
-            "stereolabs_zed",
-            "stereolabs_zedm",
-            "stereolabs_zed2",
-            "stereolabs_zed2i",
-            "stereolabs_zedx",
-            "stereolabs_zedxm",
-        ],
-    )
-
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="None",
-        description="Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_s2",
-            "slamtec_rplidar_s3",
-            "velodyne_puck",
-        ],
-    )
-
-    include_camera_mount = LaunchConfiguration("include_camera_mount")
-    declare_include_camera_mount_arg = DeclareLaunchArgument(
-        "include_camera_mount",
-        default_value="False",
-        description="Whether to include camera mount to the robot URDF",
-    )
-
     use_sim = LaunchConfiguration("use_sim")
     declare_use_sim_arg = DeclareLaunchArgument(
         "use_sim",
@@ -184,40 +142,27 @@ def generate_launch_description():
         ]
     )
 
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
+    load_urdf = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
                     FindPackageShare("rosbot_xl_description"),
-                    "urdf",
-                    "rosbot_xl.urdf.xacro",
+                    "launch",
+                    "load_urdf.launch.py",
                 ]
-            ),
-            " controller_config_file:=",
-            controller_config_path,
-            " mecanum:=",
-            mecanum,
-            " lidar_model:=",
-            lidar_model,
-            " camera_model:=",
-            camera_model,
-            " include_camera_mount:=",
-            include_camera_mount,
-            " use_sim:=",
-            use_sim,
-            " namespace:=",
-            namespace,
-        ]
+            )
+        ),
+        launch_arguments={
+            "namespace": namespace,
+            "use_joint_state_publisher": "False",
+            "use_sim": "True",
+        }.items(),
     )
-    robot_description = {"robot_description": robot_description_content}
 
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[
-            robot_description,
             controller_config_path,
         ],
         remappings=[
@@ -232,26 +177,14 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    robot_state_pub_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
-        parameters=[robot_description],
-        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-        namespace=namespace,
-    )
-
     return LaunchDescription(
         [
             declare_namespace_arg,
             declare_mecanum_arg,
-            declare_lidar_model_arg,
-            declare_camera_model_arg,
-            declare_include_camera_mount_arg,
             declare_use_sim_arg,
             SetParameter(name="use_sim_time", value=use_sim),
+            load_urdf,
             control_node,
-            robot_state_pub_node,
             OpaqueFunction(function=launch_setup),
         ]
     )

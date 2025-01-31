@@ -33,7 +33,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     namespace = LaunchConfiguration("namespace")
     mecanum = LaunchConfiguration("mecanum")
-    use_joint_state_publisher = LaunchConfiguration("use_joint_state_publisher",default="True")
+    use_joint_state_publisher = LaunchConfiguration("use_joint_state_publisher", default="True")
     use_sim = LaunchConfiguration("use_sim")
 
     declare_namespace_arg = DeclareLaunchArgument(

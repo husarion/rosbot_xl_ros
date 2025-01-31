@@ -1,4 +1,4 @@
-# Copyright 2024 Husarion
+# Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,12 +34,14 @@ def generate_microros_agent_node(context, *args, **kwargs):
         env_setup_actions.append(
             SetEnvironmentVariable(name="XRCE_DOMAIN_ID_OVERRIDE", value=ros_domain_id)
         )
-
+    
+    fastrtps_profiles = LaunchConfiguration("fastrtps_profiles").perform(context)
     port = LaunchConfiguration("port").perform(context)
+    robot_model = LaunchConfiguration("robot_model").perform(context)
+    serial_baudrate = LaunchConfiguration("serial_baudrate").perform(context)
+    serial_port = LaunchConfiguration("serial_port").perform(context)
 
-    localhost_only_fastrtps_profiles_file = LaunchConfiguration(
-        "localhost_only_fastrtps_profiles_file"
-    ).perform(context)
+    robot_communication_args = {"rosbot": ["serial", "-b", serial_baudrate, "-D", serial_port], "rosbot_xl": ["udp4", "--port", port]}
 
     if os.environ.get("ROS_LOCALHOST_ONLY") == "1":
         env_setup_actions.extend(
@@ -47,14 +49,12 @@ def generate_microros_agent_node(context, *args, **kwargs):
                 LogInfo(
                     msg=[
                         "ROS_LOCALHOST_ONLY set to 1. Using FASTRTPS_DEFAULT_PROFILES_FILE=",
-                        localhost_only_fastrtps_profiles_file,
-                        ".",
-                    ]
+                        fastrtps_profiles]
                 ),
                 SetEnvironmentVariable(name="RMW_IMPLEMENTATION", value="rmw_fastrtps_cpp"),
                 SetEnvironmentVariable(
                     name="FASTRTPS_DEFAULT_PROFILES_FILE",
-                    value=localhost_only_fastrtps_profiles_file,
+                    value=fastrtps_profiles,
                 ),
             ]
         )
@@ -62,41 +62,54 @@ def generate_microros_agent_node(context, *args, **kwargs):
     microros_agent_node = Node(
         package="micro_ros_agent",
         executable="micro_ros_agent",
-        arguments=["udp4", "--port", port],
-        output="screen",
+        arguments=robot_communication_args[robot_model],
     )
 
     return env_setup_actions + [microros_agent_node]
 
 
 def generate_launch_description():
+    default_fastrtps_profiles = PathJoinSubstitution(
+        [FindPackageShare("rosbot_xl_bringup"), "config", "microros_localhost_only.xml"]
+    )
+
+    declare_fastrtps_profiles_arg = DeclareLaunchArgument(
+        "fastrtps_profiles",
+        default_value=default_fastrtps_profiles,
+        description=(
+            "Path to the Fast RTPS default profiles file for Micro-ROS agent for localhost only setup"
+        ),
+    )
+
     declare_port_arg = DeclareLaunchArgument(
         "port",
         default_value="8888",
-        description="UDP4 port for micro-ROS agent",
+        description="ROSbot XL only. UDP4 port for micro-ROS agent",
     )
 
-    # Locate the rosbot_bringup package
-    package_dir = FindPackageShare("rosbot_xl_bringup").find("rosbot_xl_bringup")
-
-    # Construct the path to the XML file within the package
-    fastrtps_profiles_file = PathJoinSubstitution(
-        [package_dir, "config", "microros_localhost_only.xml"]
+    declare_robot_model_arg = DeclareLaunchArgument(
+        "robot_model",
+        description="Specify robot model",
+        choices=["rosbot", "rosbot_xl"],
     )
 
-    declare_localhost_only_fastrtps_profiles_file_arg = DeclareLaunchArgument(
-        "localhost_only_fastrtps_profiles_file",
-        default_value=fastrtps_profiles_file,
-        description=(
-            "Path to the Fast RTPS default profiles file for Micro-ROS agent for localhost only"
-            " setup"
-        ),
+    declare_serial_baudrate_arg = DeclareLaunchArgument(
+        "serial_baudrate", default_value="576000", description="ROSbot only. Baud rate for serial communication"
+    )
+
+    declare_serial_port_arg = DeclareLaunchArgument(
+        "serial_port",
+        default_value="/dev/ttySERIAL",
+        description="ROSbot only. Serial port for micro-ROS agent",
     )
 
     return LaunchDescription(
         [
+            declare_fastrtps_profiles_arg,
             declare_port_arg,
-            declare_localhost_only_fastrtps_profiles_file_arg,
+            declare_robot_model_arg,
+            declare_serial_baudrate_arg,
+            declare_serial_port_arg,
             OpaqueFunction(function=generate_microros_agent_node),
         ]
     )

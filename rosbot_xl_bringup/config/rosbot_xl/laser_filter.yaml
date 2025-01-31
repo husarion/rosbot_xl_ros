@@ -16,4 +16,4 @@
         max_z: 0.5
         min_z: -0.5
 
-        invert: false # activate to remove all points outside of the box
+        invert: false

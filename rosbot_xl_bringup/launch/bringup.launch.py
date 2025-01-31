@@ -89,13 +89,6 @@ def generate_launch_description():
         description="Whether simulation is used",
     )
 
-    simulation_engine = LaunchConfiguration("simulation_engine")
-    declare_simulation_engine_arg = DeclareLaunchArgument(
-        "simulation_engine",
-        default_value="ignition-gazebo",
-        description="Which simulation engine will be used",
-    )
-
     combined_launch_deprecated = LaunchConfiguration("combined_launch_deprecated")
     declare_combined_launch_deprecated_arg = DeclareLaunchArgument(
         "combined_launch_deprecated",
@@ -121,7 +114,6 @@ def generate_launch_description():
             "camera_model": camera_model,
             "include_camera_mount": include_camera_mount,
             "use_sim": use_sim,
-            "simulation_engine": simulation_engine,
             "namespace": namespace,
         }.items(),
     )
@@ -175,7 +167,6 @@ def generate_launch_description():
             declare_camera_model_arg,
             declare_include_camera_mount_arg,
             declare_use_sim_arg,
-            declare_simulation_engine_arg,
             declare_combined_launch_deprecated_arg,
             SetParameter(name="use_sim_time", value=use_sim),
             microros_launch,

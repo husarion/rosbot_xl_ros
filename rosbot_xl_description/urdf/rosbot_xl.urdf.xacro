@@ -6,20 +6,18 @@
   <xacro:arg name="camera_model" default="intel_realsense_d435" />
   <xacro:arg name="include_camera_mount" default="false" />
   <xacro:arg name="use_sim" default="false" />
-  <xacro:arg name="simulation_engine" default="ignition-gazebo" />
   <xacro:arg name="namespace" default="None" />
   <xacro:arg name="controller_config_file" default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
 
-  <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl_macro.urdf.xacro"
+  <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
   <xacro:husarion.rosbot_xl_robot
     controller_config_file="$(arg controller_config_file)"
     mecanum="$(arg mecanum)"
     namespace="$(arg namespace)"
-    simulation_engine="$(arg simulation_engine)"
     use_sim="$(arg use_sim)" />
 
-  <xacro:include filename="$(find rosbot_xl_description)/urdf/components/antenna.urdf.xacro"
+  <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/components/antenna.urdf.xacro"
     ns="antenna" />
   <xacro:antenna.antenna
     parent_link="body_link"
@@ -34,49 +32,30 @@
   <xacro:property name="lidar_xyz" value="0.02 0.0 0.0" />
   <xacro:property name="lidar_rpy" value="0.0 0.0 0.0" />
 
-  <xacro:if value="${lidar_model == 'slamtec_rplidar_s1'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s1.urdf.xacro"
-      ns="lidar" />
-    <xacro:lidar.slamtec_rplidar_s1
-      parent_link="${lidar_parent_link}"
-      xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}" />
-  </xacro:if>
+  <xacro:if value="${lidar_model.startswith('stereolabs')}">
+    <xacro:if value="${lidar_model == 'slamtec_rplidar_s1'}">
+      <xacro:property name="lidar_model_type" value="s1" />
+    </xacro:if>
+    <xacro:if value="${lidar_model == 'slamtec_rplidar_s2'}">
+      <xacro:property name="lidar_model_type" value="s2" />
+    </xacro:if>
+    <xacro:if value="${lidar_model == 'slamtec_rplidar_s3'}">
+      <xacro:property name="lidar_model_type" value="s3" />
+    </xacro:if>
+    <xacro:if value="${lidar_model == 'slamtec_rplidar_a2'}">
+      <xacro:property name="lidar_model_type" value="a2" />
+    </xacro:if>
+    <xacro:if value="${lidar_model == 'slamtec_rplidar_a3'}">
+      <xacro:property name="lidar_model_type" value="a3" />
+    </xacro:if>
 
-  <xacro:if value="${lidar_model == 'slamtec_rplidar_s2'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s2.urdf.xacro"
+    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar.urdf.xacro"
       ns="lidar" />
-    <xacro:lidar.slamtec_rplidar_s2
+    <xacro:lidar.slamtec_rplidar
       parent_link="${lidar_parent_link}"
       xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}" />
-  </xacro:if>
-
-  <xacro:if value="${lidar_model == 'slamtec_rplidar_s3'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s3.urdf.xacro"
-      ns="lidar" />
-    <xacro:lidar.slamtec_rplidar_s3
-      parent_link="${lidar_parent_link}"
-      xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}" />
-  </xacro:if>
-
-  <xacro:if value="${lidar_model == 'slamtec_rplidar_a2'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_a2.urdf.xacro"
-      ns="lidar" />
-    <xacro:lidar.slamtec_rplidar_a2
-      parent_link="${lidar_parent_link}"
-      xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}" />
-  </xacro:if>
-
-  <xacro:if value="${lidar_model == 'slamtec_rplidar_a3'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_a3.urdf.xacro"
-      ns="lidar" />
-    <xacro:lidar.slamtec_rplidar_a3
-      parent_link="${lidar_parent_link}"
-      xyz="${lidar_xyz}"
-      rpy="${lidar_rpy}" />
+      rpy="${lidar_rpy}"
+      model="${lidar_model_type}" />
   </xacro:if>
 
   <xacro:if value="${lidar_model == 'velodyne_puck'}">
@@ -152,7 +131,7 @@
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
   <xacro:if value="${include_camera_mount or camera_model != 'None'}">
-    <xacro:include filename="$(find rosbot_xl_description)/urdf/components/camera_mount.urdf.xacro"
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/components/camera_mount.urdf.xacro"
       ns="camera_mount" />
     <xacro:camera_mount.camera_mount
       parent_link="cover_link"

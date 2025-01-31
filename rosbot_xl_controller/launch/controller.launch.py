@@ -168,13 +168,6 @@ def generate_launch_description():
         description="Whether simulation is used",
     )
 
-    simulation_engine = LaunchConfiguration("simulation_engine")
-    declare_simulation_engine_arg = DeclareLaunchArgument(
-        "simulation_engine",
-        default_value="ignition-gazebo",
-        description="Which simulation engine will be used",
-    )
-
     controller_config_name = PythonExpression(
         [
             "'mecanum_drive_controller.yaml' if ",
@@ -214,8 +207,6 @@ def generate_launch_description():
             include_camera_mount,
             " use_sim:=",
             use_sim,
-            " simulation_engine:=",
-            simulation_engine,
             " namespace:=",
             namespace,
         ]
@@ -233,7 +224,7 @@ def generate_launch_description():
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
-            ("rosbot_base_controller/cmd_vel_unstamped", "cmd_vel"),
+            ("rosbot_base_controller/cmd_vel", "cmd_vel"),
             ("/tf", "tf"),
             ("/tf_static", "tf_static"),
         ],
@@ -258,7 +249,6 @@ def generate_launch_description():
             declare_camera_model_arg,
             declare_include_camera_mount_arg,
             declare_use_sim_arg,
-            declare_simulation_engine_arg,
             SetParameter(name="use_sim_time", value=use_sim),
             control_node,
             robot_state_pub_node,

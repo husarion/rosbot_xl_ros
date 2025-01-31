@@ -12,13 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from launch import LaunchContext, LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    IncludeLaunchDescription,
-    OpaqueFunction,
-)
-from launch.conditions import LaunchConfigurationNotEquals
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     LaunchConfiguration,
@@ -30,194 +25,57 @@ from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import ReplaceString
 
 
-def launch_gz_bridge(context: LaunchContext, *args, **kwargs):
-    lidar_model = context.perform_substitution(LaunchConfiguration("lidar_model"))
-    camera_model = context.perform_substitution(LaunchConfiguration("camera_model"))
-    namespace = context.perform_substitution(LaunchConfiguration("namespace"))
-    actions = []
-
-    pointcloud_rpy = [
-        "1.57",
-        "-1.57",
-        "0",
-    ]
-
-    namespace_ext = "" if namespace == "" else "/" + namespace
-    robot_name = "rosbot_xl"
-    if namespace != "":
-        robot_name = namespace
-
-    depth_camera_child_tf = (
-        robot_name + "/base_link" + namespace_ext + "/camera_" + camera_model + "_depth"
-    )
-    depth_camera_parent_tf = "camera_depth_optical_frame"
-
-    if lidar_model.startswith("slamtec_rplidar"):
-        lidar_model = "slamtec_rplidar"
-
-    if lidar_model != "None":
-        gz_lidar_remappings_file = PathJoinSubstitution(
-            [
-                FindPackageShare("rosbot_xl_gazebo"),
-                "config",
-                LaunchConfiguration(
-                    "gz_lidar_remappings_file",
-                    default=["gz_", lidar_model, "_remappings.yaml"],
-                ),
-            ]
-        )
-
-        namespaced_gz_lidar_remappings_file = ReplaceString(
-            source_file=gz_lidar_remappings_file,
-            replacements={"<robot_namespace>": namespace_ext},
-        )
-
-        actions.append(
-            Node(
-                package="ros_gz_bridge",
-                executable="parameter_bridge",
-                name="ros_gz_lidar_bridge",
-                parameters=[{"config_file": namespaced_gz_lidar_remappings_file}],
-                remappings=[
-                    ("/tf", "tf"),
-                    ("/tf_static", "tf_static"),
-                ],
-                output="screen",
-                namespace=namespace,
-                condition=LaunchConfigurationNotEquals(lidar_model, "None"),
-            )
-        )
-
-    if camera_model != "None":
-        zed_model = None
-        if camera_model.startswith("stereolabs_zed"):
-            zed_model = camera_model.replace("stereolabs_", "")
-            camera_model = "stereolabs_zed"
-            depth_camera_child_tf = "rosbot_xl/base_link/camera_" + camera_model + "_depth"
-            depth_camera_parent_tf = "camera_center_optical_frame"
-            pointcloud_rpy = ["0", "0", "0"]
-
-        gz_camera_remappings_file = PathJoinSubstitution(
-            [
-                FindPackageShare("rosbot_xl_gazebo"),
-                "config",
-                LaunchConfiguration(
-                    "gz_camera_remappings_file",
-                    default=["gz_", camera_model, "_remappings.yaml"],
-                ),
-            ]
-        )
-
-        namespaced_gz_camera_remappings_file = ReplaceString(
-            source_file=gz_camera_remappings_file,
-            replacements={"<robot_namespace>": namespace_ext},
-        )
-
-        if zed_model is not None:
-            namespaced_gz_camera_remappings_file = ReplaceString(
-                source_file=namespaced_gz_camera_remappings_file,
-                replacements={"<zed>": zed_model},
-            )
-
-        actions.append(
-            Node(
-                package="ros_gz_bridge",
-                executable="parameter_bridge",
-                name="ros_gz_camera_bridge",
-                parameters=[{"config_file": namespaced_gz_camera_remappings_file}],
-                remappings=[
-                    ("/tf", "tf"),
-                    ("/tf_static", "tf_static"),
-                ],
-                output="screen",
-                namespace=namespace,
-                condition=LaunchConfigurationNotEquals(camera_model, "None"),
-            )
-        )
-
-        # The frame of the point cloud from ignition gazebo 6 isn't provided by <frame_id>.
-        # See https://github.com/gazebosim/gz-sensors/issues/239
-        actions.append(
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                name="point_cloud_tf",
-                output="log",
-                arguments=[
-                    "0",
-                    "0",
-                    "0",
-                ]
-                + pointcloud_rpy
-                + [
-                    depth_camera_parent_tf,
-                    depth_camera_child_tf,
-                ],
-                remappings=[
-                    ("/tf", "tf"),
-                    ("/tf_static", "tf_static"),
-                ],
-                namespace=namespace,
-            )
-        )
-
-    return actions
-
-
 def generate_launch_description():
     namespace = LaunchConfiguration("namespace")
-    declare_namespace_arg = DeclareLaunchArgument(
-        "namespace",
-        default_value="",
-        description="Namespace for all topics and tfs",
-    )
+    x = LaunchConfiguration("x")
+    y = LaunchConfiguration("y")
+    z = LaunchConfiguration("z")
+    roll = LaunchConfiguration("roll")
+    pitch = LaunchConfiguration("pitch")
+    yaw = LaunchConfiguration("yaw")
 
-    mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
-    camera_model = LaunchConfiguration("camera_model")
-    declare_camera_model_arg = DeclareLaunchArgument(
-        "camera_model",
-        default_value="intel_realsense_d435",
-        description="Add camera model to the robot URDF",
-        choices=[
-            "None",
-            "intel_realsense_d435",
-            "orbbec_astra",
-            "stereolabs_zed",
-            "stereolabs_zedm",
-            "stereolabs_zed2",
-            "stereolabs_zed2i",
-            "stereolabs_zedx",
-            "stereolabs_zedxm",
-        ],
+    declare_namespace_arg = DeclareLaunchArgument(
+        "namespace",
+        default_value="",
+        description="Namespace for all topics and tfs",
     )
 
-    lidar_model = LaunchConfiguration("lidar_model")
-    declare_lidar_model_arg = DeclareLaunchArgument(
-        "lidar_model",
-        default_value="slamtec_rplidar_s3",
-        description="Add LiDAR model to the robot URDF",
-        choices=[
-            "None",
-            "slamtec_rplidar_a2",
-            "slamtec_rplidar_a3",
-            "slamtec_rplidar_s1",
-            "slamtec_rplidar_s2",
-            "slamtec_rplidar_s3",
-            "velodyne_puck",
-        ],
+    declare_x_arg = DeclareLaunchArgument(
+        "x", default_value="-1.0", description="Initial robot position in the global 'x' axis."
     )
 
-    include_camera_mount = LaunchConfiguration("include_camera_mount")
-    declare_include_camera_mount_arg = DeclareLaunchArgument(
-        "include_camera_mount",
-        default_value="False",
-        description="Whether to include camera mount to the robot URDF",
+    declare_y_arg = DeclareLaunchArgument(
+        "y", default_value="-2.0", description="Initial robot position in the global 'y' axis."
+    )
+
+    declare_z_arg = DeclareLaunchArgument(
+        "z", default_value="0.0", description="Initial robot position in the global 'z' axis."
+    )
+
+    declare_roll_arg = DeclareLaunchArgument(
+        "roll", default_value="0.0", description="Initial robot 'roll' orientation."
+    )
+
+    declare_pitch_arg = DeclareLaunchArgument(
+        "pitch", default_value="0.0", description="Initial robot 'pitch' orientation."
+    )
+
+    declare_yaw_arg = DeclareLaunchArgument(
+        "yaw", default_value="0.0", description="Initial robot 'yaw' orientation."
+    )
+
+    namespace_ext = PythonExpression(
+        ["''", " if '", namespace, "' == '' ", "else ", "'/", namespace, "'"]
+    )
+
+    gz_remappings_file = PathJoinSubstitution(
+        [FindPackageShare("rosbot_xl_gazebo"), "config", "gz_bridge.yaml"]
     )
 
     robot_name = PythonExpression(
@@ -235,32 +93,46 @@ def generate_launch_description():
             "-topic",
             "robot_description",
             "-x",
-            LaunchConfiguration("x", default="0.00"),
+            x,
             "-y",
-            LaunchConfiguration("y", default="0.00"),
+            y,
             "-z",
-            LaunchConfiguration("z", default="0.00"),
+            z,
             "-R",
-            LaunchConfiguration("roll", default="0.00"),
+            roll,
             "-P",
-            LaunchConfiguration("pitch", default="0.00"),
+            pitch,
             "-Y",
-            LaunchConfiguration("yaw", default="0.00"),
+            yaw,
         ],
-        output="screen",
         namespace=namespace,
     )
 
-    ign_clock_bridge = Node(
+    welcome_msg = LogInfo(
+        msg=[
+            "Spawning ROSbot\n\tNamespace: '",
+            namespace,
+            "'\n\tInitial pose: (",
+            x,
+            ", ",
+            y,
+            ", ",
+            z,
+            ", ",
+            roll,
+            ", ",
+            pitch,
+            ", ",
+            yaw,
+            ")",
+        ]
+    )
+
+    gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="ros_gz_bridge",
-        arguments=["/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock"],
-        remappings=[
-            ("/tf", "tf"),
-            ("/tf_static", "tf_static"),
-        ],
-        output="screen",
+        parameters=[{"config_file": gz_remappings_file}],     
         namespace=namespace,
     )
 
@@ -275,29 +147,25 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            "mecanum": mecanum,
             "use_sim": "True",
-            "simulation_engine": "ignition-gazebo",
-            "camera_model": camera_model,
-            "lidar_model": lidar_model,
-            "include_camera_mount": include_camera_mount,
             "namespace": namespace,
         }.items(),
     )
 
     return LaunchDescription(
         [
-            declare_namespace_arg,
             declare_mecanum_arg,
-            declare_camera_model_arg,
-            declare_lidar_model_arg,
-            declare_include_camera_mount_arg,
-            # Sets use_sim_time for all nodes started below
-            # (doesn't work for nodes started from ignition gazebo)
+            declare_namespace_arg,
+            declare_x_arg,
+            declare_y_arg,
+            declare_z_arg,
+            declare_roll_arg,
+            declare_pitch_arg,
+            declare_yaw_arg,
             SetParameter(name="use_sim_time", value=True),
-            ign_clock_bridge,
+            welcome_msg,
+            gz_bridge,
             gz_spawn_entity,
             bringup_launch,
-            OpaqueFunction(function=launch_gz_bridge),
         ]
     )

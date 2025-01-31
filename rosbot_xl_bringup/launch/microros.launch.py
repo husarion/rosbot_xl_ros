@@ -63,6 +63,7 @@ def generate_microros_agent_node(context, *args, **kwargs):
         package="micro_ros_agent",
         executable="micro_ros_agent",
         arguments=robot_communication_args[robot_model],
+        output="screen",
     )
 
     return env_setup_actions + [microros_agent_node]

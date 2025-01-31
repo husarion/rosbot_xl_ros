@@ -105,21 +105,23 @@ def launch_setup(context, *args, **kwargs):
 
 
 def generate_launch_description():
+    mecanum = LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
+    robot_model = LaunchConfiguration("robot_model")
+    use_sim = LaunchConfiguration("use_sim")
+   
     declare_namespace_arg = DeclareLaunchArgument(
         "namespace",
         default_value="",
         description="Namespace for all topics and tfs",
     )
 
-    mecanum = LaunchConfiguration("mecanum")
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
 
-    use_sim = LaunchConfiguration("use_sim")
     declare_use_sim_arg = DeclareLaunchArgument(
         "use_sim",
         default_value="False",
@@ -154,6 +156,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "namespace": namespace,
+            "robot_model": robot_model,
             "use_joint_state_publisher": "False",
             "use_sim": "True",
         }.items(),

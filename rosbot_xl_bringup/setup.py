@@ -18,17 +18,22 @@ from glob import glob
 from setuptools import find_packages, setup
 
 package_name = "rosbot_xl_bringup"
+common_config = glob('config/*')
+rosbot_config = glob('config/rosbot/*.yaml')
+rosbot_xl_config = glob('config/rosbot_xl/*.yaml')
+launch_files = glob('launch/*.launch.py')
 
 setup(
     name=package_name,
     version="0.8.2",
     packages=find_packages(exclude=["test"]),
     data_files=[
-        ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
+        ("share/ament_index/resource_index/packages", [f"resource/{package_name}"]),
         ("share/" + package_name, ["package.xml"]),
-        (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
-        (os.path.join("share", package_name, "config"), glob("config/*.yaml")),
-        (os.path.join("share", package_name, "config"), glob("config/*.xml")),
+        ("share/" + package_name + "/config", common_config),
+        ("share/" + package_name + "/config/rosbot", rosbot_config),
+        ("share/" + package_name + "/config/rosbot_xl", rosbot_xl_config),
+        ("share/" + package_name + "/launch", launch_files),
     ],
     install_requires=["setuptools"],
     zip_safe=True,

@@ -81,8 +81,8 @@ def main(args=None):
     port = args.port if args.port else port_dict[robot_model]
 
     rosbot_utils = get_package_share_directory("rosbot_xl_utils")
-    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_range_laserscan_fix.bin")
-    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl_v1.4.0.bin")
+    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot", "range_laserscan_fix.bin")
+    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl", "v1.4.0.bin")
     firmware_dict = {"rosbot": rosbot_firmware, "rosbot_xl": rosbot_xl_firmware}
     firmware = args.file if args.file else firmware_dict[robot_model]
 

@@ -26,8 +26,8 @@ setup(
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
-        (os.path.join("share", package_name, "firmware"), glob("firmware/*.bin")),
-        (os.path.join("share", package_name, "firmware"), glob("firmware/*.bin")),
+        ("share/" + package_name + "/firmware/rosbot", glob("*.bin")),
+        ("share/" + package_name + "/firmware/rosbot_xl", glob("*.bin")),
     ],
     install_requires=["setuptools"],
     zip_safe=True,

@@ -67,6 +67,9 @@ def generate_launch_description():
             PathJoinSubstitution([rosbot_xl_bringup, "launch", "microros.launch.py"])
         ),
         condition=IfCondition(microros),
+        launch_arguments={
+            "robot_model": robot_model,
+        }.items(),
     )
 
     ekf_config = PathJoinSubstitution([rosbot_xl_bringup, "config", robot_model, "ekf.yaml"])

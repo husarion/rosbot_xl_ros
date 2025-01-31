@@ -158,7 +158,7 @@ def generate_launch_description():
             "namespace": namespace,
             "robot_model": robot_model,
             "use_joint_state_publisher": "False",
-            "use_sim": "True",
+            "use_sim": use_sim,
         }.items(),
     )
 
@@ -176,7 +176,7 @@ def generate_launch_description():
             ("/tf", "tf"),
             ("/tf_static", "tf_static"),
         ],
-        condition=UnlessCondition(use_sim),
+        # condition=UnlessCondition(use_sim),
         namespace=namespace,
     )
 

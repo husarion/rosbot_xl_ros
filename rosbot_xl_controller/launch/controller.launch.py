@@ -46,12 +46,6 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
-    declare_use_sim_arg = DeclareLaunchArgument(
-        "use_sim",
-        default_value="False",
-        description="Whether simulation is used",
-    )
-
     config_file = PythonExpression(
         ["'mecanum_drive_controller.yaml' if ", mecanum, " else 'diff_drive_controller.yaml'"]
     )
@@ -156,7 +150,6 @@ def generate_launch_description():
     return LaunchDescription(
         [
             declare_mecanum_arg,
-            declare_use_sim_arg,
             load_urdf,
             control_node,
             delayed_spawner_nodes,

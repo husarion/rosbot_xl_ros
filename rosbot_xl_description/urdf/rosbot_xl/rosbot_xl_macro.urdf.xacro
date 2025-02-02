@@ -1,15 +1,15 @@
 <?xml version='1.0'?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:macro name="rosbot_xl_robot"
-    params="controller_config_file
+    params="controller_config
             mecanum
             namespace
             use_sim">
 
-    <xacro:if value="${namespace == 'None'}">
+    <xacro:if value="${namespace == ''}">
       <xacro:property name="ns" value="" />
     </xacro:if>
-    <xacro:unless value="${namespace == 'None'}">
+    <xacro:unless value="${namespace == ''}">
       <xacro:property name="ns" value="${namespace}/" />
     </xacro:unless>
 
@@ -121,7 +121,7 @@
     </ros2_control>
 
     <xacro:if value="${use_sim}">
-      <xacro:gazebo.controller config_file="${controller_config_file}" namespace="${namespace}" />
+      <xacro:gazebo.controller config_file="${controller_config}" namespace="${namespace}" />
       <xacro:gazebo.imu reference_frame="imu_link" namespace="${namespace}" />
     </xacro:if>
   </xacro:macro>

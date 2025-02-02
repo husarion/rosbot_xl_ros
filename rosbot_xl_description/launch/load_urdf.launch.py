@@ -29,22 +29,28 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    components_config = LaunchConfiguration("components_config")
     mecanum = LaunchConfiguration("mecanum")
-    namespace = LaunchConfiguration("namespace")
     robot_model = LaunchConfiguration("robot_model")
     use_joint_state_publisher = LaunchConfiguration("use_joint_state_publisher", default="True")
     use_sim = LaunchConfiguration("use_sim")
+    
+    declare_components_config_arg = DeclareLaunchArgument(
+        "components_config",
+        default_value=PathJoinSubstitution(
+            [FindPackageShare("rosbot_xl_description"), "config", "components.yaml"]
+        ),
+        description=(
+            "Specify file which contains components. These components will be included in URDF."
+            "Available options can be found in manuals: https://husarion.com/manuals"
+        ),
+    )
 
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
         description="Whether to use mecanum drive controller, otherwise use diff drive",
-    )
-
-    declare_namespace_arg = DeclareLaunchArgument(
-        "namespace",
-        default_value="",
-        description="Namespace for all topics and tfs",
+        choices=["True", "False"],
     )
 
     declare_robot_model_arg = DeclareLaunchArgument(
@@ -57,9 +63,10 @@ def generate_launch_description():
         "use_sim",
         default_value="False",
         description="Whether simulation is used",
+        choices=["True", "False"],
     )
 
-    controller_config_name = PythonExpression(
+    controller_config = PythonExpression(
         [
             "'mecanum_drive_controller.yaml' if ",
             mecanum,
@@ -67,11 +74,11 @@ def generate_launch_description():
         ]
     )
 
-    controller_config_path = PathJoinSubstitution(
+    controller_config = PathJoinSubstitution(
         [
             FindPackageShare("rosbot_xl_controller"),
             "config",
-            controller_config_name,
+            controller_config,
         ]
     )
 
@@ -81,12 +88,12 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution([FindPackageShare("rosbot_xl_description"), "urdf", urdf_file]),
-            " controller_config_file:=",
-            controller_config_path,
+            " components_config:=",
+            components_config,
+            " controller_config:=",
+            controller_config,
             " mecanum:=",
             mecanum,
-            " namespace:=",
-            namespace,
             " use_sim:=",
             use_sim,
         ]
@@ -99,21 +106,19 @@ def generate_launch_description():
         output="both",
         parameters=[robot_description],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-        namespace=namespace,
     )
 
     joint_state_publisher_node = Node(
         package="joint_state_publisher",
         executable="joint_state_publisher",
-        namespace=namespace,
         emulate_tty=True,
         condition=IfCondition(use_joint_state_publisher),
     )
 
     return LaunchDescription(
         [
+            declare_components_config_arg,
             declare_mecanum_arg,
-            declare_namespace_arg,
             declare_robot_model_arg,
             declare_use_sim_arg,
             SetParameter(name="use_sim_time", value=use_sim),

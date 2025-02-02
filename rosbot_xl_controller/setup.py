@@ -18,6 +18,10 @@ from glob import glob
 from setuptools import find_packages, setup
 
 package_name = "rosbot_xl_controller"
+common_config = [f for f in glob("config/*") if os.path.isfile(f)]
+rosbot_config = [f for f in glob("config/rosbot/*.yaml") if os.path.isfile(f)]
+rosbot_xl_config = [f for f in glob("config/rosbot_xl/*.yaml") if os.path.isfile(f)]
+launch_files = glob("launch/*.launch.py")
 
 setup(
     name=package_name,
@@ -26,8 +30,10 @@ setup(
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
-        (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
-        (os.path.join("share", package_name, "config"), glob("config/*.yaml")),
+        ("share/" + package_name + "/config", common_config),
+        ("share/" + package_name + "/config/rosbot", rosbot_config),
+        ("share/" + package_name + "/config/rosbot_xl", rosbot_xl_config),
+        ("share/" + package_name + "/launch", launch_files),
     ],
     install_requires=["setuptools"],
     zip_safe=True,

@@ -1,8 +1,8 @@
 <?xml version='1.0'?>
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:arg name="components_config_path" default="$(find husarion_ugv_description)/config/components.yaml" />
-  <xacro:arg name="controller_config_file" default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
+  <xacro:arg name="components_config" default="$(find rosbot_xl_description)/config/components.yaml" />
+  <xacro:arg name="controller_config" default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
   <xacro:arg name="mecanum" default="false" />
   <xacro:arg name="namespace" default="" />
   <xacro:arg name="use_sim" default="false" />
@@ -10,7 +10,7 @@
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
   <xacro:husarion.rosbot_xl_robot
-    controller_config_file="$(arg controller_config_file)"
+    controller_config="$(arg controller_config)"
     mecanum="$(arg mecanum)"
     namespace="$(arg namespace)"
     use_sim="$(arg use_sim)" />
@@ -27,14 +27,14 @@
       camera_mount_angle_2="0.0" />
   <!-- </xacro:if> -->
 
-  <xacro:property name="components_config_path_property" value="$(arg components_config_path)" />
+  <xacro:property name="components_config_property" value="$(arg components_config)" />
 
-  <xacro:unless value="${components_config_path_property == 'None'}">
+  <xacro:unless value="${components_config_property == 'None'}">
     <xacro:include filename="$(find ros_components_description)/urdf/components.urdf.xacro"
       ns="husarion_components" />
 
     <xacro:husarion_components.create_components
-      components_config_path="${components_config_path_property}"
+      components_config="${components_config_property}"
       namespace="$(arg namespace)"
     />
   </xacro:unless>

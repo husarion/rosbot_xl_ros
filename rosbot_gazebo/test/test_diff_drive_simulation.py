@@ -75,7 +75,7 @@ def test_diff_drive_simulation():
         diff_test(node)
 
     finally:
-        # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
+        # The pytest cannot kill properly the Gazebo 's tasks what blocks launching
         # several tests in a row.
         kill_ign_linux_processes()
         rclpy.shutdown()

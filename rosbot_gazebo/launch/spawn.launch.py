@@ -25,7 +25,9 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    mecanum= LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
+    robot_model = LaunchConfiguration("robot_model")
     x = LaunchConfiguration("x")
     y = LaunchConfiguration("y")
     z = LaunchConfiguration("z")
@@ -43,6 +45,12 @@ def generate_launch_description():
         "namespace",
         default_value="",
         description="Namespace for all topics and tfs",
+    )
+
+    declare_robot_model_arg = DeclareLaunchArgument(
+        "robot_model",
+        description="Specify robot model",
+        choices=["rosbot", "rosbot_xl"],
     )
 
     declare_x_arg = DeclareLaunchArgument(
@@ -74,7 +82,7 @@ def generate_launch_description():
     )
 
     robot_name = PythonExpression(
-        ["'rosbot_xl'", " if '", namespace, "' == '' ", "else ", "'", namespace, "'"]
+        ["'rosbot'", " if '", namespace, "' == '' ", "else ", "'", namespace, "'"]
     )
 
     gz_spawn_entity = Node(
@@ -100,7 +108,6 @@ def generate_launch_description():
             "-Y",
             yaw,
         ],
-        namespace=namespace,
     )
 
     welcome_msg = LogInfo(
@@ -128,7 +135,6 @@ def generate_launch_description():
         executable="parameter_bridge",
         name="ros_gz_bridge",
         parameters=[{"config_file": gz_remappings_file}],
-        namespace=namespace,
     )
 
     controller_launch = IncludeLaunchDescription(
@@ -142,14 +148,15 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
+            "mecanum": mecanum,
+            "robot_model": robot_model,
             "use_sim": "True",
-            "namespace": namespace,
         }.items(),
     )
 
     rosbot_bringup = FindPackageShare("rosbot_bringup")
 
-    ekf_config = PathJoinSubstitution([rosbot_bringup, "config", "ekf.yaml"])
+    ekf_config = PathJoinSubstitution([rosbot_bringup, "config", robot_model, "ekf.yaml"])
 
     robot_localization_node = Node(
         package="robot_localization",
@@ -157,32 +164,21 @@ def generate_launch_description():
         name="ekf_filter_node",
         output="screen",
         parameters=[ekf_config],
-        remappings=[
-            ("/tf", "tf"),
-            ("/tf_static", "tf_static"),
-        ],
-        namespace=namespace,
     )
 
-    laser_filter_config = PathJoinSubstitution([rosbot_bringup, "config", "laser_filter.yaml"])
+    laser_filter_config = PathJoinSubstitution([rosbot_bringup, "config", robot_model, "laser_filter.yaml"])
 
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
-        parameters=[
-            laser_filter_config,
-        ],
-        remappings=[
-            ("/tf", "tf"),
-            ("/tf_static", "tf_static"),
-        ],
-        namespace=namespace,
+        parameters=[laser_filter_config],
     )
 
     return LaunchDescription(
         [
             declare_mecanum_arg,
             declare_namespace_arg,
+            declare_robot_model_arg,
             declare_x_arg,
             declare_y_arg,
             declare_z_arg,

@@ -43,7 +43,7 @@ Available models:
 
 ### `rosbot_gazebo`
 
-Launch files for Ignition Gazebo working with ROS2 control.
+Launch files for Gazebo working with ROS2 control.
 
 **Available Launch Files:**
 
@@ -56,7 +56,7 @@ Launch files for Ignition Gazebo working with ROS2 control.
 | **mecanum**              | Whether to use mecanum drive controller, otherwise use diff drive | **False**                                                   |
 | **namespace**            | Namespace for all topics and tfs                                  | **""**                                                      |
 | **world**                | Path to SDF world file                                            | **`husarion_gz_worlds/`<br /> `worlds/husarion_world.sdf`** |
-| **headless**             | Run Gazebo Ignition in the headless mode                          | **False**                                                   |
+| **headless**             | Run Gazebo in the headless mode                          | **False**                                                   |
 | **robots**               | List of robots that will be spawn in the simulation               | **[]**\*\*                                                  |
 
 > \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).

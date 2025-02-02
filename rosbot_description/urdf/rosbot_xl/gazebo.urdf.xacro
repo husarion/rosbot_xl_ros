@@ -3,10 +3,6 @@
 
   <xacro:macro name="controller" params="config_file namespace:=''">
 
-    <xacro:if value="${namespace == 'None'}">
-      <xacro:property name="namespace" value="" />
-    </xacro:if>
-
     <gazebo>
       <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
 
@@ -36,12 +32,7 @@
   <!-- IMU specification: https://dl.btc.pl/kamami_wa/bst_bno055_ds000_12.pdf -->
   <xacro:macro name="imu" params="reference_frame namespace:=''">
 
-    <xacro:if value="${namespace == 'None'}">
-      <xacro:property name="ns" value="" />
-    </xacro:if>
-    <xacro:unless value="${namespace == 'None'}">
-        <xacro:property name="ns" value="${namespace}/" />
-    </xacro:unless>
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
 
     <gazebo reference="${reference_frame}">
       <sensor name="${ns}imu" type="imu">
@@ -51,7 +42,7 @@
         <visualize>false</visualize>
         <enable_metrics>false</enable_metrics>
         <frame_id>imu_link</frame_id>
-        <ignition_frame_id>imu_link</ignition_frame_id>
+        <gz_frame_id>imu_link</gz_frame_id>
         <imu>
           <angular_velocity>
             <!-- rad/s | no bias_mean in datasheet -->

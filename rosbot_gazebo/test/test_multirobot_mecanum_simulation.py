@@ -83,7 +83,7 @@ def test_multirobot_mecanum_simulation():
             node.destroy_node()
 
     finally:
-        # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
+        # The pytest cannot kill properly the Gazebo 's tasks what blocks launching
         # several tests in a row.
         executor.shutdown()
         kill_ign_linux_processes()

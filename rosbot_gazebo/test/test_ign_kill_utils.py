@@ -17,7 +17,7 @@ from time import sleep
 
 import psutil
 
-# The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
+# The pytest cannot kill properly the Gazebo 's tasks what blocks launching
 # several tests in a row.
 # https://github.com/ros-controls/gz_ros2_control/blob/master/gz_ros2_control_tests/tests/position_test.py
 

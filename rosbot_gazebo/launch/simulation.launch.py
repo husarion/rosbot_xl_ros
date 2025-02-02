@@ -21,13 +21,14 @@ from launch.substitutions import (
     PathJoinSubstitution,
     TextSubstitution,
 )
-from launch_ros.actions import SetParameter
+from launch_ros.actions import SetParameter, SetRemap
 from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import ParseMultiRobotPose
 
 
 def generate_launch_description():
     namespace = LaunchConfiguration("namespace")
+    robot_model = LaunchConfiguration("robot_model")
     x = LaunchConfiguration("x", default="-1.0")
     y = LaunchConfiguration("y", default="-2.0")
     z = LaunchConfiguration("z", default="0.0")
@@ -91,8 +92,9 @@ def generate_launch_description():
                 )
             ),
             launch_arguments={
-                "use_sim": "True",
                 "namespace": robot_name,
+                "robot_model": robot_model,
+                "use_sim": "True",
                 "x": init_pose["x"],
                 "y": init_pose["y"],
                 "z": init_pose["z"],
@@ -108,6 +110,8 @@ def generate_launch_description():
         [
             declare_namespace_arg,
             declare_robots_arg,
+            SetRemap("/tf", "tf"),
+            SetRemap("/tf_static", "tf_static"),
             SetParameter(name="use_sim_time", value=True),
             gz_sim,
             *spawn_group,

@@ -3,12 +3,7 @@
   <!-- vl53lox defining macro -->
   <xacro:macro name="vl53lox" params="parent xyz rpy prefix namespace">
 
-    <xacro:if value="${namespace == 'None'}">
-      <xacro:property name="namespace_ext" value="" />
-    </xacro:if>
-    <xacro:unless value="${namespace == 'None'}">
-        <xacro:property name="namespace_ext" value="${namespace}/" />
-    </xacro:unless>
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
 
     <joint name="${parent}_${prefix}_range_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
@@ -21,9 +16,9 @@
     <!-- an IR sensor or a sonar are not implemented yet
     https://github.com/gazebosim/gz-sensors/issues/19 -->
     <gazebo reference="${prefix}_range">
-      <sensor name="${namespace_ext}${prefix}_range" type='gpu_lidar'>
+      <sensor name="${ns}${prefix}_range" type='gpu_lidar'>
 
-        <topic>${namespace_ext}range/${prefix}</topic>
+        <topic>${ns}range/${prefix}</topic>
         <gz_frame_id>${prefix}_range</gz_frame_id>
 
         <update_rate>5.0</update_rate>

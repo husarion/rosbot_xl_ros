@@ -63,24 +63,24 @@ Real robot:
 
 ```bash
 source install/setup.bash
-ros2 launch rosbot_bringup bringup.launch.py
+ros2 launch rosbot_bringup bringup.launch.py robot_model:=<rosbot/rosbot_xl>
 ```
 
 > [!NOTE]
 > To run the software on real ROSbots, communication with the CORE2 is required. Ensure the firmware is updated before running the micro-ROS agent. For detailed instructions, refer to the rosbot_ros2_firmware repository.
 >
 > ```bash
->     sudo su
->     source install/setup.bash
->     ros2 run rosbot_utils flash_firmware
->     exit
+> sudo su
+> source install/setup.bash
+> ros2 run rosbot_utils flash_firmware
+> exit
 > ```
 
 Simulation:
 
 ```bash
 source install/setup.bash
-ros2 launch rosbot_xl_gazebo simulation.launch.py
+ros2 launch rosbot_gazebo simulation.launch.py robot_model:=<rosbot/rosbot_xl>
 ```
 
 ### Launch Arguments

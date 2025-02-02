@@ -6,19 +6,8 @@
             namespace
             use_sim">
 
-    <xacro:if value="${namespace == ''}">
-      <xacro:property name="ns" value="" />
-    </xacro:if>
-    <xacro:unless value="${namespace == ''}">
-      <xacro:property name="ns" value="${namespace}/" />
-    </xacro:unless>
-
-    <xacro:if value="${mecanum}">
-      <xacro:property name="wheel_radius" value="0.05" />
-    </xacro:if>
-    <xacro:unless value="${mecanum}">
-      <xacro:property name="wheel_radius" value="0.048" />
-    </xacro:unless>
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="wheel_radius" value="${0.05 if mecanum else 0.048}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
     <xacro:include filename="$(find rosbot_description)/urdf/rosbot_xl/body.urdf.xacro" ns="body" />
@@ -44,8 +33,8 @@
       <ros2_control name="${ns}imu" type="sensor">
         <hardware>
           <plugin>rosbot_hardware_interfaces/RosbotImuSensor</plugin>
-          <param name="connection_timeout_ms">120000</param>
-          <param name="connection_check_period_ms">500</param>
+          <param name="connection_timeout_ms">30000</param>
+          <param name="connection_check_period_ms">1000</param>
         </hardware>
         <sensor name="${ns}imu">
           <state_interface name="orientation.x" />
@@ -70,8 +59,8 @@
 
         <xacro:unless value="$(arg use_sim)">
           <plugin>rosbot_hardware_interfaces/RosbotSystem</plugin>
-          <param name="connection_timeout_ms">120000</param>
-          <param name="connection_check_period_ms">500</param>
+          <param name="connection_timeout_ms">30000</param>
+          <param name="connection_check_period_ms">1000</param>
 
           <!-- order of velocity commands to be published in motors_cmd Float32MultiArray msg -->
           <param name="velocity_command_joint_order">

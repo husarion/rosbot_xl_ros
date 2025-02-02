@@ -48,7 +48,7 @@ def launch_setup(context, *args, **kwargs):
         "mecanum_drive_controller.yaml" if eval(mecanum) else "diff_drive_controller.yaml"
     )
     controller_config = PathJoinSubstitution(
-        [FindPackageShare("rosbot_controller"), "config", controller_config]
+        [FindPackageShare("rosbot_controller"), "config", robot_model, controller_config]
     )
 
     urdf_file = robot_model + ".urdf.xacro"

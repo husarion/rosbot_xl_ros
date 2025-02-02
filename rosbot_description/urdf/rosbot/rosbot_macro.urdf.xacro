@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:macro name="rosbot" params="mecanum namespace use_sim">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != 'None' else ''}" />
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
     <xacro:property name="wheel_radius" value="${0.0470 if mecanum else 0.0425}" />
 
     <!-- INCLUDE ROBOT PARTS DEFINITIONS -->
@@ -105,16 +105,14 @@
         <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
 
           <xacro:if value="${mecanum}">
-            <parameters>$(find rosbot_controller)/config/mecanum_drive_controller.yaml</parameters>
+            <parameters>$(find rosbot_controller)/config/rosbot/mecanum_drive_controller.yaml</parameters>
           </xacro:if>
           <xacro:unless value="${mecanum}">
-            <parameters>$(find rosbot_controller)/config/diff_drive_controller.yaml</parameters>
+            <parameters>$(find rosbot_controller)/config/rosbot/diff_drive_controller.yaml</parameters>
           </xacro:unless>
 
           <ros>
-            <xacro:unless value="${namespace == 'None'}">
-              <namespace>${namespace}</namespace>
-            </xacro:unless>
+            <namespace>${ns}</namespace>
             <remapping>rosbot_base_controller/cmd_vel:=cmd_vel</remapping>
           </ros>
         </plugin>

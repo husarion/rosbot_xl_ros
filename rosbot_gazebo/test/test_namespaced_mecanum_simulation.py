@@ -77,7 +77,7 @@ def test_namespaced_mecanum_simulation():
         mecanum_test(node)
 
     finally:
-        # The pytest cannot kill properly the Gazebo Ignition's tasks what blocks launching
+        # The pytest cannot kill properly the Gazebo 's tasks what blocks launching
         # several tests in a row.
         kill_ign_linux_processes()
         rclpy.shutdown()

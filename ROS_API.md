@@ -8,7 +8,7 @@ Detailed information about content of rosbot_xl package for ROS2.
 
 Metapackage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
-### `rosbot_xl_bringup`
+### `rosbot_bringup`
 
 Package that contains launch, which starts all base functionalities with the microros agent. Also configs for `robot_localization` and `laser_filters` are defined there.
 
@@ -26,11 +26,11 @@ Package that contains launch, which starts all base functionalities with the mic
 
 > \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
 
-### `rosbot_xl_controller`
+### `rosbot_controller`
 
-ROS2 hardware controller for ROSbot XL. It manages inputs and outputs data from ROS2 control, forwarding it via ROS topics to be read by microROS. The controller.launch.py file loads the robot model defined in rosbot_xl_description along with ROS2 control dependencies from [rosbot_hardware_interfaces](https://github.com/husarion/rosbot_hardware_interfaces).
+ROS2 hardware controller for ROSbot XL. It manages inputs and outputs data from ROS2 control, forwarding it via ROS topics to be read by microROS. The controller.launch.py file loads the robot model defined in rosbot_description along with ROS2 control dependencies from [rosbot_hardware_interfaces](https://github.com/husarion/rosbot_hardware_interfaces).
 
-### `rosbot_xl_description`
+### `rosbot_description`
 
 URDF model used for both simulation and as a source of transforms on physical robot. It was written to be compatible with ROS Industrial and preconfigured for ROS2 control.
 
@@ -39,9 +39,9 @@ Available models:
 | MODEL            | DESCRIPTION                                                                                                                                                                                  |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rosbot_xl`      | Final configuration of rosbot_xl with ability to attach external hardware.                                                                                                                   |
-| `rosbot_xl_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
+| `rosbot_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
 
-### `rosbot_xl_gazebo`
+### `rosbot_gazebo`
 
 Launch files for Ignition Gazebo working with ROS2 control.
 
@@ -63,7 +63,7 @@ Launch files for Ignition Gazebo working with ROS2 control.
 >
 > \*\*Example of use: `robots:='robot1={x: 0.0, y: -1.0}; robot2={x: 1.0, y: -1.0};'`
 
-### `rosbot_xl_utils`
+### `rosbot_utils`
 
 This package contains the stable firmware version with the flash script.
 
@@ -85,7 +85,7 @@ This package contains the stable firmware version with the flash script.
 | NODE                    | DESCRIPTION                                                                                                                                                                                                                                                                                                                                             |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`~/controller_manager`**        | Controller Manager performs two main functions. First, it manages controllers and their required interfaces, handling tasks like loading, activating, deactivating, and unloading. Second, it interacts with hardware components, ensuring access to their interfaces. <br /> _[controller_manager/controller_manager][]_                             |
-| **`~/ekf_filter_node`**           | Used to fuse wheel odometry and IMU data. Parameters are defined in `rosbot_xl_bringup/config/ekf.yaml` <br /> _[robot_localization/ekf_node][]_                                                                                                                                                                                                      |
+| **`~/ekf_filter_node`**           | Used to fuse wheel odometry and IMU data. Parameters are defined in `rosbot_bringup/config/ekf.yaml` <br /> _[robot_localization/ekf_node][]_                                                                                                                                                                                                      |
 | **`~/imu_broadcaster`**           | The broadcaster to publish readings of IMU sensors <br /> _[imu_sensor_broadcaster/imu_sensor_broadcaster][]_                                                                                                                                                                                                                                         |
 | **`~/imu_sensor_node`**           | The node responsible for subscriptions to IMU data from the hardware <br /> _[rosbot_hardware_interfaces/rosbot_imu_sensor][]_ |
 | **`~/joint_state_broadcaster`**   | The broadcaster reads all state interfaces and reports them on specific topics <br /> _[joint_state_broadcaster/joint_state_broadcaster][]_                                                                                                                                                                                                           |
@@ -93,7 +93,7 @@ This package contains the stable firmware version with the flash script.
 | **`~/robot_state_publisher`**     | Uses the URDF specified by the parameter robot\*description and the joint positions from the topic joint\*states to calculate the forward kinematics of the robot and publish the results via tf <br /> _[robot_state_publisher/robot_state_publisher][]_                                                                                             |
 | **`~/rosbot_system_node`**        | The node communicating with the hardware responsible for receiving and sending data related to engine control <br />  _[rosbot_hardware_interfaces/rosbot_system][]_                                                                                                                                                       |
 | **`~/rosbot_base_controller`** | The controller managing a mobile robot with a differential or omni drive (mecanum wheels). Converts speed commands for the robot body to wheel commands for the base. It also calculates odometry based on hardware feedback and shares it.`DiffDriveController` or `MecanumDriveController` <br /> _[diff_drive_controller/diff_drive_controller][]_ |
-| **`~/scan_to_scan_filter_chain`** | Node which subscribes to `/scan` topic and removes all points that are within the robot's footprint (defined by config `laser_filter.yaml` in `rosbot_xl_bringup` package). Filtered laser scan is then published on `/scan_filtered` topic <br /> _[laser_filters/scan_to_scan_filter_chain][]_                                                      |
+| **`~/scan_to_scan_filter_chain`** | Node which subscribes to `/scan` topic and removes all points that are within the robot's footprint (defined by config `laser_filter.yaml` in `rosbot_bringup` package). Filtered laser scan is then published on `/scan_filtered` topic <br /> _[laser_filters/scan_to_scan_filter_chain][]_                                                      |
 | **`/stm32_node`**                 | Node enabling communication with Digital Board, it provides the following interface <br /> _[micro_ros_agent/micro_ros_agent][]_                                                                                                                                                                                                                      |
 
 ### Available Topics

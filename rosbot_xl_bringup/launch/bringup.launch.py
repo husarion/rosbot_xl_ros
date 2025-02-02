@@ -26,7 +26,7 @@ from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
 )
-from launch_ros.actions import Node
+from launch_ros.actions import Node, PushROSNamespace, SetRemap
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -45,7 +45,7 @@ def generate_launch_description():
     declare_namespace_arg = DeclareLaunchArgument(
         "namespace",
         default_value=EnvironmentVariable("ROBOT_NAMESPACE", default_value=""),
-        description="Namespace for all topics and tfs",
+        description="Add namespace to all launched nodes.",
     )
 
     declare_robot_model_arg = DeclareLaunchArgument(
@@ -61,10 +61,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([rosbot_xl_controller, "launch", "controller.launch.py"])
         ),
-        launch_arguments={
-            "namespace": namespace,
-        }.items(),
-    )
+    
+)
 
     microros_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -83,7 +81,6 @@ def generate_launch_description():
         executable="ekf_node",
         parameters=[ekf_config],
         remappings=[("/diagnostics", "diagnostics")],
-        namespace=namespace,
     )
 
     laser_filter_config = PathJoinSubstitution(
@@ -94,7 +91,6 @@ def generate_launch_description():
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
         parameters=[laser_filter_config],
-        namespace=namespace,
     )
 
     green_color = "\033[92m"
@@ -109,6 +105,9 @@ def generate_launch_description():
         declare_microros_arg,
         declare_namespace_arg,
         declare_robot_model_arg,
+        PushROSNamespace(namespace),
+        SetRemap(src="/tf", dst="tf"),
+        SetRemap(src="/tf_static", dst="tf_static"),
         controller_launch,
         microros_launch,
         laser_filter_node,

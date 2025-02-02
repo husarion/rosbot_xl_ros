@@ -1,10 +1,11 @@
 <?xml version='1.0'?>
 <robot name="rosbot_xl" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:arg name="mecanum" default="false" />
-  <xacro:arg name="use_sim" default="false" />
-  <xacro:arg name="namespace" default="None" />
+  <xacro:arg name="components_config_path" default="$(find husarion_ugv_description)/config/components.yaml" />
   <xacro:arg name="controller_config_file" default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
+  <xacro:arg name="mecanum" default="false" />
+  <xacro:arg name="namespace" default="" />
+  <xacro:arg name="use_sim" default="false" />
 
   <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/rosbot_xl_macro.urdf.xacro"
     ns="husarion" />
@@ -13,18 +14,6 @@
     mecanum="$(arg mecanum)"
     namespace="$(arg namespace)"
     use_sim="$(arg use_sim)" />
-
-  <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/components/antenna.urdf.xacro"
-    ns="antenna" />
-  <xacro:antenna.antenna
-    parent_link="body_link"
-    xyz="-0.155 -0.055 0.065"
-    rpy="0.0 0.0 0.0"
-    antenna_angle="0.0" />
-
-  <xacro:property name="camera_parent_link" value="camera_mount_link" />
-  <xacro:property name="camera_xyz" value="0.0 0.0 0.0" />
-  <xacro:property name="camera_rpy" value="0.0 0.0 0.0" />
 
   <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
   <!-- TODO <xacro:if value="${include_camera_mount or camera_model != 'None'}"> -->
@@ -37,5 +26,17 @@
       camera_mount_angle_1="0.0"
       camera_mount_angle_2="0.0" />
   <!-- </xacro:if> -->
+
+  <xacro:property name="components_config_path_property" value="$(arg components_config_path)" />
+
+  <xacro:unless value="${components_config_path_property == 'None'}">
+    <xacro:include filename="$(find ros_components_description)/urdf/components.urdf.xacro"
+      ns="husarion_components" />
+
+    <xacro:husarion_components.create_components
+      components_config_path="${components_config_path_property}"
+      namespace="$(arg namespace)"
+    />
+  </xacro:unless>
 
 </robot>

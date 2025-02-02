@@ -36,16 +36,9 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    namespace = LaunchConfiguration("namespace")
     mecanum = LaunchConfiguration("mecanum")
     robot_model = LaunchConfiguration("robot_model")
     use_sim = LaunchConfiguration("use_sim", default="False")
-
-    declare_namespace_arg = DeclareLaunchArgument(
-        "namespace",
-        default_value="",
-        description="Adds a namespace to all running nodes.",
-    )
 
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
@@ -78,7 +71,6 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            "namespace": namespace,
             "robot_model": robot_model,
             "use_joint_state_publisher": "False",
             "use_sim": use_sim,
@@ -96,7 +88,6 @@ def generate_launch_description():
             ("rosbot_base_controller/cmd_vel", "cmd_vel"),
         ],
         condition=UnlessCondition(use_sim),
-        namespace=namespace,
     )
 
     joint_state_broadcaster = Node(
@@ -109,7 +100,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "10",
         ],
-        namespace=namespace,
     )
 
     robot_controller = Node(
@@ -122,7 +112,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "10",
         ],
-        namespace=namespace,
     )
 
     imu_broadcaster = Node(
@@ -135,7 +124,6 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "10",
         ],
-        namespace=namespace,
     )
 
     controllers = [joint_state_broadcaster, robot_controller, imu_broadcaster]
@@ -167,7 +155,6 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            declare_namespace_arg,
             declare_mecanum_arg,
             declare_use_sim_arg,
             load_urdf,

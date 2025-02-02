@@ -57,6 +57,7 @@ def generate_launch_description():
         executable="rviz2",
         namespace=namespace,
         arguments=["-d", rviz_config],
+        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
     actions = [

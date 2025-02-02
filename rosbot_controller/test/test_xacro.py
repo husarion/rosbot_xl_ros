@@ -40,7 +40,7 @@ def test_rosbot_description_parsing():
             "use_sim": use_sim,
         }
         rosbot_description = get_package_share_directory("rosbot_description")
-        xacro_path = os.path.join(rosbot_description, "urdf/rosbot_xl.urdf.xacro")
+        xacro_path = os.path.join(rosbot_description, "urdf/rosbot.urdf.xacro")
         try:
             xacro.process_file(xacro_path, mappings=mappings)
         except xacro.XacroException as e:

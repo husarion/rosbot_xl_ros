@@ -22,18 +22,10 @@ Documentation is available in ROS_API.md.
 2. Create a workspace folder and clone the rosbot_ros repository:
 
     ```bash
-    mkdir -p ros2_ws
-    cd ros2_ws
-    git clone https://github.com/husarion/rosbot_ros src/rosbot_ros
+    mkdir ~/rosbot_ws
+    cd ~/rosbot_ws
+    git clone https://github.com/husarion/rosbot_ros.git src/rosbot_ros
     ```
-
-### Create workspace
-
-```bash
-mkdir ~/rosbot_ws
-cd ~/rosbot_ws
-git clone https://github.com/husarion/rosbot_ros.git src/rosbot_ros
-```
 
 ### Configure environment
 

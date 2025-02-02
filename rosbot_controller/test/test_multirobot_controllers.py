@@ -26,7 +26,7 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from test_utils import ControllersTestNode, controller_test
 
-robot_names = ["rosbot_xl1", "rosbot_xl2", "rosbot_xl3"]
+robot_names = ["rosbot1", "rosbot2", "rosbot3"]
 
 
 @launch_pytest.fixture

@@ -43,7 +43,7 @@ def generate_test_description():
         launch_arguments={
             "use_sim": "False",
             "mecanum": "True",
-            "namespace": "rosbot_xl",
+            "namespace": "rosbot",
         }.items(),
     )
 
@@ -54,7 +54,7 @@ def generate_test_description():
 def test_namespaced_controllers_startup():
     rclpy.init()
     try:
-        node = ControllersTestNode("test_namespaced_controllers_startup", namespace="rosbot_xl")
+        node = ControllersTestNode("test_namespaced_controllers_startup", namespace="rosbot")
         node.start_publishing_fake_hardware()
         Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
         controller_test(node)

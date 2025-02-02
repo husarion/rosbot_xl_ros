@@ -1,10 +1,10 @@
 # ROSbot XL - Software
 
-Detailed information about content of rosbot_xl package for ROS2.
+Detailed information about content of rosbot package for ROS2.
 
 ## Package Description
 
-### `rosbot_xl`
+### `rosbot`
 
 Metapackage that contains dependencies to other repositories. It is also used to define whether simulation dependencies should be used.
 
@@ -38,7 +38,7 @@ Available models:
 
 | MODEL            | DESCRIPTION                                                                                                                                                                                  |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rosbot_xl`      | Final configuration of rosbot_xl with ability to attach external hardware.                                                                                                                   |
+| `rosbot`      | Final configuration of rosbot with ability to attach external hardware.                                                                                                                   |
 | `rosbot_base` | Base of rosbot prepared to be included into preexisting configuration. Meant to be compatible with concept of ROS Industrial ability for manipulators to have interchangeable end effectors. |
 
 ### `rosbot_gazebo`

@@ -53,29 +53,35 @@ vcs import src < src/rosbot_ros/rosbot/rosbot_$HUSARION_ROS_BUILD_TYPE.repos
 sudo rosdep init
 rosdep update --rosdistro $ROS_DISTRO
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
+
 colcon build --symlink-install --packages-up-to rosbot --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
 
 #### Run the Robot
 
-1. Flash the firmware:
+Real robot:
 
-    ```bash
-    sudo su
-    source install/setup.bash
-    ros2 run rosbot_utils flash_firmware
-    exit
-    ```
+```bash
+source install/setup.bash
+ros2 launch rosbot_bringup bringup.launch.py
+```
 
 > [!NOTE]
 > To run the software on real ROSbots, communication with the CORE2 is required. Ensure the firmware is updated before running the micro-ROS agent. For detailed instructions, refer to the rosbot_ros2_firmware repository.
 
-2. Launch the robot:
-
-    ```bash
+```bash
+    sudo su
     source install/setup.bash
-    ros2 launch rosbot_bringup bringup.launch.py
-    ```
+    ros2 run rosbot_utils flash_firmware
+    exit
+```
+
+Simulation:
+
+```bash
+source install/setup.bash
+ros2 launch rosbot_xl_gazebo simulation.launch.py
+```
 
 ### Launch Arguments
 

@@ -73,68 +73,7 @@ Visualization Manager:
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
-            antenna_connector_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            antenna_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
             base_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            body_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            camera_mount_bot_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            camera_mount_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            camera_mount_mid_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            camera_mount_top_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            cover_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            fl_wheel_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            fr_wheel_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            imu_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-            rl_wheel_link:
-              Alpha: 1
-              Show Axes: false
-              Show Trail: false
-              Value: true
-            rr_wheel_link:
               Alpha: 1
               Show Axes: false
               Show Trail: false
@@ -207,7 +146,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:

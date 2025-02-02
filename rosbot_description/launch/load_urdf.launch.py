@@ -53,7 +53,6 @@ def launch_setup(context, *args, **kwargs):
 
     urdf_file = robot_model + ".urdf.xacro"
     include_camera_mount = str(contains_cam_component(components_config))
-    print("include_camera_mount: ", include_camera_mount)
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),

@@ -68,13 +68,13 @@ ros2 launch rosbot_bringup bringup.launch.py
 
 > [!NOTE]
 > To run the software on real ROSbots, communication with the CORE2 is required. Ensure the firmware is updated before running the micro-ROS agent. For detailed instructions, refer to the rosbot_ros2_firmware repository.
-
-```bash
-    sudo su
-    source install/setup.bash
-    ros2 run rosbot_utils flash_firmware
-    exit
-```
+>
+> ```bash
+>     sudo su
+>     source install/setup.bash
+>     ros2 run rosbot_utils flash_firmware
+>     exit
+> ```
 
 Simulation:
 

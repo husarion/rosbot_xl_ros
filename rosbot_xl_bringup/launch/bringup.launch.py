@@ -61,8 +61,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([rosbot_xl_controller, "launch", "controller.launch.py"])
         ),
-    
-)
+    )
 
     microros_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

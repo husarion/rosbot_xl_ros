@@ -3,6 +3,7 @@
 
   <xacro:arg name="components_config" default="$(find rosbot_xl_description)/config/components.yaml" />
   <xacro:arg name="controller_config" default="$(find rosbot_xl_controller)/config/diff_drive_controller.yaml" />
+  <xacro:arg name="include_camera_mount" default="false" />
   <xacro:arg name="mecanum" default="false" />
   <xacro:arg name="namespace" default="" />
   <xacro:arg name="use_sim" default="false" />
@@ -15,28 +16,19 @@
     namespace="$(arg namespace)"
     use_sim="$(arg use_sim)" />
 
-  <xacro:property name="include_camera_mount" value="$(arg include_camera_mount)" />
-  <!-- TODO <xacro:if value="${include_camera_mount or camera_model != 'None'}"> -->
-    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/components/camera_mount.urdf.xacro"
-      ns="camera_mount" />
+  <xacro:if value="$(arg include_camera_mount)">
+    <xacro:include filename="$(find rosbot_xl_description)/urdf/rosbot_xl/components/camera_mount.urdf.xacro" ns="camera_mount" />
     <xacro:camera_mount.camera_mount
       parent_link="cover_link"
       xyz="-0.1 0.0 0.0"
       rpy="0.0 0.0 0.0"
       camera_mount_angle_1="0.0"
       camera_mount_angle_2="0.0" />
-  <!-- </xacro:if> -->
+  </xacro:if>
 
-  <xacro:property name="components_config_property" value="$(arg components_config)" />
-
-  <xacro:unless value="${components_config_property == 'None'}">
-    <xacro:include filename="$(find ros_components_description)/urdf/components.urdf.xacro"
-      ns="husarion_components" />
-
-    <xacro:husarion_components.create_components
-      components_config="${components_config_property}"
-      namespace="$(arg namespace)"
-    />
-  </xacro:unless>
-
+  <xacro:include filename="$(find ros_components_description)/urdf/components.urdf.xacro" ns="components" />
+  <xacro:components.create_components
+    components_config_path="$(arg components_config)"
+    namespace=""
+  />
 </robot>

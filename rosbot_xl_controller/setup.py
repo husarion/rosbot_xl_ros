@@ -33,7 +33,7 @@ setup(
     zip_safe=True,
     maintainer="Husarion",
     maintainer_email="contact@husarion.com",
-    description="Hardware configuration for ROSbot XL",
+    description="Hardware configuration for ROSbot Series",
     license="Apache License 2.0",
     tests_require=["pytest"],
     entry_points={

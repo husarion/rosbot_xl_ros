@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright 2020 ros2_control Development Team
 # Copyright 2024 Husarion sp. z o.o.
 #
@@ -16,110 +14,39 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler
+from launch.actions import (
+    DeclareLaunchArgument,
+    GroupAction,
+    EmitEvent,
+    IncludeLaunchDescription,
+    RegisterEventHandler,
+    TimerAction,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import UnlessCondition
-from launch.event_handlers import OnProcessExit
-from launch.substitutions import (
-    LaunchConfiguration,
-    PathJoinSubstitution,
-    PythonExpression,
-)
-from launch_ros.actions import Node, SetParameter
+from launch.event_handlers import OnProcessIO
+from launch.events import Shutdown
+from launch.substitutions import LaunchConfiguration,    PathJoinSubstitution,    PythonExpression
+from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
-def launch_setup(context, *args, **kwargs):
-    namespace = LaunchConfiguration("namespace").perform(context)
-    controller_manager_name = "controller_manager"
-    if namespace != "":
-        controller_manager_name = namespace + "/" + controller_manager_name
-
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    robot_controller_spawner = Node(
-        package="controller_manager",
-        name=LaunchConfiguration(
-            "robot_controller_spawner_name",
-            default=[namespace, "_robot_controller_spawner"],
-        ),
-        executable="spawner",
-        arguments=[
-            "rosbot_base_controller",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[robot_controller_spawner],
-        )
-    )
-
-    imu_broadcaster_spawner = Node(
-        package="controller_manager",
-        name=LaunchConfiguration(
-            "imu_spawner_name", default=[namespace, "_imu_broadcaster_spawner"]
-        ),
-        executable="spawner",
-        arguments=[
-            "imu_broadcaster",
-            "--controller-manager",
-            controller_manager_name,
-            "--controller-manager-timeout",
-            "120",
-            "--namespace",
-            namespace,
-        ],
-    )
-
-    delay_imu_broadcaster_spawner_after_robot_controller_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=robot_controller_spawner,
-            on_exit=[imu_broadcaster_spawner],
-        )
-    )
-    return [
-        joint_state_broadcaster_spawner,
-        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-        delay_imu_broadcaster_spawner_after_robot_controller_spawner,
-    ]
-
-
 def generate_launch_description():
-    mecanum = LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
+    mecanum = LaunchConfiguration("mecanum")
     robot_model = LaunchConfiguration("robot_model")
-    use_sim = LaunchConfiguration("use_sim")
-   
+    use_sim = LaunchConfiguration("use_sim", default="False")
+
     declare_namespace_arg = DeclareLaunchArgument(
         "namespace",
         default_value="",
-        description="Namespace for all topics and tfs",
+        description="Adds a namespace to all running nodes.",
     )
 
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
         default_value="False",
-        description="Whether to use mecanum drive controller, otherwise use diff drive",
+        description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
     declare_use_sim_arg = DeclareLaunchArgument(
@@ -128,20 +55,13 @@ def generate_launch_description():
         description="Whether simulation is used",
     )
 
-    controller_config_name = PythonExpression(
-        [
-            "'mecanum_drive_controller.yaml' if ",
-            mecanum,
-            " else 'diff_drive_controller.yaml'",
-        ]
+
+    config_file = PythonExpression(
+        ["'mecanum_drive_controller.yaml' if ", mecanum, " else 'diff_drive_controller.yaml'"]
     )
 
-    controller_config_path = PathJoinSubstitution(
-        [
-            FindPackageShare("rosbot_xl_controller"),
-            "config",
-            controller_config_name,
-        ]
+    controllers_config_file = PathJoinSubstitution(
+        [FindPackageShare("rosbot_xl_controller"), "config", robot_model, config_file]
     )
 
     load_urdf = IncludeLaunchDescription(
@@ -165,29 +85,102 @@ def generate_launch_description():
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[
-            controller_config_path,
-        ],
+        parameters=[controllers_config_file],
         remappings=[
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
             ("~/motors_response", "/_motors_response"),
             ("rosbot_base_controller/cmd_vel", "cmd_vel"),
-            ("/tf", "tf"),
-            ("/tf_static", "tf_static"),
         ],
-        # condition=UnlessCondition(use_sim),
+        condition=UnlessCondition(use_sim),
         namespace=namespace,
     )
+
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            "controller_manager",
+            "--controller-manager-timeout",
+            "10",
+        ],
+        namespace=namespace,
+    )
+
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "rosbot_base_controller",
+            "--controller-manager",
+            "controller_manager",
+            "--controller-manager-timeout",
+            "10",
+        ],
+        namespace=namespace,
+    )
+
+    imu_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "imu_broadcaster",
+            "--controller-manager",
+            "controller_manager",
+            "--controller-manager-timeout",
+            "10",
+        ],
+        namespace=namespace,
+    )
+
+    # spawners expect ros2_control_node to be running
+    delayed_spawner_nodes = TimerAction(
+        period=3.0,
+        actions=[
+            joint_state_broadcaster_spawner,
+            robot_controller_spawner,
+            imu_broadcaster_spawner,
+        ],
+    )
+
+    def check_if_log_is_fatal(event):
+        red_color = "\033[91m"
+        reset_color = "\033[0m"
+        if "fatal" in event.text.decode().lower() or "failed" in event.text.decode().lower():
+            print(f"{red_color}Fatal error: {event.text}. Emitting shutdown...{reset_color}")
+            return EmitEvent(event=Shutdown(reason="Spawner failed"))
+
+    controllers_monitor = GroupAction([
+        RegisterEventHandler(
+        OnProcessIO(
+            target_action=joint_state_broadcaster_spawner,
+            on_stderr=lambda event: check_if_log_is_fatal(event),
+        )
+    ),
+    RegisterEventHandler(
+        OnProcessIO(
+            target_action=robot_controller_spawner,
+            on_stderr=lambda event: check_if_log_is_fatal(event),
+        )
+    ),
+    RegisterEventHandler(
+        OnProcessIO(
+            target_action=imu_broadcaster_spawner,
+            on_stderr=lambda event: check_if_log_is_fatal(event),
+        )
+    )
+    ])
 
     return LaunchDescription(
         [
             declare_namespace_arg,
             declare_mecanum_arg,
             declare_use_sim_arg,
-            SetParameter(name="use_sim_time", value=use_sim),
             load_urdf,
             control_node,
-            OpaqueFunction(function=launch_setup),
+            delayed_spawner_nodes,
+            controllers_monitor,
         ]
     )

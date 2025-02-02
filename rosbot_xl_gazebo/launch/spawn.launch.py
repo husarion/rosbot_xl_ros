@@ -22,7 +22,6 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
-from nav2_common.launch import ReplaceString
 
 
 def generate_launch_description():
@@ -68,10 +67,6 @@ def generate_launch_description():
 
     declare_yaw_arg = DeclareLaunchArgument(
         "yaw", default_value="0.0", description="Initial robot 'yaw' orientation."
-    )
-
-    namespace_ext = PythonExpression(
-        ["''", " if '", namespace, "' == '' ", "else ", "'/", namespace, "'"]
     )
 
     gz_remappings_file = PathJoinSubstitution(
@@ -132,7 +127,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="ros_gz_bridge",
-        parameters=[{"config_file": gz_remappings_file}],     
+        parameters=[{"config_file": gz_remappings_file}],
         namespace=namespace,
     )
 

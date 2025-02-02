@@ -34,14 +34,17 @@ def generate_microros_agent_node(context, *args, **kwargs):
         env_setup_actions.append(
             SetEnvironmentVariable(name="XRCE_DOMAIN_ID_OVERRIDE", value=ros_domain_id)
         )
-    
+
     fastrtps_profiles = LaunchConfiguration("fastrtps_profiles").perform(context)
     port = LaunchConfiguration("port").perform(context)
     robot_model = LaunchConfiguration("robot_model").perform(context)
     serial_baudrate = LaunchConfiguration("serial_baudrate").perform(context)
     serial_port = LaunchConfiguration("serial_port").perform(context)
 
-    robot_communication_args = {"rosbot": ["serial", "-b", serial_baudrate, "-D", serial_port], "rosbot_xl": ["udp4", "--port", port]}
+    robot_communication_args = {
+        "rosbot": ["serial", "-b", serial_baudrate, "-D", serial_port],
+        "rosbot_xl": ["udp4", "--port", port],
+    }
 
     if os.environ.get("ROS_LOCALHOST_ONLY") == "1":
         env_setup_actions.extend(
@@ -49,7 +52,8 @@ def generate_microros_agent_node(context, *args, **kwargs):
                 LogInfo(
                     msg=[
                         "ROS_LOCALHOST_ONLY set to 1. Using FASTRTPS_DEFAULT_PROFILES_FILE=",
-                        fastrtps_profiles]
+                        fastrtps_profiles,
+                    ]
                 ),
                 SetEnvironmentVariable(name="RMW_IMPLEMENTATION", value="rmw_fastrtps_cpp"),
                 SetEnvironmentVariable(
@@ -95,7 +99,9 @@ def generate_launch_description():
     )
 
     declare_serial_baudrate_arg = DeclareLaunchArgument(
-        "serial_baudrate", default_value="576000", description="ROSbot only. Baud rate for serial communication"
+        "serial_baudrate",
+        default_value="576000",
+        description="ROSbot only. Baud rate for serial communication",
     )
 
     declare_serial_port_arg = DeclareLaunchArgument(

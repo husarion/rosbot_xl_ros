@@ -21,7 +21,11 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (
+    EnvironmentVariable,
+    LaunchConfiguration,
+    PathJoinSubstitution,
+)
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -82,7 +86,9 @@ def generate_launch_description():
         namespace=namespace,
     )
 
-    laser_filter_config = PathJoinSubstitution([rosbot_xl_bringup, "config", robot_model, "laser_filter.yaml"])
+    laser_filter_config = PathJoinSubstitution(
+        [rosbot_xl_bringup, "config", robot_model, "laser_filter.yaml"]
+    )
 
     laser_filter_node = Node(
         package="laser_filters",

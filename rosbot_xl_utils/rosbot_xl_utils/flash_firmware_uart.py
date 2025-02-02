@@ -41,7 +41,7 @@ class FirmwareFlasherUART:
     def __init__(self, binary_file):
         self.binary_file = binary_file
         self.acquire_system_info()
-        
+
         print(f"\nUART Flashing:\n  file: {binary_file}\n  port: {self.port}\n")
         try:
             self.flash_firmware()

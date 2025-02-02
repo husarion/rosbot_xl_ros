@@ -22,7 +22,7 @@ from ament_index_python.packages import get_package_share_directory
 def test_rosbot_description_parsing():
     mecanum_values = ["true", "false"]
     use_sim_values = ["true", "false"]
- 
+
     all_combinations = list(
         itertools.product(
             mecanum_values,
@@ -45,6 +45,5 @@ def test_rosbot_description_parsing():
             xacro.process_file(xacro_path, mappings=mappings)
         except xacro.XacroException as e:
             assert False, (
-                f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, "
-                f"use_sim: {use_sim}"
+                f"xacro parsing failed: {str(e)} for mecanum: {mecanum}, " f"use_sim: {use_sim}"
             )

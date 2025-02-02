@@ -23,6 +23,7 @@ from pyftdi.ftdi import Ftdi
 # CBUS0 - BOOT0
 # CBUS1 - RST
 
+
 class FirmwareFlasherUSB:
     def __init__(self, binary_file, port):
         self.device = "ftdi://ftdi:ft-x:/1"
@@ -59,7 +60,7 @@ class FirmwareFlasherUSB:
         time.sleep(0.3)
         self.ftdi.set_cbus_gpio(0b00)  # set BOOT0 to 1 and RST to 0
         time.sleep(0.1)
-        self.ftdi.set_cbus_direction(0b11,0b00) # set BOOT0 and RST to input
+        self.ftdi.set_cbus_direction(0b11, 0b00)  # set BOOT0 and RST to input
         time.sleep(0.1)
         self.ftdi.close()
         sh.usbreset("0403:6015")
@@ -87,4 +88,3 @@ class FirmwareFlasherUSB:
         self.flashing_operation("Flashing")
 
         self.exit_bootloader_mode()
-

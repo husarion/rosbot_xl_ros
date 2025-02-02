@@ -28,7 +28,6 @@ from launch_ros.actions import Node, SetParameter
 from launch_ros.substitutions import FindPackageShare
 
 
-
 def generate_launch_description():
     mecanum = LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
@@ -41,7 +40,7 @@ def generate_launch_description():
         default_value="False",
         description="Whether to use mecanum drive controller, otherwise use diff drive",
     )
-    
+
     declare_namespace_arg = DeclareLaunchArgument(
         "namespace",
         default_value="",
@@ -81,9 +80,7 @@ def generate_launch_description():
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
-            PathJoinSubstitution(
-                [FindPackageShare("rosbot_xl_description"), "urdf", urdf_file]
-            ),
+            PathJoinSubstitution([FindPackageShare("rosbot_xl_description"), "urdf", urdf_file]),
             " controller_config_file:=",
             controller_config_path,
             " mecanum:=",

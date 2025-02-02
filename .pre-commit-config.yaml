@@ -1,27 +1,49 @@
----
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
-      - id: check-merge-conflict
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-xml
       - id: check-added-large-files
+        args: ["--maxkb=3000"]
       - id: check-ast
       - id: check-json
+        exclude: ^.vscode/
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
       - id: name-tests-test
-        files: ^.*\/test\/.*$
-        args: [--pytest-test-first]
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+      - id: cmake-format
+
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v19.1.7
+    hooks:
+      - id: clang-format
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         name: codespell
         description: Checks for common misspellings in text files.
-        entry: codespell  *
+        entry: codespell
+        exclude_types: [rst, svg]
         language: python
         types: [text]
 
@@ -29,56 +51,53 @@ repos:
     rev: 0.2.3
     hooks:
       - id: yamlfmt
-        files: ^(?!.*compose)(?!.*ekf\.yaml$).*$
+        files: ^.github|./\.yaml
         args: [--mapping, '2', --sequence, '4', --offset, '2', --width, '100']
 
   - repo: https://github.com/psf/black
-    rev: 24.4.0
+    rev: 24.10.0
     hooks:
       - id: black
-        args: [--line-length=99]
+        args: ["--line-length=99"]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
-        args: ['--ignore=E501,W503']   # ignore too long line and line break before binary operator,
-                                       # black checks it
+        args:
+          ["--ignore=E501,W503"] # ignore too long line and line break before binary operator,
+          # black checks it
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+  - repo: local
     hooks:
-      - id: isort
-        args: [--profile, black]
+      - id: ament_copyright
+        name: ament_copyright
+        description: Check if copyright notice is available in all files.
+        stages: [commit]
+        entry: ament_copyright
+        language: system
 
-  # Need to figure out how o check local repos in action
-  # - repo: local
-  #   hooks:
-  #     - id: ament_lint_cmake
-  #       name: ament_lint_cmake
-  #       description: Check format of CMakeLists.txt files.
-  #       entry: ament_lint_cmake
-  #       language: system
-  #       files: CMakeLists\.txt$
-
-  # - repo: local
-  #   hooks:
-  #     - id: ament_copyright
-  #       name: ament_copyright
-  #       description: Check if copyright notice is available in all files.
-  #       stages: [commit]
-  #       entry: ament_copyright
-  #       language: system
-
-  # Docs - RestructuredText hooks
   - repo: https://github.com/PyCQA/doc8
-    rev: v1.1.1
+    rev: v1.1.2
     hooks:
       - id: doc8
-        args: [--max-line-length=100, --ignore=D001]
+        args: ["--max-line-length=100", "--ignore=D001"]
         exclude: ^.*\/CHANGELOG\.rst/.*$
 
-  - repo: https://github.com/comkieffer/pre-commit-xmllint.git
-    rev: 1.0.0
+  - repo: https://github.com/tier4/pre-commit-hooks-ros
+    rev: v0.10.0
     hooks:
-      - id: xmllint
+      - id: prettier-package-xml
+      - id: sort-package-xml
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+    -   id: markdownlint-fix-docker
+        name: markdownlint-fix-docker
+        description: "Fixes the style of Markdown/Commonmark files."
+        entry: ghcr.io/igorshubovych/markdownlint-cli --fix
+        language: docker_image
+        types: [markdown]
+        minimum_pre_commit_version: 0.15.0
+        args: ["--fix"]

@@ -51,10 +51,10 @@ def find_firmware_file(path, robot_model):
     rosbot_link = (
         "https://github.com/husarion/rosbot_ros2_firmware/releases/download/0.11.0/firmware.bin"
     )
-    rosbot_link = (
+    rosbot_xl_link = (
         "https://github.com/husarion/rosbot_firmware/releases/download/v1.4.0/firmware.bin"
     )
-    robot_download_link = {"rosbot": rosbot_link, "rosbot_xl": rosbot_link}
+    robot_download_link = {"rosbot": rosbot_link, "rosbot_xl": rosbot_xl_link}
 
     if not path:
         print("Downloading firmware...")
@@ -73,6 +73,7 @@ def main(args=None):
     parser.add_argument(
         "--robot-model",
         required=True,
+        default=os.getenv("ROBOT_MODEL_NAME"),
         choices=["rosbot", "rosbot_xl"],
         help="Specify the robot model",
     )
@@ -94,8 +95,8 @@ def main(args=None):
 
     rosbot_utils = get_package_share_directory("rosbot_utils")
     rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot", "range_laserscan_fix.bin")
-    rosbot_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl", "v1.4.0.bin")
-    firmware_dict = {"rosbot": rosbot_firmware, "rosbot_xl": rosbot_firmware}
+    rosbot_xl_firmware = os.path.join(rosbot_utils, "firmware", "rosbot_xl", "v1.4.0.bin")
+    firmware_dict = {"rosbot": rosbot_firmware, "rosbot_xl": rosbot_xl_firmware}
     firmware = args.file if args.file else firmware_dict[robot_model]
 
     try:

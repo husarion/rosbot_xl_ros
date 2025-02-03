@@ -32,7 +32,10 @@ class FirmwareFlasherUSB:
         self.binary_file = binary_file
         self.port = port
 
-        print(f"\nUSB Flashing:\n  file: {binary_file}\n  port: {port}\n")
+        print(f"""
+USB Flashing:
+    File: {binary_file}
+    Port: {port}""")
         try:
             self.flash_firmware()
         except Exception as e:
@@ -68,23 +71,25 @@ class FirmwareFlasherUSB:
 
     def flashing_operation(self, operation_name):
         print(f"\n{operation_name} operation started")
+        time.sleep(1.0)
 
-        if operation_name == "Read-UnProtection":
-            sh.stm32flash("-b", "115200", "-v", "-w", self.binary_file, self.port, _out=sys.stdout)
-        elif operation_name == "Write-UnProtection":
+        if operation_name == "Read-Protection":
+            sh.stm32flash("-b", "115200", "-k", self.port)
+        elif operation_name == "Write-Protection":
             sh.stm32flash("-b", "115200", "-u", self.port)
         elif operation_name == "Flashing":
-            sh.stm32flash("-b", "115200", "-k", self.port)
+            sh.stm32flash("-b", "115200", "-v", "-w", self.binary_file, self.port, _out=sys.stdout)
         else:
-            raise ("Unknown operation.")
-        time.sleep(0.5)
+            raise ("Unknown operation")
+
         print("Success")
+        time.sleep(1.0)
 
     def flash_firmware(self):
         self.enter_bootloader_mode()
 
-        self.flashing_operation("Read-UnProtection")
-        self.flashing_operation("Write-UnProtection")
+        self.flashing_operation("Read-Protection")
+        self.flashing_operation("Write-Protection")
         self.flashing_operation("Flashing")
 
         self.exit_bootloader_mode()

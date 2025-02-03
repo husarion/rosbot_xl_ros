@@ -72,7 +72,7 @@ ros2 launch rosbot_bringup bringup.launch.py robot_model:=<rosbot/rosbot_xl>
 > ```bash
 > sudo su
 > source install/setup.bash
-> ros2 run rosbot_utils flash_firmware
+> ros2 run rosbot_utils flash_firmware --robot-model <rosbot/rosbot_xl>
 > exit
 > ```
 

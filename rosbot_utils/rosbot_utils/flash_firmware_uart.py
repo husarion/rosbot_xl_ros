@@ -42,7 +42,6 @@ class FirmwareFlasherUART:
         self.binary_file = binary_file
         self.acquire_system_info()
 
-        print(f"\nUART Flashing:\n  file: {binary_file}\n  port: {self.port}\n")
         try:
             self.flash_firmware()
         except Exception as e:
@@ -51,12 +50,10 @@ class FirmwareFlasherUART:
 
     def acquire_system_info(self):
         sys_arch = str(sh.uname("-m")).strip()
-
-        print(f"System architecture: {sys_arch}")
-
+        device = ""
         if sys_arch == "armv7l":
             # Setups ThinkerBoard pins
-            print("Device: ThinkerBoard\n")
+            device="ThinkerBoard"
             self.port = "/dev/ttyS1"
             gpio_chip = "/dev/gpiochip0"
             boot0_pin_no = 164
@@ -64,7 +61,7 @@ class FirmwareFlasherUART:
 
         elif sys_arch == "x86_64":
             # Setups UpBoard pins
-            print("Device: UpBoard\n")
+            device = "UpBoard"
             self.port = "/dev/ttyS4"
             gpio_chip = "/dev/gpiochip4"
             boot0_pin_no = 17
@@ -72,13 +69,12 @@ class FirmwareFlasherUART:
 
         elif sys_arch == "aarch64":
             # Setups RPi pins
-            model = get_raspberry_pi_model()
-            print(f"Device: {model}\n")
+            device = get_raspberry_pi_model()
             self.port = "/dev/ttyAMA0"
 
-            if model == "Raspberry Pi 4":
+            if device == "Raspberry Pi 4":
                 gpio_chip = "/dev/gpiochip0"
-            elif model == "Raspberry Pi 5":
+            elif device == "Raspberry Pi 5":
                 gpio_chip = "/dev/gpiochip4"
             else:
                 gpio_chip = "/dev/gpiochip0"  # Default or error handling
@@ -86,7 +82,14 @@ class FirmwareFlasherUART:
             boot0_pin_no = 17
             reset_pin_no = 18
         else:
-            print("Unknown device...")
+            raise ("Unknown device. Currently supported: Raspberry Pi 4/5, ThinkerBoard, UpBoard")
+        print(f"""
+UART Flashing:
+    Arch   : {sys_arch}
+    Device : {device}
+    File   : {self.binary_file}
+    Port   : {self.port}
+""")
 
         chip = gpiod.Chip(gpio_chip)
         self.boot0_pin = chip.get_line(boot0_pin_no)
@@ -111,23 +114,25 @@ class FirmwareFlasherUART:
 
     def flashing_operation(self, operation_name):
         print(f"\n{operation_name} operation started")
+        time.sleep(0.5)
 
-        if operation_name == "Read-UnProtection":
-            sh.stm32flash("-b", "115200", "-v", "-w", self.binary_file, self.port, _out=sys.stdout)
-        elif operation_name == "Write-UnProtection":
+        if operation_name == "Read-Protection":
+            sh.stm32flash("-b", "115200", "-k", self.port)
+        elif operation_name == "Write-Protection":
             sh.stm32flash("-b", "115200", "-u", self.port)
         elif operation_name == "Flashing":
-            sh.stm32flash("-b", "115200", "-k", self.port)
+            sh.stm32flash("-b", "115200", "-v", "-w", self.binary_file, self.port, _out=sys.stdout)
         else:
-            raise ("Unknown operation.")
-        time.sleep(0.5)
+            raise ("Unknown operation")
+
         print("Success")
+        time.sleep(0.5)
 
     def flash_firmware(self):
         self.enter_bootloader_mode()
 
-        self.flashing_operation("Read-UnProtection")
-        self.flashing_operation("Write-UnProtection")
+        self.flashing_operation("Read-Protection")
+        self.flashing_operation("Write-Protection")
         self.flashing_operation("Flashing")
 
         self.exit_bootloader_mode()

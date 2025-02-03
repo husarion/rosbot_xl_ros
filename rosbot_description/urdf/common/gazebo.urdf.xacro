@@ -2,12 +2,9 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
   <xacro:macro name="controller" params="config_file namespace:=''">
-
     <gazebo>
       <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-
         <parameters>${config_file}</parameters>
-
         <ros>
           <namespace>${namespace}</namespace>
           <remapping>rosbot_base_controller/cmd_vel:=cmd_vel</remapping>
@@ -41,7 +38,6 @@
         <topic>${ns}imu/data_raw</topic>
         <visualize>false</visualize>
         <enable_metrics>false</enable_metrics>
-        <frame_id>imu_link</frame_id>
         <gz_frame_id>imu_link</gz_frame_id>
         <imu>
           <angular_velocity>

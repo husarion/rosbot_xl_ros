@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="wheel" params="wheel_radius side mecanum">
+  <xacro:macro name="wheel" params="mecanum side wheel_radius">
 
     <xacro:property name="wheel_separation_x" value="0.170" />
 

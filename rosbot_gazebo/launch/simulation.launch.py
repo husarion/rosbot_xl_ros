@@ -110,6 +110,7 @@ def generate_launch_description():
         [
             declare_namespace_arg,
             declare_robots_arg,
+            SetRemap("/diagnostics", "diagnostics"),
             SetRemap("/tf", "tf"),
             SetRemap("/tf_static", "tf_static"),
             SetParameter(name="use_sim_time", value=True),

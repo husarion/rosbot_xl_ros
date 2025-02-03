@@ -50,6 +50,7 @@ def generate_launch_description():
 
     declare_robot_model_arg = DeclareLaunchArgument(
         "robot_model",
+        default_value=EnvironmentVariable("ROBOT_MODEL_NAME", default_value=""),
         description="Specify robot model",
         choices=["rosbot", "rosbot_xl"],
     )
@@ -105,8 +106,9 @@ def generate_launch_description():
         declare_namespace_arg,
         declare_robot_model_arg,
         PushROSNamespace(namespace),
-        SetRemap(src="/tf", dst="tf"),
-        SetRemap(src="/tf_static", dst="tf_static"),
+        SetRemap("/diagnostics", "diagnostics"),
+        SetRemap("/tf", "tf"),
+        SetRemap("/tf_static", "tf_static"),
         controller_launch,
         microros_launch,
         laser_filter_node,

@@ -16,6 +16,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
+    EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
     PythonExpression,
@@ -49,6 +50,7 @@ def generate_launch_description():
 
     declare_robot_model_arg = DeclareLaunchArgument(
         "robot_model",
+        default_value=EnvironmentVariable("ROBOT_MODEL_NAME", default_value=""),
         description="Specify robot model",
         choices=["rosbot", "rosbot_xl"],
     )

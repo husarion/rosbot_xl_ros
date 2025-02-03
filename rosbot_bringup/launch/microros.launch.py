@@ -21,7 +21,7 @@ from launch.actions import (
     OpaqueFunction,
     SetEnvironmentVariable,
 )
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -94,6 +94,7 @@ def generate_launch_description():
 
     declare_robot_model_arg = DeclareLaunchArgument(
         "robot_model",
+        default_value=EnvironmentVariable("ROBOT_MODEL_NAME", default_value=""),
         description="Specify robot model",
         choices=["rosbot", "rosbot_xl"],
     )

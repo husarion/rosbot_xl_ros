@@ -92,7 +92,7 @@ def generate_launch_description():
             "--controller-manager",
             "controller_manager",
             "--controller-manager-timeout",
-            "10",
+            "20",
         ],
     )
 
@@ -104,7 +104,7 @@ def generate_launch_description():
             "--controller-manager",
             "controller_manager",
             "--controller-manager-timeout",
-            "10",
+            "20",
         ],
     )
 
@@ -116,7 +116,7 @@ def generate_launch_description():
             "--controller-manager",
             "controller_manager",
             "--controller-manager-timeout",
-            "10",
+            "20",
         ],
     )
 
@@ -124,7 +124,7 @@ def generate_launch_description():
 
     # spawners expect ros2_control_node to be running
     delayed_spawner_nodes = TimerAction(
-        period=3.0,
+        period=5.0,
         actions=controllers,
     )
 

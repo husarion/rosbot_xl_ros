@@ -20,6 +20,7 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.conditions import IfCondition
 from launch.substitutions import (
     Command,
+    EnvironmentVariable,
     FindExecutable,
     LaunchConfiguration,
     PathJoinSubstitution,
@@ -115,6 +116,7 @@ def generate_launch_description():
 
     declare_robot_model_arg = DeclareLaunchArgument(
         "robot_model",
+        default_value=EnvironmentVariable("ROBOT_MODEL_NAME", default_value=""),
         description="Specify robot model",
         choices=["rosbot", "rosbot_xl"],
     )

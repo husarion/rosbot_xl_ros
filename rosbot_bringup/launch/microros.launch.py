@@ -77,7 +77,6 @@ def generate_launch_description():
     default_fastrtps_profiles = PathJoinSubstitution(
         [FindPackageShare("rosbot_bringup"), "config", "microros_localhost_only.xml"]
     )
-
     declare_fastrtps_profiles_arg = DeclareLaunchArgument(
         "fastrtps_profiles",
         default_value=default_fastrtps_profiles,

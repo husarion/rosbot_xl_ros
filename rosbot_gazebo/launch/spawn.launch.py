@@ -21,7 +21,7 @@ from launch.substitutions import (
     PathJoinSubstitution,
     PythonExpression,
 )
-from launch_ros.actions import Node, SetParameter
+from launch_ros.actions import Node, SetParameter, SetRemap
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -190,6 +190,9 @@ def generate_launch_description():
             declare_roll_arg,
             declare_pitch_arg,
             declare_yaw_arg,
+            SetRemap("/diagnostics", "diagnostics"),
+            SetRemap("/tf", "tf"),
+            SetRemap("/tf_static", "tf_static"),
             SetParameter(name="use_sim_time", value=True),
             welcome_msg,
             gz_bridge,

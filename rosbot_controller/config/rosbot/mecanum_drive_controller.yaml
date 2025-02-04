@@ -12,7 +12,7 @@
 
 /**/imu_broadcaster:
   ros__parameters:
-    tf_frame_prefix_enable: true
+    tf_frame_prefix_enable: false
 
     sensor_name: imu
     frame_id: imu_link
@@ -22,7 +22,7 @@
 
 /**/rosbot_base_controller:
   ros__parameters:
-    tf_frame_prefix_enable: true
+    tf_frame_prefix_enable: false
 
     front_left_wheel_name: fl_wheel_joint
     front_right_wheel_name: fr_wheel_joint

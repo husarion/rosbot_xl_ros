@@ -48,7 +48,7 @@ export HUSARION_ROS_BUILD_TYPE=simulation
 ```bash
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-vcs import src < src/rosbot_ros/rosbot/rosbot_$HUSARION_ROS_BUILD_TYPE.repos
+vcs import src < src/rosbot_ros/rosbot/${HUSARION_ROS_BUILD_TYPE}_deps.repos
 
 sudo rosdep init
 rosdep update --rosdistro $ROS_DISTRO

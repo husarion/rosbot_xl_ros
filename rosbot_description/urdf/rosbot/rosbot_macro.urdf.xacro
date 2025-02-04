@@ -6,7 +6,7 @@
             namespace
             use_sim">
 
-    <!-- PROPERTIES --> 
+    <!-- PROPERTIES -->
     <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
     <xacro:property name="wheel_radius" value="${0.047 if mecanum else 0.0425}" />
 

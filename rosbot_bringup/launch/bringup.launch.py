@@ -90,6 +90,7 @@ def generate_launch_description():
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
+        name="laser_filter",
         parameters=[laser_filter_config],
     )
 

@@ -32,10 +32,12 @@ class FirmwareFlasherUSB:
         self.binary_file = binary_file
         self.port = port
 
-        print(f"""
+        print(
+            f"""
 USB Flashing:
     File: {binary_file}
-    Port: {port}""")
+    Port: {port}"""
+        )
         try:
             self.flash_firmware()
         except Exception as e:

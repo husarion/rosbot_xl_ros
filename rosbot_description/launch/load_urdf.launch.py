@@ -36,6 +36,7 @@ def contains_cam_component(yaml_fil):
             return any(item["type"].startswith("CAM") for item in data["components"])
     return False
 
+
 def launch_setup(context, *args, **kwargs):
     components_config = LaunchConfiguration("components_config").perform(context)
     mecanum = LaunchConfiguration("mecanum").perform(context)

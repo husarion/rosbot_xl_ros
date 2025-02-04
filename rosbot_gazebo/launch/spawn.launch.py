@@ -26,7 +26,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    mecanum= LaunchConfiguration("mecanum")
+    mecanum = LaunchConfiguration("mecanum")
     namespace = LaunchConfiguration("namespace")
     robot_model = LaunchConfiguration("robot_model")
     x = LaunchConfiguration("x")
@@ -168,11 +168,14 @@ def generate_launch_description():
         parameters=[ekf_config],
     )
 
-    laser_filter_config = PathJoinSubstitution([rosbot_bringup, "config", robot_model, "laser_filter.yaml"])
+    laser_filter_config = PathJoinSubstitution(
+        [rosbot_bringup, "config", robot_model, "laser_filter.yaml"]
+    )
 
     laser_filter_node = Node(
         package="laser_filters",
         executable="scan_to_scan_filter_chain",
+        name="laser_filter",
         parameters=[laser_filter_config],
     )
 

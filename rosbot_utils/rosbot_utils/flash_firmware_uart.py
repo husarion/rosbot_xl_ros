@@ -53,7 +53,7 @@ class FirmwareFlasherUART:
         device = ""
         if sys_arch == "armv7l":
             # Setups ThinkerBoard pins
-            device="ThinkerBoard"
+            device = "ThinkerBoard"
             self.port = "/dev/ttyS1"
             gpio_chip = "/dev/gpiochip0"
             boot0_pin_no = 164
@@ -83,13 +83,15 @@ class FirmwareFlasherUART:
             reset_pin_no = 18
         else:
             raise ("Unknown device. Currently supported: Raspberry Pi 4/5, ThinkerBoard, UpBoard")
-        print(f"""
+        print(
+            f"""
 UART Flashing:
     Arch   : {sys_arch}
     Device : {device}
     File   : {self.binary_file}
     Port   : {self.port}
-""")
+"""
+        )
 
         chip = gpiod.Chip(gpio_chip)
         self.boot0_pin = chip.get_line(boot0_pin_no)

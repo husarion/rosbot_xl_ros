@@ -4,7 +4,7 @@
 
   <xacro:macro name="imu" params="name:='imu' namespace:=''" >
     <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
-  
+
     <ros2_control name="${ns}${name}" type="sensor">
       <hardware>
         <plugin>rosbot_hardware_interfaces/RosbotImuSensor</plugin>

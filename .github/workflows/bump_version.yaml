@@ -12,14 +12,14 @@ on:
     types: [closed]
 
 jobs:
-  industrial_ci:
+  ci:
     name: Industrial CI
-    uses: ./.github/workflows/industrial_ci.yaml
+    uses: ./.github/workflows/CI.yaml
 
   get-bump:
     name: Get version bump
     runs-on: ubuntu-latest
-    needs: industrial_ci
+    needs: ci
     outputs:
       bump: ${{ env.BUMP }}
     steps:

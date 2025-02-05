@@ -1,0 +1,21 @@
+---
+name: CI
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+
+
+jobs:
+
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+      - uses: pre-commit/action@v3.0.1
+
+  ros_test:
+    name: ROS Test
+    uses: ./.github/workflows/run-test.yaml

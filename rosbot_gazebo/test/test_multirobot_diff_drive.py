@@ -20,12 +20,12 @@ import launch_pytest
 import pytest
 import rclpy
 from ament_index_python.packages import get_package_share_directory
+from gz_kill_process import kill_ign_linux_processes
 from launch import LaunchDescription
 from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import SingleThreadedExecutor
-from gz_kill_process import kill_ign_linux_processes
 from test_utils import SimulationTestNode, diff_test
 
 

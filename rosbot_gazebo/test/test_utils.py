@@ -210,7 +210,9 @@ def wait_for_initialization(node: SimulationTestNode, robot_name="ROSbot"):
     assert node.robot_initialized_event.wait(30), f"{robot_name} does not initialized correctly!"
 
 
-def speed_test(node: SimulationTestNode, test_name, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"):
+def speed_test(
+    node: SimulationTestNode, test_name, v_x=0.0, v_y=0.0, v_yaw=0.0, robot_name="ROSbot"
+):
     node.set_destination_speed(v_x, v_y, v_yaw)
     assert node.vel_stabilization_time_event.wait(20.0), (
         f"{test_name}"

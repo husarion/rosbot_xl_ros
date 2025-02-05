@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from itertools import product
 from threading import Thread
 
 import launch_pytest
 import pytest
 import rclpy
-from itertools import product
+from gz_kill_process import kill_ign_linux_processes
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -25,19 +26,20 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from gz_kill_process import kill_ign_linux_processes
 from test_utils import *
 
 
 @launch_pytest.fixture
 def generate_test_description(request):
     mecanum, namespace, robot_model = request.param
-    print(f"""
+    print(
+        f"""
 Running test with
     mecanum={mecanum}
     namespace={namespace}
     robot_model={robot_model}
-    """)
+    """
+    )
     rosbot_gazebo = FindPackageShare("rosbot_gazebo")
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -60,26 +62,35 @@ Running test with
         }.items(),
     )
 
-    return LaunchDescription(
-        [
-            simulation_launch,
-            KeepAliveProc(),
-            ReadyToTest(),
-        ]
-    ), mecanum, namespace, robot_model
+    return (
+        LaunchDescription(
+            [
+                simulation_launch,
+                KeepAliveProc(),
+                ReadyToTest(),
+            ]
+        ),
+        mecanum,
+        namespace,
+        robot_model,
+    )
+
 
 mecanum_options = ["True", "False"]
 namespace_options = ["", "test_ns"]
 robot_model_options = ["rosbot", "rosbot_xl"]
 test_params = list(product(mecanum_options, namespace_options, robot_model_options))
 
+
 @pytest.mark.parametrize("generate_test_description", test_params, indirect=True)
 @pytest.mark.launch(fixture=generate_test_description)
 def test_simulation(generate_test_description):
     _, mecanum, namespace, robot_model = generate_test_description
 
-    sensor_to_test = {"rosbot": [], # Not simulated "camera_color", "camera_points" "scan_filtered", "range_fl","range_fr", "range_rl", "range_rr"
-                      "rosbot_xl": []}
+    sensor_to_test = {
+        "rosbot": [],  # Not simulated "camera_color", "camera_points" "scan_filtered", "range_fl","range_fr", "range_rl", "range_rr"
+        "rosbot_xl": [],
+    }
 
     rclpy.init()
     try:

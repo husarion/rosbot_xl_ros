@@ -24,7 +24,7 @@
   <xacro:camera.luxonis_depthai
     parent_link="camera_mount_link"
     xyz="0.0 0.0 0.02"
-    model="OAK-D-PRO" 
+    model="OAK-D-PRO"
     use_sim="$(arg use_sim)" />
 
 </robot>

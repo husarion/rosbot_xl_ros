@@ -35,7 +35,7 @@ class BringupTestNode(Node):
             namespace=namespace,
             cli_args=["--ros-args", "-r", "/tf:=tf", "-r", "/tf_static:=tf_static"],
         )
-        
+
         self.joint_state_msg_event = Event()
         self.controller_odom_msg_event = Event()
         self.imu_msg_event = Event()

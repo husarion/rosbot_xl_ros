@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from itertools import product
+
 import launch_pytest
 import pytest
 import rclpy
-from itertools import product
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -29,12 +30,14 @@ from test_utils import *
 @launch_pytest.fixture
 def generate_test_description(request):
     mecanum, namespace, robot_model = request.param
-    print(f"""
+    print(
+        f"""
 Running test with
     mecanum={mecanum}
     namespace={namespace}
     robot_model={robot_model}
-    """)
+    """
+    )
     rosbot_bringup = FindPackageShare("rosbot_bringup")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -58,18 +61,25 @@ Running test with
         }.items(),
     )
 
-    return LaunchDescription(
-        [
-            bringup_launch,
-            KeepAliveProc(),
-            ReadyToTest(),
-        ]
-    ), mecanum, namespace, robot_model
+    return (
+        LaunchDescription(
+            [
+                bringup_launch,
+                KeepAliveProc(),
+                ReadyToTest(),
+            ]
+        ),
+        mecanum,
+        namespace,
+        robot_model,
+    )
+
 
 mecanum_options = ["True", "False"]
 namespace_options = ["", "test_ns"]
 robot_model_options = ["rosbot", "rosbot_xl"]
 test_params = list(product(mecanum_options, namespace_options, robot_model_options))
+
 
 @pytest.mark.parametrize("generate_test_description", test_params, indirect=True)
 @pytest.mark.launch(fixture=generate_test_description)
@@ -78,7 +88,7 @@ def test_simulation(generate_test_description):
 
     rclpy.init()
     try:
-        node = BringupTestNode("test_bringup",  namespace=namespace)
+        node = BringupTestNode("test_bringup", namespace=namespace)
         node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 

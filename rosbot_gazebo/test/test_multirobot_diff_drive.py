@@ -25,25 +25,25 @@ from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import SingleThreadedExecutor
-from test_ign_kill_utils import kill_ign_linux_processes
+from gz_kill_process import kill_ign_linux_processes
 from test_utils import SimulationTestNode, diff_test
 
 
 @launch_pytest.fixture
 def generate_test_description():
-    # IncludeLaunchDescription does not work with robots argument
+    gz_world_path = (
+        get_package_share_directory("husarion_gz_worlds") + "/worlds/empty_with_plugins.sdf"
+    )
     simulation_launch = ExecuteProcess(
         cmd=[
             "ros2",
             "launch",
             "rosbot_gazebo",
             "simulation.launch.py",
-            (
-                f'world:={get_package_share_directory("husarion_gz_worlds")}'
-                "/worlds/empty_with_plugins.sdf"
-            ),
+            "gz_headless_mode:=True",
+            f"gz_world:={gz_world_path}",
+            "microros:=False",
             "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
-            "headless:=True",
         ],
         output="screen",
     )
@@ -52,7 +52,6 @@ def generate_test_description():
         [
             simulation_launch,
             KeepAliveProc(),
-            # Tell launch to start the test
             ReadyToTest(),
         ]
     )
@@ -82,7 +81,7 @@ def test_multirobot_diff_drive_simulation():
             node.destroy_node()
 
     finally:
-        # The pytest cannot kill properly the Gazebo 's tasks what blocks launching
+        # The pytest cannot kill properly the Gazebo's tasks what blocks launching
         # several tests in a row.
         executor.shutdown()
         kill_ign_linux_processes()

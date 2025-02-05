@@ -15,18 +15,18 @@
 
 import math
 import random
-from threading import Event
+import time
+from threading import Event, Thread
 
 import rclpy
+from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from sensor_msgs.msg import Imu, JointState, LaserScan
-from tf2_ros import TransformException
-from tf2_ros.buffer import Buffer
-from tf2_ros.transform_listener import TransformListener
 
 
 class BringupTestNode(Node):
     ROSBOT_HARDWARE_PUBLISHERS_RATE = 10.0
+
     __test__ = False
 
     def __init__(self, name="test_node", namespace=None):
@@ -35,47 +35,68 @@ class BringupTestNode(Node):
             namespace=namespace,
             cli_args=["--ros-args", "-r", "/tf:=tf", "-r", "/tf_static:=tf_static"],
         )
-        self.odom_tf_event = Event()
+        
+        self.joint_state_msg_event = Event()
+        self.controller_odom_msg_event = Event()
+        self.imu_msg_event = Event()
+        self.ekf_odom_msg_event = Event()
         self.scan_filter_event = Event()
 
+        self.ros_spin_thread = None
+        self.timer = None
+
+        self.create_test_subscribers_and_publishers()
+
+    def create_test_subscribers_and_publishers(self):
         self.imu_pub = self.create_publisher(Imu, "/_imu/data_raw", 10)
         self.joint_pub = self.create_publisher(JointState, "/_motors_response", 10)
-
-        self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
-
         self.scan_pub = self.create_publisher(LaserScan, "scan", 10)
+
+        self.joint_state_sub = self.create_subscription(
+            JointState, "joint_states", self.joint_states_callback, 10
+        )
+        self.controller_odom_sub = self.create_subscription(
+            Odometry, "rosbot_base_controller/odom", self.controller_odometry_callback, 10
+        )
+        self.imu_sub = self.create_subscription(Imu, "imu_broadcaster/imu", self.imu_callback, 10)
+        self.ekf_odom_sub = self.create_subscription(
+            Odometry, "odometry/filtered", self.ekf_odometry_callback, 10
+        )
         self.scan_filtered_sub = self.create_subscription(
             LaserScan, "scan_filtered", self.filtered_scan_callback, 10
         )
 
-        self.timer = None
-
-    def lookup_transform_odom(self):
-        try:
-            self.tf_buffer.lookup_transform("odom", "base_link", rclpy.time.Time())
-            self.odom_tf_event.set()
-        except TransformException as ex:
-            self.get_logger().error(
-                f"Could not transform odom to base_link: {ex}",
-                skip_first=True,
-                throttle_duration_sec=3.0,
-            )
+    def start_node_thread(self):
+        if not self.ros_spin_thread:
+            self.ros_spin_thread = Thread(target=rclpy.spin, args=(self,), daemon=True)
+            self.ros_spin_thread.start()
 
     def start_publishing_fake_hardware(self):
-        self.timer = self.create_timer(
-            1.0 / self.ROSBOT_HARDWARE_PUBLISHERS_RATE,
-            self.timer_callback,
-        )
+        if not self.timer:
+            self.timer = self.create_timer(
+                1.0 / self.ROSBOT_HARDWARE_PUBLISHERS_RATE,
+                self.timer_callback,
+            )
+
+    def timer_callback(self):
+        self.publish_fake_hardware_messages()
+        self.publish_scan()
+
+    def joint_states_callback(self, msg: JointState):
+        self.joint_state_msg_event.set()
+
+    def controller_odometry_callback(self, msg: Odometry):
+        self.controller_odom_msg_event.set()
+
+    def imu_callback(self, msg: Imu):
+        self.imu_msg_event.set()
+
+    def ekf_odometry_callback(self, msg: Odometry):
+        self.ekf_odom_msg_event.set()
 
     def filtered_scan_callback(self, msg: LaserScan):
         if len(msg.ranges) > 0:
             self.scan_filter_event.set()
-
-    def timer_callback(self):
-        self.publish_fake_hardware_messages()
-        self.lookup_transform_odom()
-        self.publish_scan()
 
     def publish_fake_hardware_messages(self):
         imu_msg = Imu()
@@ -112,12 +133,39 @@ class BringupTestNode(Node):
         self.scan_pub.publish(msg)
 
 
-def ekf_and_scan_test(node: BringupTestNode, robot_name="ROSbot"):
-    assert node.odom_tf_event.wait(20.0), (
-        f"{robot_name}: Expected odom to base_link tf but it was not received. Check"
-        " robot_localization!"
-    )
+def wait_for_all_events(events, timeout):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        if all(event.is_set() for event in events):
+            return True, []
+        time.sleep(0.1)
 
-    assert node.scan_filter_event.wait(
-        20.0
-    ), f"{robot_name}: Expected filtered scan but it is not filtered properly. Check laser_filter!"
+    not_set_events = [i for i, event in enumerate(events) if not event.is_set()]
+    return False, not_set_events
+
+
+def readings_data_test(node, robot_name="ROSbot"):
+    events = [
+        node.joint_state_msg_event,
+        node.controller_odom_msg_event,
+        node.imu_msg_event,
+        node.ekf_odom_msg_event,
+    ]
+
+    event_names = [
+        "JointStates",
+        "Controller Odometry",
+        "IMU",
+        "EKF Odometry",
+    ]
+
+    msgs_received_flag, not_set_indices = wait_for_all_events(events, timeout=20.0)
+
+    if not msgs_received_flag:
+        not_set_event_names = [event_names[i] for i in not_set_indices]
+        missing_events = ", ".join(not_set_event_names)
+        raise AssertionError(
+            f"{robot_name}: Not all expected messages were received. Missing: {missing_events}."
+        )
+
+    print(f"{robot_name}: All messages received successfully.")

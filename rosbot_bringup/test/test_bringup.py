@@ -1,5 +1,3 @@
-# Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2023 Intel Corporation. All Rights Reserved.
 # Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from threading import Thread
-
 import launch_pytest
 import pytest
 import rclpy
+from itertools import product
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
-from test_utils import BringupTestNode, ekf_and_scan_test
+from launch_testing.actions import ReadyToTest
+from launch_testing.util import KeepAliveProc
+from test_utils import *
 
 
 @launch_pytest.fixture
-def generate_test_description():
+def generate_test_description(request):
+    mecanum, namespace, robot_model = request.param
+    print(f"""
+Running test with
+    mecanum={mecanum}
+    namespace={namespace}
+    robot_model={robot_model}
+    """)
     rosbot_bringup = FindPackageShare("rosbot_bringup")
     bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -41,25 +47,43 @@ def generate_test_description():
             )
         ),
         launch_arguments={
-            "use_sim": "False",
-            "mecanum": "True",
-            "namespace": "rosbot",
+            "gz_headless_mode": "True",
+            "gz_world": PathJoinSubstitution(
+                [FindPackageShare("husarion_gz_worlds"), "worlds", "empty_with_plugins.sdf"]
+            ),
+            "mecanum": mecanum,
+            "microros": "False",
+            "namespace": namespace,
+            "robot_model": robot_model,
         }.items(),
     )
 
-    return LaunchDescription([bringup_launch])
+    return LaunchDescription(
+        [
+            bringup_launch,
+            KeepAliveProc(),
+            ReadyToTest(),
+        ]
+    ), mecanum, namespace, robot_model
 
+mecanum_options = ["True", "False"]
+namespace_options = ["", "test_ns"]
+robot_model_options = ["rosbot", "rosbot_xl"]
+test_params = list(product(mecanum_options, namespace_options, robot_model_options))
 
+@pytest.mark.parametrize("generate_test_description", test_params, indirect=True)
 @pytest.mark.launch(fixture=generate_test_description)
-def test_namespaced_bringup_startup_success():
+def test_simulation(generate_test_description):
+    _, mecanum, namespace, robot_model = generate_test_description
+
     rclpy.init()
     try:
-        node = BringupTestNode("test_bringup", namespace="rosbot")
+        node = BringupTestNode("test_bringup",  namespace=namespace)
+        node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
 
-        Thread(target=lambda node: rclpy.spin(node), args=(node,)).start()
-        ekf_and_scan_test(node)
-        node.destroy_node()
+        node.start_node_thread()
+        readings_data_test(node)
 
     finally:
         rclpy.shutdown()

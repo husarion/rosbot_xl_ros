@@ -13,11 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from time import sleep
-
 import psutil
 
-# The pytest cannot kill properly the Gazebo 's tasks what blocks launching
+# The pytest cannot kill properly the Gazebo's tasks what blocks launching
 # several tests in a row.
 # https://github.com/ros-controls/gz_ros2_control/blob/master/gz_ros2_control_tests/tests/position_test.py
 
@@ -25,7 +23,5 @@ import psutil
 def kill_ign_linux_processes():
     for proc in psutil.process_iter():
         # check whether the process name matches
-        if proc.name() == "ruby" or proc.name() == "parameter_bridge":
-            while proc.is_running():
-                proc.kill()
-                sleep(1.0)
+        if proc.name() == "ruby":
+            proc.kill()

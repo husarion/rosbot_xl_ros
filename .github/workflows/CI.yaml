@@ -18,4 +18,4 @@ jobs:
 
   ros_test:
     name: ROS Test
-    uses: ./.github/workflows/run-test.yaml
+    uses: ./.github/workflows/run-tests.yaml

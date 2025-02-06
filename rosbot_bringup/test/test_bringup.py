@@ -24,7 +24,7 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
-from test_utils import *
+from test_utils import BringupTestNode, readings_data_test
 
 
 @launch_pytest.fixture
@@ -84,7 +84,7 @@ test_params = list(product(mecanum_options, namespace_options, robot_model_optio
 @pytest.mark.parametrize("generate_test_description", test_params, indirect=True)
 @pytest.mark.launch(fixture=generate_test_description)
 def test_simulation(generate_test_description):
-    _, mecanum, namespace, robot_model = generate_test_description
+    _, _, namespace = generate_test_description
 
     rclpy.init()
     try:

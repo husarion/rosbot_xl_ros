@@ -28,7 +28,7 @@ class SimulationTestNode(Node):
 
     # The inaccuracies in measurement uncertainties and wheel slippage
     # cause the rosbot_base_controller to determine inaccurate odometry.
-    ACCURACY = 0.25  # 20% accuracy (due wheel_separation angular spped differs between hw and sim)
+    ACCURACY = 0.25  # 20% accuracy (due wheel_separation angular speed differs between hw and sim)
     VELOCITY_STABILIZATION_DELAY = 3
 
     RANGE_SENSORS_TOPICS = ["range/fl", "range/fr", "range/rl", "range/rr"]

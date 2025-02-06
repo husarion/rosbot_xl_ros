@@ -29,9 +29,9 @@ jobs:
       - name: Set test package
         run: |
           if [ "${{ matrix.build_type }}" = "hardware" ]; then
-            echo "TEST_PACKAGE=['rosbot_bringup']" >> $GITHUB_ENV
+            echo 'TEST_PACKAGE=["rosbot_bringup"]' >> $GITHUB_ENV
           else
-            echo "TEST_PACKAGE=['rosbot_gazebo']" >> $GITHUB_ENV
+            echo 'TEST_PACKAGE=["rosbot_gazebo"]' >> $GITHUB_ENV
           fi
 
       - name: Build and test

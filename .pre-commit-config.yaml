@@ -94,11 +94,10 @@ repos:
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.44.0
     hooks:
-    -   id: markdownlint-fix-docker
-        name: markdownlint-fix-docker
+      - id: markdownlint-fix
+        name: markdownlint-fix
         description: "Fixes the style of Markdown/Commonmark files."
-        entry: ghcr.io/igorshubovych/markdownlint-cli --fix
-        language: docker_image
+        entry: markdownlint --fix
+        language: node
         types: [markdown]
         minimum_pre_commit_version: 0.15.0
-        args: ["--fix"]

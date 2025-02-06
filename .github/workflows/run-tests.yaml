@@ -9,6 +9,8 @@ jobs:
   build-and-test:
     name: Run tests ${{ matrix.build_type }} build type
     runs-on: ubuntu-24.04
+    container:
+      image: ubuntu:noble
     strategy:
       matrix:
         build_type: [simulation, hardware]

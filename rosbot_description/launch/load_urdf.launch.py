@@ -39,19 +39,12 @@ def contains_cam_component(yaml_fil):
 
 def launch_setup(context, *args, **kwargs):
     components_config = LaunchConfiguration("components_config").perform(context)
+    controller_config = LaunchConfiguration("controller_config").perform(context)
     mecanum = LaunchConfiguration("mecanum").perform(context)
+    mock_joints = LaunchConfiguration("mock_joints", default="True").perform(context)
+    namespace = LaunchConfiguration("namespace").perform(context)
     robot_model = LaunchConfiguration("robot_model").perform(context)
-    use_joint_state_publisher = LaunchConfiguration(
-        "use_joint_state_publisher", default="True"
-    ).perform(context)
-    use_sim = LaunchConfiguration("use_sim").perform(context)
-
-    controller_config = (
-        "mecanum_drive_controller.yaml" if eval(mecanum) else "diff_drive_controller.yaml"
-    )
-    controller_config = PathJoinSubstitution(
-        [FindPackageShare("rosbot_controller"), "config", robot_model, controller_config]
-    )
+    use_sim = LaunchConfiguration("use_sim", default="False").perform(context)
 
     urdf_file = robot_model + ".urdf.xacro"
     include_camera_mount = str(contains_cam_component(components_config))
@@ -68,6 +61,8 @@ def launch_setup(context, *args, **kwargs):
             include_camera_mount,
             " mecanum:=",
             mecanum,
+            " namespace:=",
+            namespace,
             " use_sim:=",
             use_sim,
         ]
@@ -84,7 +79,7 @@ def launch_setup(context, *args, **kwargs):
     joint_state_publisher_node = Node(
         package="joint_state_publisher",
         executable="joint_state_publisher",
-        condition=IfCondition(use_joint_state_publisher),
+        condition=IfCondition(mock_joints),
     )
 
     return [
@@ -122,13 +117,6 @@ def generate_launch_description():
         choices=["rosbot", "rosbot_xl"],
     )
 
-    declare_use_sim_arg = DeclareLaunchArgument(
-        "use_sim",
-        default_value="False",
-        description="Whether simulation is used",
-        choices=["True", "False"],
-    )
-
     publish_robot_description = OpaqueFunction(function=launch_setup)
 
     return LaunchDescription(
@@ -136,7 +124,6 @@ def generate_launch_description():
             declare_components_config_arg,
             declare_mecanum_arg,
             declare_robot_model_arg,
-            declare_use_sim_arg,
             publish_robot_description,
         ]
     )

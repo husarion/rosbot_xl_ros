@@ -1,5 +1,3 @@
-# Copyright 2021 Open Source Robotics Foundation, Inc.
-# Copyright 2023 Intel Corporation. All Rights Reserved.
 # Copyright 2024 Husarion sp. z o.o.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +24,11 @@ from launch.actions import ExecuteProcess
 from launch_testing.actions import ReadyToTest
 from launch_testing.util import KeepAliveProc
 from rclpy.executors import SingleThreadedExecutor
-from test_utils import SimulationTestNode, diff_test
+from test_utils import (
+    SimulationTestNode,
+    speed_test,
+    wait_for_initialization,
+)
 
 
 @launch_pytest.fixture
@@ -42,8 +44,21 @@ def generate_test_description():
             "simulation.launch.py",
             "gz_headless_mode:=True",
             f"gz_world:={gz_world_path}",
-            "microros:=False",
-            "robots:=robot1={y: -4.0}; robot2={y: 0.0};",
+            "namespace:=robot1",
+            "robot_model:=rosbot",
+        ],
+        output="screen",
+    )
+
+    spawn_secound_robot = ExecuteProcess(
+        cmd=[
+            "ros2",
+            "launch",
+            "rosbot_gazebo",
+            "spawn_robot.launch.py",
+            "namespace:=robot2",
+            "robot_model:=rosbot_xl",
+            "y:=-4.0",
         ],
         output="screen",
     )
@@ -51,6 +66,7 @@ def generate_test_description():
     return LaunchDescription(
         [
             simulation_launch,
+            spawn_secound_robot,
             KeepAliveProc(),
             ReadyToTest(),
         ]
@@ -58,17 +74,16 @@ def generate_test_description():
 
 
 @pytest.mark.launch(fixture=generate_test_description)
-def test_multirobot_diff_drive_simulation():
+def test_multirobot_simulation():
     robots = ["robot1", "robot2"]
+
     rclpy.init()
     try:
         nodes = {}
         executor = SingleThreadedExecutor()
 
         for node_namespace in robots:
-            node = SimulationTestNode(
-                "test_multirobot_diff_drive_simulation", namespace=node_namespace
-            )
+            node = SimulationTestNode("test_multirobot_simulation", namespace=node_namespace)
             nodes[node_namespace] = node
             executor.add_node(node)
 
@@ -76,7 +91,9 @@ def test_multirobot_diff_drive_simulation():
 
         for node_namespace in robots:
             node = nodes[node_namespace]
-            diff_test(node, node_namespace)
+            wait_for_initialization(node, robot_name=node_namespace)
+            speed_test(node, "Test velocity in x direction", v_x=0.7, robot_name=node_namespace)
+            speed_test(node, "Test velocity in yaw", v_yaw=3.0, robot_name=node_namespace)
             executor.remove_node(node)
             node.destroy_node()
 

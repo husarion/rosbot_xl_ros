@@ -228,7 +228,7 @@ def speed_test(
     )
     assert node.is_ekf_odom_correct, (
         f"{test_name}"
-        f"\n{robot_name}: does not move properly. Check ekf_filter_node!"
+        f"\n{robot_name}: does not move properly. Check ekf_node!"
         f" Twist: {node.ekf_twist}"
         f"\nCommand: x: {v_x}, y: {v_y}, yaw: {v_yaw}"
     )

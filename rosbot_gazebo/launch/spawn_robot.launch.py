@@ -21,8 +21,9 @@ from launch.substitutions import (
     PathJoinSubstitution,
     PythonExpression,
 )
-from launch_ros.actions import Node, SetParameter, SetRemap
+from launch_ros.actions import Node, PushROSNamespace, SetParameter, SetRemap
 from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import ReplaceString
 
 
 def generate_launch_description():
@@ -79,10 +80,7 @@ def generate_launch_description():
         "yaw", default_value="0.0", description="Initial robot 'yaw' orientation."
     )
 
-    gz_remappings_file = PathJoinSubstitution(
-        [FindPackageShare("rosbot_gazebo"), "config", "gz_bridge.yaml"]
-    )
-
+    ns = PythonExpression(["'", namespace, "' + '/' if '", namespace, "' else ''"])
     robot_name = PythonExpression(
         ["'rosbot'", " if '", namespace, "' == '' ", "else ", "'", namespace, "'"]
     )
@@ -132,11 +130,16 @@ def generate_launch_description():
         ]
     )
 
+    gz_bridge_path = PathJoinSubstitution(
+        [FindPackageShare("rosbot_gazebo"), "config", "rosbot_bridge.yaml"]
+    )
+    gz_bridge_config = ReplaceString(gz_bridge_path, {"<namespace>/": ns})
+
     gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
-        name="ros_gz_bridge",
-        parameters=[{"config_file": gz_remappings_file}],
+        name="rosbot_gz_bridge",
+        parameters=[{"config_file": gz_bridge_config}],
     )
 
     controller_launch = IncludeLaunchDescription(
@@ -163,7 +166,7 @@ def generate_launch_description():
     robot_localization_node = Node(
         package="robot_localization",
         executable="ekf_node",
-        name="ekf_filter_node",
+        name="ekf_node",
         output="screen",
         parameters=[ekf_config],
     )
@@ -190,6 +193,7 @@ def generate_launch_description():
             declare_roll_arg,
             declare_pitch_arg,
             declare_yaw_arg,
+            PushROSNamespace(namespace),
             SetRemap("/diagnostics", "diagnostics"),
             SetRemap("/tf", "tf"),
             SetRemap("/tf_static", "tf_static"),

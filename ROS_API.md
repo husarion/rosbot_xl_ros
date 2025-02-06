@@ -57,11 +57,8 @@ Launch files for Gazebo working with ROS2 control.
 | **namespace**            | Namespace for all topics and tfs                                  | **""**                                                      |
 | **world**                | Path to SDF world file                                            | **`husarion_gz_worlds/`<br /> `worlds/husarion_world.sdf`** |
 | **headless**             | Run Gazebo in the headless mode                          | **False**                                                   |
-| **robots**               | List of robots that will be spawn in the simulation               | **[]**\*\*                                                  |
 
 > \*You can check all available options using `-s`/`--show-args` flag. (e.g. `ros2 launch rosbot_bringup bringup.launch.py -s`).
->
-> \*\*Example of use: `robots:='robot1={x: 0.0, y: -1.0}; robot2={x: 1.0, y: -1.0};'`
 
 ### `rosbot_utils`
 
@@ -85,7 +82,7 @@ This package contains the stable firmware version with the flash script.
 | NODE                    | DESCRIPTION                                                                                                                                                                                                                                                                                                                                             |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`~/controller_manager`**        | Controller Manager performs two main functions. First, it manages controllers and their required interfaces, handling tasks like loading, activating, deactivating, and unloading. Second, it interacts with hardware components, ensuring access to their interfaces. <br /> _[controller_manager/controller_manager][]_                             |
-| **`~/ekf_filter_node`**           | Used to fuse wheel odometry and IMU data. Parameters are defined in `rosbot_bringup/config/ekf.yaml` <br /> _[robot_localization/ekf_node][]_                                                                                                                                                                                                      |
+| **`~/ekf_node`**           | Used to fuse wheel odometry and IMU data. Parameters are defined in `rosbot_bringup/config/ekf.yaml` <br /> _[robot_localization/ekf_node][]_                                                                                                                                                                                                      |
 | **`~/imu_broadcaster`**           | The broadcaster to publish readings of IMU sensors <br /> _[imu_sensor_broadcaster/imu_sensor_broadcaster][]_                                                                                                                                                                                                                                         |
 | **`~/imu_sensor_node`**           | The node responsible for subscriptions to IMU data from the hardware <br /> _[rosbot_hardware_interfaces/rosbot_imu_sensor][]_ |
 | **`~/joint_state_broadcaster`**   | The broadcaster reads all state interfaces and reports them on specific topics <br /> _[joint_state_broadcaster/joint_state_broadcaster][]_                                                                                                                                                                                                           |

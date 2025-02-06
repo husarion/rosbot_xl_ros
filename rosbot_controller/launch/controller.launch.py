@@ -27,18 +27,38 @@ from launch.event_handlers import OnProcessIO
 from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
+    EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
     PythonExpression,
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from nav2_common.launch import ReplaceString
 
 
 def generate_launch_description():
+    controller_config = LaunchConfiguration("controller_config")
     mecanum = LaunchConfiguration("mecanum")
+    namespace = LaunchConfiguration("namespace")
     robot_model = LaunchConfiguration("robot_model")
     use_sim = LaunchConfiguration("use_sim", default="False")
+
+    controllers_file = PythonExpression(
+        ["'mecanum_drive_controller.yaml' if ", mecanum, " else 'diff_drive_controller.yaml'"]
+    )
+
+    default_controller_config = PathJoinSubstitution(
+        [FindPackageShare("rosbot_controller"), "config", robot_model, controllers_file]
+    )
+
+    declare_controller_config_arg = DeclareLaunchArgument(
+        "controller_config",
+        default_value=default_controller_config,
+        description="Path to controller configuration file. By default, it is located in"
+        " 'rosbot_controller/config/{robot_model}/{mecanum/diff}_drive_controller.yaml'. You can also specify"
+        " the path to your custom controller configuration file here. ",
+    )
 
     declare_mecanum_arg = DeclareLaunchArgument(
         "mecanum",
@@ -46,13 +66,15 @@ def generate_launch_description():
         description="Whether to use mecanum drive controller (otherwise diff drive controller is used)",
     )
 
-    config_file = PythonExpression(
-        ["'mecanum_drive_controller.yaml' if ", mecanum, " else 'diff_drive_controller.yaml'"]
+    declare_robot_model_arg = DeclareLaunchArgument(
+        "robot_model",
+        default_value=EnvironmentVariable("ROBOT_MODEL_NAME", default_value=""),
+        description="Specify robot model",
+        choices=["rosbot", "rosbot_xl"],
     )
 
-    controllers_config_file = PathJoinSubstitution(
-        [FindPackageShare("rosbot_controller"), "config", robot_model, config_file]
-    )
+    ns = PythonExpression(["'", namespace, "' + '/' if '", namespace, "' else ''"])
+    controller_config = ReplaceString(controller_config, {"<namespace>/": ns})
 
     load_urdf = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -65,8 +87,9 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
+            "controller_config": controller_config,
+            "mock_joints": "False",
             "robot_model": robot_model,
-            "use_joint_state_publisher": "False",
             "use_sim": use_sim,
         }.items(),
     )
@@ -74,7 +97,7 @@ def generate_launch_description():
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[controllers_config_file],
+        parameters=[controller_config],
         remappings=[
             ("imu_sensor_node/imu", "/_imu/data_raw"),
             ("~/motors_cmd", "/_motors_cmd"),
@@ -124,14 +147,15 @@ def generate_launch_description():
 
     # spawners expect ros2_control_node to be running
     delayed_spawner_nodes = TimerAction(
-        period=5.0,
+        period=3.0,
         actions=controllers,
     )
 
     def check_if_log_is_fatal(event):
         red_color = "\033[91m"
         reset_color = "\033[0m"
-        if "fatal" in event.text.decode().lower() or "failed" in event.text.decode().lower():
+        msg = event.text.decode().lower()
+        if ("fatal" in msg or "failed" in msg) and "attempt" not in msg:
             print(f"{red_color}Fatal error: {event.text}. Emitting shutdown...{reset_color}")
             return EmitEvent(event=Shutdown(reason="Spawner failed"))
 
@@ -150,6 +174,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             declare_mecanum_arg,
+            declare_robot_model_arg,
+            declare_controller_config_arg,  # controler_config base on mecanum and robot_model arg
             load_urdf,
             control_node,
             delayed_spawner_nodes,

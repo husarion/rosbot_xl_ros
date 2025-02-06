@@ -83,16 +83,15 @@ test_params = list(product(mecanum_options, namespace_options, robot_model_optio
 
 @pytest.mark.parametrize("generate_test_description", test_params, indirect=True)
 @pytest.mark.launch(fixture=generate_test_description)
-def test_simulation(generate_test_description):
-    _, _, namespace = generate_test_description
+def test_bringup(generate_test_description):
+    _, _, namespace, _ = generate_test_description
 
     rclpy.init()
     try:
         node = BringupTestNode("test_bringup", namespace=namespace)
-        node.create_test_subscribers_and_publishers()
         node.start_publishing_fake_hardware()
-
         node.start_node_thread()
+
         readings_data_test(node)
 
     finally:

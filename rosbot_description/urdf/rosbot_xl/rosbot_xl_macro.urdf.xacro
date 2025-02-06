@@ -8,7 +8,6 @@
             use_sim">
 
     <!-- PROPERTIES -->
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
     <xacro:property name="wheel_radius" value="${0.05 if mecanum else 0.048}" />
 
     <!-- INCLUDE ROBOT MACRO -->

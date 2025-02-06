@@ -1,7 +1,7 @@
 # Ref: http://docs.ros.org/en/noetic/api/robot_localization/html/state_estimation_nodes.html
 
 ## ekf config file ###
-/**/ekf_filter_node:
+/**/ekf_node:
     ros__parameters:
         frequency: 20.0
         sensor_timeout: 0.05

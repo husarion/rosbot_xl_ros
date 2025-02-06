@@ -26,6 +26,14 @@ jobs:
         with:
           use-ros2-testing: true
 
+      - name: Set test package
+        run: |
+          if [ "${{ matrix.build_type }}" = "hardware" ]; then
+            echo "TEST_PACKAGE=['rosbot_bringup']" >> $GITHUB_ENV
+          else
+            echo "TEST_PACKAGE=['rosbot_gazebo']" >> $GITHUB_ENV
+          fi
+
       - name: Build and test
         uses: ros-tooling/action-ros-ci@0.3.16
         with:
@@ -34,10 +42,9 @@ jobs:
           colcon-defaults: |
             {
               "build": {
-                "packages-up-to": ["rosbot"],
-                "cmake-args": ["-DCMAKE_BUILD_TYPE=Release"]
+                "packages-up-to": ["rosbot"]
               },
               "test": {
-                "packages-select-regex": ["rosbot*"]
+                "packages-select": ${{ env.TEST_PACKAGE }}
               }
             }

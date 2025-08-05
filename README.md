@@ -1,3 +1,8 @@
+> [!IMPORTANT]  
+> This repository is **archived** and no longer actively maintained.
+> All logic and further development have been moved to the [**rosbot_ros**](https://github.com/husarion/rosbot_ros) repository.
+> Please refer to the new repository for the latest updates and ongoing development.**
+
 # ROSbot XL ROS
 
 ROS2 packages for ROSbot XL
